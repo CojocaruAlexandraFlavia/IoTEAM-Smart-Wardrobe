@@ -10,11 +10,11 @@ Aplicația permite utilizatorilor gestionarea eficientă a conținutului gardero
 
 ## Obiectivele aplicației: 
 
-1.Gestionarea articolelor vestimentare aflate în dressing 
-2.Recomandarea de outfit-uri în conformitate cu starea meteo, preferințe și particularitățile fizice ale utilizatorilor 
-3.Acordarea unui rating ținutei recomandate și generarea unei liste de favorite 
-4.Actualizarea datelor despre garderobă în funcție de update-ul caracteristicilor utilizatorilor 
-5.Sortarea articolelor în funcție de frecvența purtării  
+1. Gestionarea articolelor vestimentare aflate în dressing 
+2. Recomandarea de outfit-uri în conformitate cu starea meteo, preferințe și particularitățile fizice ale utilizatorilor 
+3. Acordarea unui rating ținutei recomandate și generarea unei liste de favorite 
+4. Actualizarea datelor despre garderobă în funcție de update-ul caracteristicilor utilizatorilor 
+5. Sortarea articolelor în funcție de frecvența purtării  
 
  
 
