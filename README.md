@@ -26,35 +26,35 @@ Aplicația permite utilizatorilor gestionarea eficientă a conținutului gardero
 
 ## User Stories: 
 
-1.As a person who is interested in fashion, I want to use the recommandation feature in order to create the best outfit for myself. 
-2.As a person in constant hustle, I want to have a quick solution for putting together an outfit appropiate for the weather. 
-3.As a person who is in charge with the management of chores, I want to know what needs to be cleaned.  
-4.As a person who owns many clothes, I want to be able to know which ones I have not worn in a while so that I can rethink their purpose. 
-5.As a person with a limited wardrobe, I want to receive recommendations for clothes from Zara I could buy that could complement mine. 
+1. As a person who is interested in fashion, I want to use the recommandation feature in order to create the best outfit for myself. 
+2. As a person in constant hustle, I want to have a quick solution for putting together an outfit appropiate for the weather. 
+3. As a person who is in charge with the management of chores, I want to know what needs to be cleaned.  
+4. As a person who owns many clothes, I want to be able to know which ones I have not worn in a while so that I can rethink their purpose. 
+5. As a person with a limited wardrobe, I want to receive recommendations for clothes from Zara I could buy that could complement mine. 
 
  
 
 ## Colectarea cerințelor 
 
-1.Conectarea la API-ul pentru generarea paletelor de culoare pentru asortarea hainelor 
-2.Selectarea hainelor după categorie (casual, professional, elegant etc.) 
-3.Existența unei camere video care să facă scanarea utilizatorului (simulare oglindă) 
-4.Existența unei camere video care să facă scanarea dulapului 
-5.Request la caracteristicile utilizatorului (înălțime, culoarea ochilor, greutate etc.)   
-6.Request în baza de date a articolelor de îmbrăcăminte/încălțăminte   
-7.Conectare la API-ul de vreme pentru aflarea condițiilor meteorologice 
-8.Reținerea unui istoric al purtărilor de la ultima spălare până în prezent 
-9.Sortarea pe cele 3 categorii de spălat (alb, negru, colorat) 
-10.Conectarea la API-ul pentru instrucțiunile de spălat 
-11.Reținerea datei pentru ultima purtare a unui articol 
-12.Conectare la API-ul magazinului ZARA 
-13.Reținerea istoricului outfit-urilor pe ultimele 7 zile  
-14.*Verificarea articolelor de defecte (găuri, decolorări etc) 
-15.*Conectare la API-ul de Spotify și să pună muzică în concordanță cu specificul outfit-ului ales 
-16.*Existența unui senzor de deschidere/închidere a ușii 
-17.*Recomandarea unor exemple de ținute populare care pot fi adaptate la garderoba proprie 
-18.*Conectare la API-ul de Instagram pentru a compara ținutele apreciate pe aplicație cu ceea ce deține utilizatorul în dulap și pentru postări din categoria „Outfit of The Day” 
-19.*Detectarea automată a stării articolului de îmbrăcăminte (dacă chiar ai spălat-o sau nu) 
+1. Conectarea la API-ul pentru generarea paletelor de culoare pentru asortarea hainelor 
+2. Selectarea hainelor după categorie (casual, professional, elegant etc.) 
+3. Existența unei camere video care să facă scanarea utilizatorului (simulare oglindă) 
+4. Existența unei camere video care să facă scanarea dulapului 
+5. Request la caracteristicile utilizatorului (înălțime, culoarea ochilor, greutate etc.)   
+6. Request în baza de date a articolelor de îmbrăcăminte/încălțăminte   
+7. Conectare la API-ul de vreme pentru aflarea condițiilor meteorologice 
+8. Reținerea unui istoric al purtărilor de la ultima spălare până în prezent 
+9. Sortarea pe cele 3 categorii de spălat (alb, negru, colorat) 
+10. Conectarea la API-ul pentru instrucțiunile de spălat 
+11. Reținerea datei pentru ultima purtare a unui articol 
+12. Conectare la API-ul magazinului ZARA 
+13. Reținerea istoricului outfit-urilor pe ultimele 7 zile  
+14. *Verificarea articolelor de defecte (găuri, decolorări etc) 
+15. *Conectare la API-ul de Spotify și să pună muzică în concordanță cu specificul outfit-ului ales 
+16. *Existența unui senzor de deschidere/închidere a ușii 
+17. *Recomandarea unor exemple de ținute populare care pot fi adaptate la garderoba proprie 
+18. *Conectare la API-ul de Instagram pentru a compara ținutele apreciate pe aplicație cu ceea ce deține utilizatorul în dulap și pentru postări din categoria „Outfit of The Day” 
+19. *Detectarea automată a stării articolului de îmbrăcăminte (dacă chiar ai spălat-o sau nu) 
 
  
 ## Interpretarea și prioritizarea cerințelor 
