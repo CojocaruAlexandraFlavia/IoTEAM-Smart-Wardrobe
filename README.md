@@ -113,6 +113,8 @@ XVIII. *Conectare la API-ul de Instagram pentru a compara ținutele apreciate pe
 
 XIX. *Detectarea automată a stării articolului de îmbrăcăminte (dacă chiar ai spălat-o sau nu) 
 
+
+![Graphic](https://github.com/CojocaruAlexandraFlavia/IoTEAM-Smart-Wardrobe/blob/main/grafic.png)
  
 DREAPTA SUS – DIFICIL-VALOROS 
 
