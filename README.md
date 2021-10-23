@@ -129,15 +129,17 @@ DREAPTA JOS – DIFICIL-NEVALOROS
 ## Membrii echipei: 
  
 
-Maria Florea 
+[@AndreeaGavrila](https://github.com/AndreeaGavrila)
 
-Maria Adriana Tudor 
+[@AlexandraBuruiana](https://github.com/alexandraburu23)
 
-Alexandra Buruiană 
+[@MariaFlorea](https://github.com/FloreaMaria)
 
-Alexandra-Flavia Cojocaru 
+[@AlexandraFlaviaCojocaru](https://github.com/CojocaruAlexandraFlavia)
 
-Andreea Gavrilă 
+[@MariaAdrianaTudor](https://github.com/maria-tudor)
+
+
 
  
 
