@@ -77,23 +77,23 @@ Sistem: 3,4,16
 
 I. Request la caracteristicile utilizatorului (înălțime, culoarea ochilor, greutate etc.)   
 II. Request în baza de date a articolelor de îmbrăcăminte/încălțăminte   
-III.Reținerea datei pentru ultima purtare a unui articol 
-IV.Reținerea unui istoric al purtărilor de la ultima spălare până în prezent 
-V.Reținerea istoricului outfit-urilor pe ultimele 7 zile 
-VI.Selectarea hainelor după categorie (casual, professional, elegant etc.) 
-VII.Sortarea pe cele 3 categorii de spălat (alb, negru, colorat) 
-VIII.Conectare la API-ul de vreme pentru aflarea condițiilor meteorologice 
-IX.Conectarea la API-ul pentru generarea paletelor de culoare pentru asortarea hainelor 
-X.Conectarea la API-ul pentru instrucțiunile de spălat 
-XI.Conectare la API-ul magazinului ZARA 
-XII.Existența unei camere video care să facă scanarea utilizatorului (simulare oglindă) 
-XIII.Existența unei camere video care să facă scanarea dulapului 
-XIV.*Verificarea articolelor de defecte (găuri, decolorări etc) 
-XV.*Conectare la API-ul de Spotify și să pună muzică în concordanță cu specificul outfit-ului ales 
-XVI.*Existența unui senzor de deschidere/închidere a ușii 
-XVII.*Recomandarea unor exemple de ținute populare care pot fi adaptate la garderoba proprie 
-XVIII.*Conectare la API-ul de Instagram pentru a compara ținutele apreciate pe aplicație cu ceea ce deține utilizatorul în dulap și pentru postări din categoria „Outfit of The Day” 
-XIX.*Detectarea automată a stării articolului de îmbrăcăminte (dacă chiar ai spălat-o sau nu) 
+III. Reținerea datei pentru ultima purtare a unui articol 
+IV. Reținerea unui istoric al purtărilor de la ultima spălare până în prezent 
+V. Reținerea istoricului outfit-urilor pe ultimele 7 zile 
+VI. Selectarea hainelor după categorie (casual, professional, elegant etc.) 
+VII. Sortarea pe cele 3 categorii de spălat (alb, negru, colorat) 
+VIII. Conectare la API-ul de vreme pentru aflarea condițiilor meteorologice 
+IX. Conectarea la API-ul pentru generarea paletelor de culoare pentru asortarea hainelor 
+X. Conectarea la API-ul pentru instrucțiunile de spălat 
+XI. Conectare la API-ul magazinului ZARA 
+XII. Existența unei camere video care să facă scanarea utilizatorului (simulare oglindă) 
+XIII. Existența unei camere video care să facă scanarea dulapului 
+XIV. *Verificarea articolelor de defecte (găuri, decolorări etc) 
+XV. *Conectare la API-ul de Spotify și să pună muzică în concordanță cu specificul outfit-ului ales 
+XVI. *Existența unui senzor de deschidere/închidere a ușii 
+XVII. *Recomandarea unor exemple de ținute populare care pot fi adaptate la garderoba proprie 
+XVIII. *Conectare la API-ul de Instagram pentru a compara ținutele apreciate pe aplicație cu ceea ce deține utilizatorul în dulap și pentru postări din categoria „Outfit of The Day” 
+XIX. *Detectarea automată a stării articolului de îmbrăcăminte (dacă chiar ai spălat-o sau nu) 
 
  
 DREAPTA SUS – DIFICIL-VALOROS 
