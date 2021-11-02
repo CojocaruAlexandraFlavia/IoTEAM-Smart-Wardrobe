@@ -11,19 +11,23 @@ import java.util.List;
 public class User {
 
     @Id
+    @GeneratedValue
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private EyeColor eyeColor;
 
     private double weight;
 
     private double height;
 
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private int age;
 
+    @Enumerated(EnumType.STRING)
     private HairColor hairColor;
 
     @OneToMany(targetEntity = Item.class, mappedBy = "user", cascade= CascadeType.ALL, fetch = FetchType.LAZY)
