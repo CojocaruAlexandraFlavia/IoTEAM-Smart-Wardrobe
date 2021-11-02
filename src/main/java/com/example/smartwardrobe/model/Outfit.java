@@ -15,6 +15,7 @@ public class Outfit {
 
     private String description;
 
+    @Enumerated(EnumType.STRING)
     private Coat coat;
 
     @OneToMany(targetEntity = History.class, mappedBy = "outfit", cascade=CascadeType.ALL, fetch = FetchType.LAZY)

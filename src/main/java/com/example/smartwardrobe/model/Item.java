@@ -13,20 +13,26 @@ public class Item {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private Material material;
 
+    @Enumerated(EnumType.STRING)
     private Size size;
 
     private String code;
 
+    @Enumerated(EnumType.STRING)
     private ItemColor itemColor;
 
+    @Enumerated(EnumType.STRING)
     private Style style;
 
+    @Enumerated(EnumType.STRING)
     private ItemCategory itemCategory;
 
     private LocalDate lastWearing;
 
+    @Enumerated(EnumType.STRING)
     private WashingZoneColor washingZoneColor;
 
     @ManyToMany(mappedBy = "items")
