@@ -1,6 +1,11 @@
 package com.example.smartwardrobe.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,6 +16,9 @@ public class History {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @JsonSerialize
+    @JsonDeserialize
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
 
     @ManyToOne
