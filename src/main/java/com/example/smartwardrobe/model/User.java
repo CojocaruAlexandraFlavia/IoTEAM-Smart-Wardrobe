@@ -3,6 +3,7 @@ package com.example.smartwardrobe.model;
 import com.example.smartwardrobe.enums.EyeColor;
 import com.example.smartwardrobe.enums.Gender;
 import com.example.smartwardrobe.enums.HairColor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -31,6 +32,7 @@ public class User {
     private HairColor hairColor;
 
     @OneToMany(targetEntity = Item.class, mappedBy = "user", cascade= CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Item> items;
 
     public User(Long id, EyeColor eyeColor, double weight, double height, Gender gender, int age, HairColor hairColor, List<Item> items) {

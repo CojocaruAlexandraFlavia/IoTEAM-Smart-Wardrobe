@@ -19,7 +19,7 @@ public class OutfitController {
         return outfitService.findAllOutfits();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Outfit getOutfitById(@PathVariable("id") Long id){
         return outfitService.findOutfitById(id);
     }
@@ -29,7 +29,7 @@ public class OutfitController {
         return outfitService.saveOutfit(outfit);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public void deleteOutfitById(@PathVariable("id") Long id){
         outfitService.deleteOutfitById(id);
     }
