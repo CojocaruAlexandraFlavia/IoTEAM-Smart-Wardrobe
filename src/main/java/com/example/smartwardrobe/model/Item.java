@@ -1,11 +1,6 @@
 package com.example.smartwardrobe.model;
 
 import com.example.smartwardrobe.enums.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,7 +9,7 @@ import java.util.List;
 @Entity
 public class Item {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -35,20 +30,16 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemCategory itemCategory;
 
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastWearing;
 
     @Enumerated(EnumType.STRING)
     private WashingZoneColor washingZoneColor;
 
-    @ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ManyToMany(mappedBy = "items")
     private List<Outfit> outfits;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     public Item(Long id, Material material, Size size, String code, ItemColor itemColor, Style style, ItemCategory itemCategory, LocalDate lastWearing, WashingZoneColor washingZoneColor, List<Outfit> outfits, User user) {

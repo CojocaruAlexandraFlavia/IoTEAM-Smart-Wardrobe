@@ -1,7 +1,6 @@
 package com.example.smartwardrobe.model;
 
 import com.example.smartwardrobe.enums.Coat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
 public class Outfit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -20,7 +19,6 @@ public class Outfit {
     private Coat coat;
 
     @OneToMany(targetEntity = History.class, mappedBy = "outfit", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
     private List<History> histories;
 
     @ManyToMany
