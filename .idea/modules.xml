@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/IoTEAM-Smart-Wardrobe.iml" filepath="$PROJECT_DIR$/.idea/IoTEAM-Smart-Wardrobe.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smart-wardrobe.iml" filepath="$PROJECT_DIR$/smart-wardrobe.iml" />
     </modules>
   </component>
 </project>
