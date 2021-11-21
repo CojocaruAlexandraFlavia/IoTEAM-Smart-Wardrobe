@@ -6,8 +6,11 @@ D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\WashingZoneColor.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\repository\ItemRepository.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\model\Item.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\BasicAuthEntryPoint.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\service\impl\OutfitServiceImpl.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\Material.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\Config.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\model\LoginRequest.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\controller\HistoryController.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\controller\ItemController.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\repository\UserRepository.java
@@ -24,6 +27,7 @@ D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\SmartWardrobeApplication.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\repository\OutfitRepository.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\repository\HistoryRepository.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\controller\AuthController.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\ItemCategory.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\model\Outfit.java
 D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\HairColor.java
