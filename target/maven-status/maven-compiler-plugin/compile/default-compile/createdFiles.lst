@@ -1,6 +1,8 @@
 com\example\smartwardrobe\enums\EyeColor.class
+com\example\smartwardrobe\model\LoginRequest.class
 com\example\smartwardrobe\model\Outfit.class
 com\example\smartwardrobe\enums\WashingZoneColor.class
+com\example\smartwardrobe\Config.class
 com\example\smartwardrobe\SmartWardrobeApplication.class
 com\example\smartwardrobe\enums\HairColor.class
 com\example\smartwardrobe\enums\ItemColor.class
@@ -26,7 +28,9 @@ com\example\smartwardrobe\controller\HistoryController.class
 com\example\smartwardrobe\controller\UserController.class
 com\example\smartwardrobe\service\impl\ItemServiceImpl.class
 com\example\smartwardrobe\service\HistoryService.class
+com\example\smartwardrobe\BasicAuthEntryPoint.class
 com\example\smartwardrobe\enums\Style.class
 com\example\smartwardrobe\enums\Gender.class
 com\example\smartwardrobe\repository\ItemRepository.class
+com\example\smartwardrobe\controller\AuthController.class
 com\example\smartwardrobe\model\Item.class

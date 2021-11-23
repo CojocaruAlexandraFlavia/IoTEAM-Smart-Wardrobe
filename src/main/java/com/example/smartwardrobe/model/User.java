@@ -4,12 +4,17 @@ import com.example.smartwardrobe.enums.EyeColor;
 import com.example.smartwardrobe.enums.Gender;
 import com.example.smartwardrobe.enums.HairColor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +40,21 @@ public class User {
     @JsonIgnore
     private List<Item> items;
 
-    public User(Long id, EyeColor eyeColor, double weight, double height, Gender gender, int age, HairColor hairColor, List<Item> items) {
+    @Column(unique = true)
+    private String username;
+
+    private String password;
+
+    private boolean isAccountNonExpired;
+
+    private boolean isAccountNonLocked;
+
+    private boolean isCredentialsNonExpired;
+
+    private boolean isEnabled;
+
+    public User(Long id, EyeColor eyeColor, double weight, double height, Gender gender, int age,
+                HairColor hairColor, List<Item> items, String username, String password) {
         this.id = id;
         this.eyeColor = eyeColor;
         this.weight = weight;
@@ -44,9 +63,17 @@ public class User {
         this.age = age;
         this.hairColor = hairColor;
         this.items = items;
+        this.username = username;
+        this.password = password;
     }
 
-    public User() { }
+    public User() {
+        super();
+        isAccountNonExpired = true;
+        isAccountNonLocked = true;
+        isEnabled = true;
+        isCredentialsNonExpired = true;
+    }
 
     public Long getId() {
         return id;
@@ -110,5 +137,47 @@ public class User {
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isAccountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isAccountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return isCredentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new ArrayList<>(List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
