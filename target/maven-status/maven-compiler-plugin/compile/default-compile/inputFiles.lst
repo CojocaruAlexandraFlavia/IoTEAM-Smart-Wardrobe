@@ -1,32 +1,36 @@
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\enums\WashingZoneColor.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\model\User.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\service\impl\OutfitServiceImpl.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\enums\Style.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\controller\OutfitController.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\controller\UserController.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\controller\HistoryController.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\service\impl\HistoryServiceImpl.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\enums\Gender.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\repository\HistoryRepository.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\service\OutfitService.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\service\impl\UserServiceImpl.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\enums\ItemColor.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\service\impl\ItemServiceImpl.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\SmartWardrobeApplication.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\enums\EyeColor.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\service\HistoryService.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\enums\HairColor.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\service\UserService.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\enums\ItemCategory.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\model\Outfit.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\enums\Material.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\enums\Coat.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\model\Item.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\enums\Size.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\repository\ItemRepository.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\service\ItemService.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\weather\WeatherControl.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\controller\ItemController.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\repository\OutfitRepository.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\repository\UserRepository.java
-D:\an2_sem_2\RC\Programe\IoTEAM-Smart-Wardrobe\src\main\java\com\example\smartwardrobe\model\History.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\controller\OutfitController.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\EyeColor.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\controller\UserController.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\service\OutfitService.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\weather\WeatherControl.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\WashingZoneColor.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\repository\ItemRepository.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\model\Item.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\BasicAuthEntryPoint.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\service\impl\OutfitServiceImpl.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\Material.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\Config.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\model\LoginRequest.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\controller\HistoryController.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\controller\ItemController.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\repository\UserRepository.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\service\UserService.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\service\ItemService.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\service\impl\ItemServiceImpl.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\model\User.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\ItemColor.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\service\HistoryService.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\Size.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\service\impl\UserServiceImpl.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\Coat.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\service\impl\HistoryServiceImpl.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\SmartWardrobeApplication.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\repository\OutfitRepository.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\repository\HistoryRepository.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\controller\AuthController.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\ItemCategory.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\model\Outfit.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\HairColor.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\Style.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\enums\Gender.java
+D:\FMI\An III\Proiect IS\smart-wardrobe\src\main\java\com\example\smartwardrobe\model\History.java
