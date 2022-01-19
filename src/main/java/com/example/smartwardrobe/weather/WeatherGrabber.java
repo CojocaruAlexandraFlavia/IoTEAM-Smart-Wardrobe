@@ -122,8 +122,4 @@ public class WeatherGrabber {
         return (JSONObject) jsonObject.get(key);
     }
 
-    /**
-     * Wrapper for the weather
-     */
-
 }

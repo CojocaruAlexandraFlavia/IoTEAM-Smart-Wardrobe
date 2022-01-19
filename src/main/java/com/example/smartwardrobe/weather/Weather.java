@@ -5,6 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Wrapper for the weather
+ */
+
 public class Weather implements Serializable {
     private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE, d MMM yyyy hh:mm a z", Locale.US);
     private int code;
