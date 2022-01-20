@@ -5,18 +5,20 @@ import com.example.smartwardrobe.weather.Weather;
 import com.example.smartwardrobe.weather.WeatherGrabber;
 import org.json.simple.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 
 public class WeatherController {
-    public static void main(String[] args) throws Exception {
+    public static void getWeather() throws Exception {
         InetAddress ip;
         String ipNo;
-        ipNo = "193.105.140.131";
-//            int editIp = ipNo.indexOf('/');
-//            ipNo = ipNo.substring(editIp+1);
+        URL whatismyip = new URL("http://checkip.amazonaws.com");
+        BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()));
+        ipNo = in.readLine();
         System.out.println(ipNo);
-
         IpInformation ipInformation = WeatherGrabber.grabLocationFrom(ipNo);
         Weather weatherConditions = WeatherGrabber.grabWeatherFrom(ipInformation);
         System.out.println(weatherConditions.toString());
