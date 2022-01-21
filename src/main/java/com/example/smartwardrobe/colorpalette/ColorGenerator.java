@@ -9,7 +9,10 @@ import java.util.Random;
 import static com.example.smartwardrobe.enums.ItemColor.*;
 
 public class ColorGenerator {
-
+    /*
+    the color arrays are written from the darkest color of the spectrum to the lightest one
+    the colors array is composed of the color arrays in the color wheel order
+     */
     ItemColor[] reds = {MOHOGAMY, WINE, BERRY, RUBY, CRIMSON, RED, ROSE, BLUSH};
     ItemColor[] oranges = {RUST, BRONZE, FIRE, ORANGE, APRICOT, HONEY, MERIGOLD, CANTALOUPE};
     ItemColor[] yellows = {GOLDENROD, YELLOW_JASMINE, CITRINE, GOLD, YELLOW, BRIGHT_YELLOW, BUTTER, PALE_YELLOW};
@@ -62,6 +65,10 @@ public class ColorGenerator {
 
     }
     public ItemColor[] pastel(ItemColor color){
+        /*
+        pastel palette gets the pastel color of the color family of the parameter
+        and returns 2 random pastel colors from the spectrum
+         */
         int i,j,max;
         color = getPastel(color);
         i = colorNumber(color)[0];
@@ -81,11 +88,49 @@ public class ColorGenerator {
         }
         return new ItemColor[] {color2, color3};
     }
-    public static void main(String[] args) {
-        ColorGenerator colorGenerator = new ColorGenerator();
-        System.out.println(Arrays.toString(colorGenerator.colorNumber(WATERMELON)));
-        //System.out.println(colorGenerator.colorKind(3,5));
-        System.out.println(Arrays.toString(colorGenerator.monoChromatic(WATERMELON)));
-        System.out.println(Arrays.toString(colorGenerator.pastel(WATERMELON)));
+    public ItemColor[] analogous(ItemColor color) {
+        /*
+        according to color theory, analogous
+        comprises colors that are right next to each other on the color wheel
+         */
+        int i,j,max;
+        i = colorNumber(color)[0];
+        j = colorNumber(color)[1];
+        max = colors.length - 1;
+        ItemColor color2, color3;
+        if(i > 0 && i < max) {
+             color2 = colors[i - 1][j];
+             color3 = colors[i + 1][j];
+        } else if (i == 0){
+             color2 = colors[max][j];
+             color3 = colors[i + 1][j];
+        } else {
+             color2 = colors[i - 1][j];
+             color3 = colors[0][j];
+        }
+        return new ItemColor[] {color2, color3};
     }
+    public ItemColor[] splitComplementary(ItemColor color){
+        /*
+        according to color theory, split-complementary
+        uses a base color with two colors on either side of its opposite color.
+         */
+        int i,j,max;
+        i = colorNumber(color)[0];
+        j = colorNumber(color)[1];
+        max = colors.length - 1;
+        ItemColor color2, color3;
+        if(i >= 4 && i <= max-2) {
+            color2 = colors[i - 4][j];
+            color3 = colors[i + 2][j];
+        } else if (i < 4){
+            color2 = colors[max + i - 3][j];
+            color3 = colors[i + 2][j];
+        } else {
+            color2 = colors[i - 4][j];
+            color3 = colors[max + 2 - i][j];
+        }
+        return new ItemColor[] {color2, color3};
+    }
+
 }
