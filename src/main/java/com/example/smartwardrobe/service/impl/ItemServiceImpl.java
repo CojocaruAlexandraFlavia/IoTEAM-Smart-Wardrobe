@@ -5,9 +5,14 @@ import com.example.smartwardrobe.enums.Style;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.repository.ItemRepository;
 import com.example.smartwardrobe.service.ItemService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.EnumUtils;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,13 +32,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item findItemByCategory(ItemCategory itemCategory) {
-        return itemRepository.findByItemCategory(itemCategory).orElseThrow();
-    }
-
-    @Override
-    public Item findItemByStyle(Style style) {
-        return itemRepository.findByStyle(style).orElseThrow();
+    public List<Item> findItemsByCategory(ItemCategory itemCategory) {
+        return itemRepository.findByItemCategory(itemCategory);
     }
 
     @Override
@@ -46,4 +46,56 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.findAll();
     }
 
+    @Override
+    public List<Item> getItemsByStyleName(String styleName) {
+        if (!EnumUtils.isValidEnum(Style.class, styleName.toUpperCase()) ){
+            return new ArrayList<>();
+        }
+        return itemRepository.findByStyle(Style.valueOf(styleName.toUpperCase()));
+    }
+
+    @Override
+    public String washItem(String itemId) {
+        Item item = findItemById(Long.valueOf(itemId));
+        item.setLastWashingDay(LocalDate.now());
+        item.setNrOfWearsSinceLastWash(0);
+        itemRepository.save(item);
+        return "The item is clean!";
+    }
+
+    @Override
+    public void updateItemAfterAddingOutfit(Long itemId) {
+        Item item = findItemById(itemId);
+        item.setNrOfWearsSinceLastWash(item.getNrOfWearsSinceLastWash() + 1);
+        item.setLastWearing(LocalDate.now());
+        saveItem(item);
+    }
+
+    @Override
+    public JSONArray createJsonArrayOfItems(List<Item> items) {
+        JSONArray jsonArray = new JSONArray();
+        for(Item item: items){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", item.getId().toString());
+            jsonObject.put("material", item.getMaterial().toString());
+            jsonObject.put("size", item.getSize().toString());
+            jsonObject.put("code", item.getCode());
+            jsonObject.put("color", item.getItemColor().toString());
+            jsonObject.put("style", item.getStyle().toString());
+            jsonObject.put("category", item.getItemCategory().toString());
+            if(item.getLastWearing() == null){
+                jsonObject.put("lastWearingDate", "null");
+            }else{
+                jsonObject.put("lastWearingDate", item.getLastWearing().toString());
+            }
+            if(item.getLastWashingDay() == null){
+                jsonObject.put("lastWashingDay", "null");
+            }else{
+                jsonObject.put("lastWashingDay", item.getLastWashingDay().toString());
+            }
+            jsonObject.put("wearsSinceLastWashing", item.getNrOfWearsSinceLastWash());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
+    }
 }

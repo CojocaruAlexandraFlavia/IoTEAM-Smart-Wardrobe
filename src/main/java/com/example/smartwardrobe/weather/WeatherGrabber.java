@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -66,6 +67,18 @@ public class WeatherGrabber {
     }
 
     /**
+     *
+     * @param src
+     * @return
+     */
+
+    public static String unaccent(String src) {
+        return Normalizer
+                .normalize(src, Normalizer.Form.NFD)
+                .replaceAll("[^\\p{ASCII}]", "");
+    }
+
+    /**
      * Grabs the weather by city and countryCode from Yahoo Weather Api
      *
      * @param city        city
@@ -73,10 +86,16 @@ public class WeatherGrabber {
      * @return weather
      * @throws Exception exception
      */
+
+
+
     public static Weather grabWeatherFrom(String city, String countryCode) throws Exception {
-        String data = city + ", " + countryCode;
+
+        String city6 = unaccent(city);
+
+        String data = city6 + ", " + countryCode;
         String YQL = String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\") and u='c'", data);
-        String endpoint = String.format("http://api.weatherapi.com/v1/current.json?key=7863f9f7b46547e5bf7222325221901&q="+city+"&aqi=no", URLEncoder.encode(YQL, "UTF-8"));
+        String endpoint = String.format("http://api.weatherapi.com/v1/current.json?key=7863f9f7b46547e5bf7222325221901&q="+city6+"&aqi=no", URLEncoder.encode(YQL, "UTF-8"));
         URL url = new URL(endpoint);
         try (BufferedReader stream = new BufferedReader(new InputStreamReader(url.openStream()))) {
             JSONParser parser = new JSONParser();

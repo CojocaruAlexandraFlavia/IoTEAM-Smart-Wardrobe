@@ -8,11 +8,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SmartWardrobeApplication {
 
 	public static void main(String[] args) {
-		try{
-		WeatherController.getWeather();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try{
+//		WeatherController.getWeather();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		SpringApplication.run(SmartWardrobeApplication.class, args);
 	}
 
