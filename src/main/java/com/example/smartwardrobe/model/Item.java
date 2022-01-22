@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+//@JsonIgnoreProperties(value= {"outfits"})
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,10 +40,16 @@ public class Item {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastWearing;
 
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate lastWashingDay;
+
+    private int nrOfWearsSinceLastWash;
+
     @Enumerated(EnumType.STRING)
     private WashingZoneColor washingZoneColor;
 
-    @ManyToMany(mappedBy = "items", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "items")
     @JsonIgnore
     private List<Outfit> outfits;
 
@@ -155,4 +162,19 @@ public class Item {
         this.user = user;
     }
 
+    public LocalDate getLastWashingDay() {
+        return lastWashingDay;
+    }
+
+    public void setLastWashingDay(LocalDate lastWashingDay) {
+        this.lastWashingDay = lastWashingDay;
+    }
+
+    public int getNrOfWearsSinceLastWash() {
+        return nrOfWearsSinceLastWash;
+    }
+
+    public void setNrOfWearsSinceLastWash(int nrOfWearsSinceLastWashing) {
+        this.nrOfWearsSinceLastWash = nrOfWearsSinceLastWashing;
+    }
 }

@@ -23,7 +23,7 @@ public class Outfit {
     @JsonIgnore
     private List<History> histories;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "outfit_item",
             joinColumns = @JoinColumn(name = "outfit_id"),
