@@ -3,11 +3,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -61,9 +63,19 @@ public class WeatherGrabber {
      * @throws Exception exception
      */
     public static Weather grabWeatherFrom(IpInformation ipInformation) throws Exception {
-        return grabWeatherFrom(ipInformation.getCountry(), ipInformation.getCountryCode());
+        return grabWeatherFrom(ipInformation.getCity(), ipInformation.getCountryCode());
     }
 
+    /**
+     *
+     * @param src
+     * @return
+     */
+    public static String unaccent(String src) {
+        return Normalizer
+                .normalize(src, Normalizer.Form.NFD)
+                .replaceAll("[^\\p{ASCII}]", "");
+    }
     /**
      * Grabs the weather by city and countryCode from Yahoo Weather Api
      *
@@ -73,16 +85,27 @@ public class WeatherGrabber {
      * @throws Exception exception
      */
     public static Weather grabWeatherFrom(String city, String countryCode) throws Exception {
-        String data = city + ", " + countryCode;
+        String city6 = unaccent(city);
+        String data = city6 + ", " + countryCode;
         String YQL = String.format("select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\"%s\") and u='c'", data);
-        String endpoint = String.format("https://query.yahooapis.com/v1/public/yql?q=%s&format=json", URLEncoder.encode(YQL, "UTF-8"));
+        String endpoint = String.format("http://api.weatherapi.com/v1/current.json?key=7863f9f7b46547e5bf7222325221901&q="+city6+"&aqi=no", URLEncoder.encode(YQL, "UTF-8"));
         URL url = new URL(endpoint);
         try (BufferedReader stream = new BufferedReader(new InputStreamReader(url.openStream()))) {
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(stream);
-            JSONObject result = (JSONObject) getValue(getValue(getValue(jsonObject, "query"), "results"), "channel").get("item");
-            JSONObject weatherData = (JSONObject) result.get("condition");
-            return new Weather(Integer.parseInt((String) weatherData.get("code")), (String) weatherData.get("text"), Integer.parseInt((String) weatherData.get("temp")), (String) weatherData.get("date"));
+            JSONObject weatherData = (JSONObject) jsonObject.get("current");
+            FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/weather.json");
+            JSONObject newData = new JSONObject();
+            newData.put("humidity",weatherData.get("humidity"));
+            newData.put("is_day",weatherData.get("is_day"));
+            newData.put("feelslike_c",weatherData.get("feelslike_c"));
+            newData.put("last_updated",weatherData.get("last_updated"));
+            file.write(newData.toJSONString());
+            file.close();
+            return new Weather(Integer.parseInt(weatherData.get("humidity").toString()),
+                    Integer.parseInt(weatherData.get("is_day").toString()),
+                    Float.parseFloat(weatherData.get("feelslike_c").toString()),
+                    weatherData.get("last_updated").toString());
         }
     }
 
@@ -107,7 +130,16 @@ public class WeatherGrabber {
         try (BufferedReader stream = new BufferedReader(new InputStreamReader(url.openStream()))) {
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject) parser.parse(stream);
-            return new IpInformation((String) jsonObject.get("country"), (String) jsonObject.get("city"), (String) jsonObject.get("timezone"), (String) jsonObject.get("countryCode"));
+            FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/ip.json");
+            file.write(jsonObject.toJSONString());
+            file.close();
+            if (((String) jsonObject.get("regionName")).equals("Bucharest")){
+                return new IpInformation((String) jsonObject.get("country"), (String) jsonObject.get("regionName"), (String) jsonObject.get("timezone"), (String) jsonObject.get("countryCode"));
+            }
+            else{
+                return new IpInformation((String) jsonObject.get("country"), (String) jsonObject.get("city"), (String) jsonObject.get("timezone"), (String) jsonObject.get("countryCode"));
+            }
+
         }
     }
 
@@ -121,9 +153,5 @@ public class WeatherGrabber {
     private static JSONObject getValue(JSONObject jsonObject, String key) {
         return (JSONObject) jsonObject.get(key);
     }
-
-    /**
-     * Wrapper for the weather
-     */
 
 }
