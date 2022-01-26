@@ -1,6 +1,8 @@
 package com.example.smartwardrobe.service;
 
 import com.example.smartwardrobe.model.Outfit;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.util.List;
 
@@ -11,5 +13,7 @@ public interface OutfitService{
     void deleteOutfit(Outfit outfit);
     Outfit findOutfitById(Long id);
     List<Outfit> findAllOutfits();
+    void writeOutfitToFile(Outfit outfit);
+    JSONArray getOutfitsFromFile();
 
 }
