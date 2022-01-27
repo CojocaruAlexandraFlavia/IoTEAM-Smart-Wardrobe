@@ -49,7 +49,6 @@ public class OutfitServiceImpl implements OutfitService {
         historyService.saveHistory(history);
 
         writeOutfitToFile(savedOutfit);
-        writeOutfitCategoryToFile(savedOutfit);
 
         return savedOutfit;
     }
@@ -106,41 +105,6 @@ public class OutfitServiceImpl implements OutfitService {
         JSONParser parser = new JSONParser();
         try{
             JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json")); ;
-            return jsonArray;
-        } catch (ParseException | IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public void writeOutfitCategoryToFile(Outfit outfit) {
-        JSONArray jsonArray = getOutfitsCategoryFromFile();
-        if(jsonArray.size() == 7){
-            jsonArray.remove(0);
-            for(int i = 0; i < jsonArray.size() - 1; i++){
-                jsonArray.set(i, jsonArray.get(i + 1));
-            }
-        }
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("items", itemService.createJsonArrayOfItems(outfit.getItems()));
-        jsonArray.add(jsonObject);
-        try {
-            FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/outfitscategory.json");
-            file.write(jsonArray.toJSONString());
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public JSONArray getOutfitsCategoryFromFile() {
-        JSONParser parser = new JSONParser();
-        try{
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/store.json")); ;
             return jsonArray;
         } catch (ParseException | IOException e) {
             e.printStackTrace();
