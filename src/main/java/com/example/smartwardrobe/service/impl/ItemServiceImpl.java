@@ -98,4 +98,9 @@ public class ItemServiceImpl implements ItemService {
         }
         return jsonArray;
     }
+
+    @Override
+    public List<Item> findAll() {
+        return itemRepository.findAll();
+    }
 }

@@ -97,7 +97,6 @@ public class OutfitServiceImpl implements OutfitService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
