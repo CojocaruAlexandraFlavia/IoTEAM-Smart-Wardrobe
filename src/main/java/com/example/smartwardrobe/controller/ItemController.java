@@ -2,11 +2,18 @@ package com.example.smartwardrobe.controller;
 
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.service.ItemService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -49,6 +56,10 @@ public class ItemController {
     @PatchMapping ("/washing/{itemId}")
     public String washItem(@PathVariable("itemId") String itemId){
         return itemService.washItem(itemId);
+    }
+    @PostMapping("/getAllStore")
+    public void readAllItemsFromStore(){
+         itemService.readAllItemsFromStore();
     }
 
 }

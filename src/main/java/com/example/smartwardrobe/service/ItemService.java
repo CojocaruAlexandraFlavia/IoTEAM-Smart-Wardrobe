@@ -18,5 +18,5 @@ public interface ItemService {
     String washItem(String itemId);
     void updateItemAfterAddingOutfit(Long itemId);
     JSONArray createJsonArrayOfItems(List<Item> items);
-
+    void readAllItemsFromStore();
 }
