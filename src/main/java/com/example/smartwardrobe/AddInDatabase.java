@@ -12,34 +12,34 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-
-@Component
-public class AddInDatabase implements ApplicationListener<ContextRefreshedEvent> {
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private boolean added= false;
-
-
-    @Override
-    @Transactional
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-        if(!added){
-            User user = new User();
-            user.setPassword(passwordEncoder.encode("user1"));
-            user.setUsername("user1");
-            user.setAge(15);
-            user.setGender(Gender.FEMALE);
-            user.setHeight(1.75);
-            user.setEyeColor(EyeColor.BLUE);
-            user.setHairColor(HairColor.BLONDE);
-            user.setWeight(65.5);
-            userRepository.save(user);
-            added = true;
-        }
-    }
-}
+//
+//@Component
+//public class AddInDatabase implements ApplicationListener<ContextRefreshedEvent> {
+//
+////    @Autowired
+////    private PasswordEncoder passwordEncoder;
+////
+////    @Autowired
+////    private UserRepository userRepository;
+////
+////    private boolean added= false;
+////
+////
+////    @Override
+////    @Transactional
+////    public void onApplicationEvent(ContextRefreshedEvent event) {
+////        if(!added){
+////            User user = new User();
+////            user.setPassword(passwordEncoder.encode("user1"));
+////            user.setUsername("user1");
+////            user.setAge(15);
+////            user.setGender(Gender.FEMALE);
+////            user.setHeight(1.75);
+////            user.setEyeColor(EyeColor.BLUE);
+////            user.setHairColor(HairColor.BLONDE);
+////            user.setWeight(65.5);
+////            userRepository.save(user);
+////            added = true;
+////        }
+//   // }
+//}
