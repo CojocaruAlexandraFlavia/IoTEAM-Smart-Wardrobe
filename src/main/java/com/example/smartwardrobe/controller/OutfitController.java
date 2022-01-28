@@ -33,5 +33,17 @@ public class OutfitController {
     public void deleteOutfitById(@PathVariable("id") Long id){
         outfitService.deleteOutfitById(id);
     }
+    @PostMapping("/recommendMonochromaticOutfit")
+    public List<Outfit> recommendMonochromaticOutfit(){
+        return outfitService.recommendMonochromaticOutfit();
+    }
+    @PostMapping("/recommendAnalogousOutfit")
+    public List<Outfit> recommendAnalogousOutfit(){
+        return outfitService.recommendAnalogousOutfit();
+    }
+    @PostMapping("/recommendPastelOutfit")
+    public List<Outfit> recommendPastelOutfit(){
+        return outfitService.recommendPastelOutfit();
+    }
 
 }
