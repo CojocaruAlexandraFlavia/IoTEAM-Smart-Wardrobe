@@ -1,6 +1,6 @@
 package com.example.smartwardrobe.model;
 
-import com.example.smartwardrobe.enums.Coat;
+import com.example.smartwardrobe.enums.CoatCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -16,7 +16,11 @@ public class Outfit {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
+//    @Enumerated(EnumType.STRING)
+//    private Coat coat;
+
+    @ManyToOne
+    @JoinColumn(name = "coat_id")
     private Coat coat;
 
     @OneToMany(targetEntity = History.class, mappedBy = "outfit", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
@@ -30,6 +34,9 @@ public class Outfit {
             inverseJoinColumns = @JoinColumn(name = "item_id")
     )
     private List<Item> items;
+
+
+
 
 
     public Outfit(Long id, String description, Coat coat) {

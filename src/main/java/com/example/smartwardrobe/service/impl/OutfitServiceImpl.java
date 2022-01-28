@@ -322,6 +322,19 @@ public class OutfitServiceImpl implements OutfitService {
             }
 
         }
+        List<Item> dresses = itemService.findItemsByCategory(ItemCategory.valueOf("DRESS"));
+        System.out.println(skirts);
+        for(int i = 0; i < dresses.toArray().length; i++) {
+            Item dress = dresses.get(i);
+            Outfit outfit = new Outfit();
+            outfit.setId((long) outfitID);
+            outfit.setDescription("OUTFIT"+outfitID);
+            outfitID += 1;
+            List<Item> outfitItems = new ArrayList<Item>();
+            outfitItems.add(dress);
+            outfit.setItems(outfitItems);
+            outfitList.add(outfit);
+        }
         return outfitList;
     }
     @Override
@@ -535,6 +548,19 @@ public class OutfitServiceImpl implements OutfitService {
             }
 
         }
+        List<Item> dresses = itemService.findItemsByCategory(ItemCategory.valueOf("DRESS"));
+        System.out.println(skirts);
+        for(int i = 0; i < dresses.toArray().length; i++) {
+            Item dress = dresses.get(i);
+            Outfit outfit = new Outfit();
+            outfit.setId((long) outfitID);
+            outfit.setDescription("OUTFIT"+outfitID);
+            outfitID += 1;
+            List<Item> outfitItems = new ArrayList<Item>();
+            outfitItems.add(dress);
+            outfit.setItems(outfitItems);
+            outfitList.add(outfit);
+       }
         return outfitList;
     }
     @Override
@@ -729,6 +755,21 @@ public class OutfitServiceImpl implements OutfitService {
                 }
             }
 
+        }
+        List<Item> dresses = itemService.findItemsByCategory(ItemCategory.valueOf("DRESS"));
+        System.out.println(skirts);
+        for(int i = 0; i < dresses.toArray().length; i++) {
+            Item dress = dresses.get(i);
+            if(colorGenerator.getPastel(dress.getItemColor()) == dress.getItemColor()){
+                Outfit outfit = new Outfit();
+                outfit.setId((long) outfitID);
+                outfit.setDescription("OUTFIT"+outfitID);
+                outfitID += 1;
+                List<Item> outfitItems = new ArrayList<Item>();
+                outfitItems.add(dress);
+                outfit.setItems(outfitItems);
+                outfitList.add(outfit);
+            }
         }
         return outfitList;
     }
