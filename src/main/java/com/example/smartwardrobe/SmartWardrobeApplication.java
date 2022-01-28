@@ -1,9 +1,9 @@
 package com.example.smartwardrobe;
 
-import com.example.smartwardrobe.controller.WeatherController;
-import com.example.smartwardrobe.service.impl.ItemServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.io.IOException;
 
 @SpringBootApplication
 public class SmartWardrobeApplication {
@@ -14,6 +14,11 @@ public class SmartWardrobeApplication {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
+		try{
+			WashingController.getInstructions();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		SpringApplication.run(SmartWardrobeApplication.class, args);
 	}
 
