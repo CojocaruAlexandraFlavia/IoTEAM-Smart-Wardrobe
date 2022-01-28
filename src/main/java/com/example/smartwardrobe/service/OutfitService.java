@@ -15,4 +15,9 @@ public interface OutfitService{
     List<Outfit> findAllOutfits();
     void writeOutfitToFile(Outfit outfit);
     JSONArray getOutfitsFromFile();
+
+    List<Outfit> recommendMonochromaticOutfit();
+    List<Outfit> recommendAnalogousOutfit();
+    List<Outfit> recommendPastelOutfit();
+
 }
