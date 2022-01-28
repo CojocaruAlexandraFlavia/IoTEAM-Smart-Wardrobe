@@ -155,15 +155,16 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = jeans.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
-                    Outfit outfit = new Outfit();
-                    outfit.setId((long) outfitID);
-                    outfitID += 1;
-                    List<Item> outfitItems = new ArrayList<Item>();
-                    outfitItems.add(top);
-                    outfitItems.add(bottom);
-                    outfit.setItems(outfitItems);
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                 }
             }
@@ -171,15 +172,16 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = pants.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
-                    Outfit outfit = new Outfit();
-                    outfit.setId((long) outfitID);
-                    outfitID += 1;
-                    List<Item> outfitItems = new ArrayList<Item>();
-                    outfitItems.add(top);
-                    outfitItems.add(bottom);
-                    outfit.setItems(outfitItems);
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                 }
             }
@@ -187,15 +189,16 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = skirts.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
-                    Outfit outfit = new Outfit();
-                    outfit.setId((long) outfitID);
-                    outfitID += 1;
-                    List<Item> outfitItems = new ArrayList<Item>();
-                    outfitItems.add(top);
-                    outfitItems.add(bottom);
-                    outfit.setItems(outfitItems);
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                 }
             }
@@ -211,15 +214,16 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = jeans.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
-                    Outfit outfit = new Outfit();
-                    outfit.setId((long) outfitID);
-                    outfitID += 1;
-                    List<Item> outfitItems = new ArrayList<Item>();
-                    outfitItems.add(top);
-                    outfitItems.add(bottom);
-                    outfit.setItems(outfitItems);
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                 }
             }
@@ -227,15 +231,16 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = pants.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
-                    Outfit outfit = new Outfit();
-                    outfit.setId((long) outfitID);
-                    outfitID += 1;
-                    List<Item> outfitItems = new ArrayList<Item>();
-                    outfitItems.add(top);
-                    outfitItems.add(bottom);
-                    outfit.setItems(outfitItems);
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                 }
             }
@@ -243,15 +248,16 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = skirts.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
-                    Outfit outfit = new Outfit();
-                    outfit.setId((long) outfitID);
-                    outfitID += 1;
-                    List<Item> outfitItems = new ArrayList<Item>();
-                    outfitItems.add(top);
-                    outfitItems.add(bottom);
-                    outfit.setItems(outfitItems);
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                 }
             }
@@ -267,15 +273,16 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = jeans.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
-                    Outfit outfit = new Outfit();
-                    outfit.setId((long) outfitID);
-                    outfitID += 1;
-                    List<Item> outfitItems = new ArrayList<Item>();
-                    outfitItems.add(top);
-                    outfitItems.add(bottom);
-                    outfit.setItems(outfitItems);
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                 }
             }
@@ -283,15 +290,16 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = pants.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
-                    Outfit outfit = new Outfit();
-                    outfit.setId((long) outfitID);
-                    outfitID += 1;
-                    List<Item> outfitItems = new ArrayList<Item>();
-                    outfitItems.add(top);
-                    outfitItems.add(bottom);
-                    outfit.setItems(outfitItems);
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                 }
             }
@@ -299,15 +307,16 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = skirts.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
-                    Outfit outfit = new Outfit();
-                    outfit.setId((long) outfitID);
-                    outfitID += 1;
-                    List<Item> outfitItems = new ArrayList<Item>();
-                    outfitItems.add(top);
-                    outfitItems.add(bottom);
-                    outfit.setItems(outfitItems);
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                 }
             }
@@ -351,15 +360,16 @@ public class OutfitServiceImpl implements OutfitService {
                     Item bottom = jeans.get(j);
                     if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
-                        Outfit outfit = new Outfit();
-                        outfit.setId((long) outfitID);
-                        outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
-                        outfitItems.add(top);
-                        outfitItems.add(bottom);
-                        outfit.setItems(outfitItems);
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
 //                        writeOutfitToFile(outfit);
                     }
                 }
@@ -367,15 +377,16 @@ public class OutfitServiceImpl implements OutfitService {
                     Item bottom = pants.get(j);
                     if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
-                        Outfit outfit = new Outfit();
-                        outfit.setId((long) outfitID);
-                        outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
-                        outfitItems.add(top);
-                        outfitItems.add(bottom);
-                        outfit.setItems(outfitItems);
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                     }
                 }
@@ -383,15 +394,16 @@ public class OutfitServiceImpl implements OutfitService {
                     Item bottom = skirts.get(j);
                     if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
-                        Outfit outfit = new Outfit();
-                        outfit.setId((long) outfitID);
-                        outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
-                        outfitItems.add(top);
-                        outfitItems.add(bottom);
-                        outfit.setItems(outfitItems);
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                     }
                 }
@@ -411,15 +423,16 @@ public class OutfitServiceImpl implements OutfitService {
                     Item bottom = jeans.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
-                        Outfit outfit = new Outfit();
-                        outfit.setId((long) outfitID);
-                        outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
-                        outfitItems.add(top);
-                        outfitItems.add(bottom);
-                        outfit.setItems(outfitItems);
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
 //                        writeOutfitToFile(outfit);
                     }
                 }
@@ -427,15 +440,16 @@ public class OutfitServiceImpl implements OutfitService {
                     Item bottom = pants.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
-                        Outfit outfit = new Outfit();
-                        outfit.setId((long) outfitID);
-                        outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
-                        outfitItems.add(top);
-                        outfitItems.add(bottom);
-                        outfit.setItems(outfitItems);
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                     }
                 }
@@ -443,15 +457,16 @@ public class OutfitServiceImpl implements OutfitService {
                     Item bottom = skirts.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
-                        Outfit outfit = new Outfit();
-                        outfit.setId((long) outfitID);
-                        outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
-                        outfitItems.add(top);
-                        outfitItems.add(bottom);
-                        outfit.setItems(outfitItems);
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                     }
                 }
@@ -470,15 +485,16 @@ public class OutfitServiceImpl implements OutfitService {
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle())
                         {
-                        Outfit outfit = new Outfit();
-                        outfit.setId((long) outfitID);
-                        outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
-                        outfitItems.add(top);
-                        outfitItems.add(bottom);
-                        outfit.setItems(outfitItems);
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
 //                        writeOutfitToFile(outfit);
                         }
                 }
@@ -486,15 +502,16 @@ public class OutfitServiceImpl implements OutfitService {
                     Item bottom = pants.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
-                        Outfit outfit = new Outfit();
-                        outfit.setId((long) outfitID);
-                        outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
-                        outfitItems.add(top);
-                        outfitItems.add(bottom);
-                        outfit.setItems(outfitItems);
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                     }
                 }
@@ -502,15 +519,16 @@ public class OutfitServiceImpl implements OutfitService {
                     Item bottom = skirts.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
-                        Outfit outfit = new Outfit();
-                        outfit.setId((long) outfitID);
-                        outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
-                        outfitItems.add(top);
-                        outfitItems.add(bottom);
-                        outfit.setItems(outfitItems);
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                     }
                 }
@@ -555,6 +573,7 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
                     outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
                     outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
@@ -570,6 +589,7 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
                     outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
                     outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
@@ -585,6 +605,7 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
                     outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
                     outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
@@ -608,6 +629,7 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
                     outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
                     outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
@@ -623,6 +645,7 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
                     outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
                     outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
@@ -638,6 +661,7 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
                     outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
                     outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
@@ -661,6 +685,7 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
                     outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
                     outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
@@ -676,6 +701,7 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
                     outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
                     outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
@@ -691,6 +717,7 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
                     outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
                     outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
