@@ -348,8 +348,11 @@ public class OutfitServiceImpl implements OutfitService {
             e.printStackTrace();
             outfitID = 1;
         }
+
+
+
         ColorGenerator colorGenerator = new ColorGenerator();
-        List<Outfit> outfitList = new ArrayList<Outfit>();
+        List<Outfit> outfitList = new ArrayList<>();
         List<Item> blouses = itemService.findItemsByCategory(ItemCategory.valueOf("BLOUSE"));
         System.out.println(blouses);
         List<Item> shirts = itemService.findItemsByCategory(ItemCategory.valueOf("SHIRT"));
@@ -383,7 +386,6 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setItems(outfitItems);
                             outfitList.add(outfit);
                             System.out.println(outfit);
-//                        writeOutfitToFile(outfit);
                     }
                 }
                 for(int j = 0; j < pants.toArray().length; j++){
@@ -400,7 +402,6 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setItems(outfitItems);
                             outfitList.add(outfit);
                             System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
                     }
                 }
                 for(int j = 0; j < skirts.toArray().length; j++){
@@ -417,7 +418,6 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setItems(outfitItems);
                             outfitList.add(outfit);
                             System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
                     }
                 }
 
@@ -446,7 +446,6 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setItems(outfitItems);
                             outfitList.add(outfit);
                             System.out.println(outfit);
-//                        writeOutfitToFile(outfit);
                     }
                 }
                 for (int j = 0; j < pants.toArray().length; j++) {
@@ -463,7 +462,6 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setItems(outfitItems);
                             outfitList.add(outfit);
                             System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
                     }
                 }
                 for (int j = 0; j < skirts.toArray().length; j++) {
@@ -480,7 +478,6 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setItems(outfitItems);
                             outfitList.add(outfit);
                             System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
                     }
                 }
             }
@@ -508,7 +505,6 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setItems(outfitItems);
                             outfitList.add(outfit);
                             System.out.println(outfit);
-//                        writeOutfitToFile(outfit);
                         }
                 }
                 for (int j = 0; j < pants.toArray().length; j++) {
@@ -525,7 +521,6 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setItems(outfitItems);
                             outfitList.add(outfit);
                             System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
                     }
                 }
                 for (int j = 0; j < skirts.toArray().length; j++) {
