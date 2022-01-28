@@ -132,4 +132,40 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    @Override
+    public List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory){
+        List<Item> items = new ArrayList<Item>();
+        JSONParser jsonParser = new JSONParser();
+        try (FileReader reader = new FileReader("src/main/java/com/example/smartwardrobe/json/store.json"))
+        {
+            //Read JSON file
+            JSONObject obj = (JSONObject) jsonParser.parse(reader);
+
+            JSONArray itemList = (JSONArray) obj.get("items");
+            for(int i = 0;i<itemList.toArray().length;i++)
+            {
+                JSONObject jsonItem = (JSONObject) itemList.get(i);
+//                System.out.println(item);
+                Item item = new Item();
+                item.setMaterial(Material.valueOf((String) jsonItem.get("material")));
+                item.setSize(Size.valueOf((String) jsonItem.get("size")));
+                item.setCode((String) jsonItem.get("code"));
+                item.setItemColor(ItemColor.valueOf((String) jsonItem.get("itemColor")));
+                item.setStyle(Style.valueOf((String)  jsonItem.get("style")));
+                item.setItemCategory(ItemCategory.valueOf((String)  jsonItem.get("itemCategory")));
+                item.setWashingZoneColor(WashingZoneColor.valueOf((String) jsonItem.get("washingZoneColor")));
+
+                if(item.getItemCategory() == itemCategory){
+                    items.add(item);
+                }
+            }
+            System.out.println(itemList);
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        return items;
+    }
+
 }

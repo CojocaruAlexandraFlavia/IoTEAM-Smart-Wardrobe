@@ -19,4 +19,5 @@ public interface ItemService {
     void updateItemAfterAddingOutfit(Long itemId);
     JSONArray createJsonArrayOfItems(List<Item> items);
     void readAllItemsFromStore();
+    List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory);
 }
