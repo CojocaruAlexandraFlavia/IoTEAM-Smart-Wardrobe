@@ -96,7 +96,7 @@ public class OutfitServiceImpl implements OutfitService {
         jsonObject.put("items", itemService.createJsonArrayOfItems(outfit.getItems()));
         jsonArray.add(jsonObject);
         try {
-            FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/genoutfits.json");
+            FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/outfits.json");
             file.write(jsonArray.toJSONString());
             file.close();
             //Files.write(Paths.get("src/main/java/com/example/smartwardrobe/json/outfits.json"),jsonObject.toJSONString().getBytes());
@@ -122,6 +122,15 @@ public class OutfitServiceImpl implements OutfitService {
 
     @Override
     public List<Outfit> recommendMonochromaticOutfit(){
+        int outfitID;
+        JSONParser parser = new JSONParser();
+        try{
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json")); ;
+            outfitID = jsonArray.size();
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+            outfitID = 1;
+        }
         ColorGenerator colorGenerator = new ColorGenerator();
         List<Outfit> outfitList = new ArrayList<Outfit>();
         List<Item> blouses = itemService.findItemsByCategory(ItemCategory.BLOUSE);
@@ -147,6 +156,8 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -161,6 +172,8 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -175,6 +188,8 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -197,6 +212,8 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -211,6 +228,8 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -225,6 +244,8 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -247,6 +268,8 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -261,6 +284,8 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -275,6 +300,8 @@ public class OutfitServiceImpl implements OutfitService {
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                     if(bottom.getStyle() == top.getStyle()){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -290,6 +317,15 @@ public class OutfitServiceImpl implements OutfitService {
     }
     @Override
     public List<Outfit> recommendAnalogousOutfit(){
+        int outfitID;
+        JSONParser parser = new JSONParser();
+        try{
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json")); ;
+            outfitID = jsonArray.size();
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+            outfitID = 1;
+        }
         ColorGenerator colorGenerator = new ColorGenerator();
         List<Outfit> outfitList = new ArrayList<Outfit>();
         List<Item> blouses = itemService.findItemsByCategory(ItemCategory.valueOf("BLOUSE"));
@@ -316,6 +352,8 @@ public class OutfitServiceImpl implements OutfitService {
                     if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
                         Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfitID += 1;
                         List<Item> outfitItems = new ArrayList<Item>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
@@ -330,6 +368,8 @@ public class OutfitServiceImpl implements OutfitService {
                     if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
                         Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfitID += 1;
                         List<Item> outfitItems = new ArrayList<Item>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
@@ -344,6 +384,8 @@ public class OutfitServiceImpl implements OutfitService {
                     if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
                         Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfitID += 1;
                         List<Item> outfitItems = new ArrayList<Item>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
@@ -370,6 +412,8 @@ public class OutfitServiceImpl implements OutfitService {
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
                         Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfitID += 1;
                         List<Item> outfitItems = new ArrayList<Item>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
@@ -384,6 +428,8 @@ public class OutfitServiceImpl implements OutfitService {
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
                         Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfitID += 1;
                         List<Item> outfitItems = new ArrayList<Item>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
@@ -398,6 +444,8 @@ public class OutfitServiceImpl implements OutfitService {
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
                         Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfitID += 1;
                         List<Item> outfitItems = new ArrayList<Item>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
@@ -423,6 +471,8 @@ public class OutfitServiceImpl implements OutfitService {
                         if(bottom.getStyle() == top.getStyle())
                         {
                         Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfitID += 1;
                         List<Item> outfitItems = new ArrayList<Item>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
@@ -437,6 +487,8 @@ public class OutfitServiceImpl implements OutfitService {
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
                         Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfitID += 1;
                         List<Item> outfitItems = new ArrayList<Item>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
@@ -451,6 +503,8 @@ public class OutfitServiceImpl implements OutfitService {
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
                         if(bottom.getStyle() == top.getStyle()){
                         Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfitID += 1;
                         List<Item> outfitItems = new ArrayList<Item>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
@@ -467,6 +521,15 @@ public class OutfitServiceImpl implements OutfitService {
     }
     @Override
     public List<Outfit> recommendPastelOutfit(){
+        int outfitID;
+        JSONParser parser = new JSONParser();
+        try{
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json")); ;
+            outfitID = jsonArray.size();
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+            outfitID = 1;
+        }
         ColorGenerator colorGenerator = new ColorGenerator();
         List<Outfit> outfitList = new ArrayList<Outfit>();
         List<Item> blouses = itemService.findItemsByCategory(ItemCategory.valueOf("BLOUSE"));
@@ -491,6 +554,8 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = jeans.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -504,6 +569,8 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = pants.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -517,6 +584,8 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = skirts.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -538,6 +607,8 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = jeans.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -551,6 +622,8 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = pants.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -564,6 +637,8 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = skirts.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -585,6 +660,8 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = jeans.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -598,6 +675,8 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = pants.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
@@ -611,6 +690,8 @@ public class OutfitServiceImpl implements OutfitService {
                 Item bottom = skirts.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
                     Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfitID += 1;
                     List<Item> outfitItems = new ArrayList<Item>();
                     outfitItems.add(top);
                     outfitItems.add(bottom);
