@@ -1,5 +1,8 @@
 package com.example.smartwardrobe.service.impl;
 
+import com.example.smartwardrobe.colorpalette.ColorGenerator;
+import com.example.smartwardrobe.enums.ItemCategory;
+import com.example.smartwardrobe.enums.ItemColor;
 import com.example.smartwardrobe.model.History;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.model.Outfit;
@@ -8,6 +11,7 @@ import com.example.smartwardrobe.repository.OutfitRepository;
 import com.example.smartwardrobe.service.HistoryService;
 import com.example.smartwardrobe.service.ItemService;
 import com.example.smartwardrobe.service.OutfitService;
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -19,8 +23,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class OutfitServiceImpl implements OutfitService {
@@ -49,6 +52,9 @@ public class OutfitServiceImpl implements OutfitService {
         historyService.saveHistory(history);
 
         writeOutfitToFile(savedOutfit);
+
+//        writeOutfitCategoryToFile(savedOutfit);
+
 
         return savedOutfit;
     }
@@ -111,4 +117,620 @@ public class OutfitServiceImpl implements OutfitService {
         }
         return null;
     }
+
+
+
+    @Override
+    public List<Outfit> recommendMonochromaticOutfit(){
+        int outfitID;
+        JSONParser parser = new JSONParser();
+        try{
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json")); ;
+            outfitID = jsonArray.size();
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+            outfitID = 1;
+        }
+        ColorGenerator colorGenerator = new ColorGenerator();
+        List<Outfit> outfitList = new ArrayList<Outfit>();
+        List<Item> blouses = itemService.findItemsByCategory(ItemCategory.BLOUSE);
+        System.out.println(blouses);
+        List<Item> shirts = itemService.findItemsByCategory(ItemCategory.valueOf("SHIRT"));
+        System.out.println(shirts);
+        List<Item> tshirts = itemService.findItemsByCategory(ItemCategory.valueOf("TSHIRT"));
+        System.out.println(tshirts);
+        List<Item> jeans = itemService.findItemsByCategory(ItemCategory.valueOf("JEANS"));
+        System.out.println(jeans);
+        List<Item> pants = itemService.findItemsByCategory(ItemCategory.valueOf("PANTS"));
+        System.out.println(pants);
+        List<Item> skirts = itemService.findItemsByCategory(ItemCategory.valueOf("SKIRT"));
+        System.out.println(skirts);
+        for(int i = 0; i < blouses.toArray().length; i++){
+            Item top = blouses.get(i);
+            ItemColor topColor = top.getItemColor();
+            ItemColor[] colors = colorGenerator.monoChromatic(topColor);
+            ItemColor firstColor = colors[0];
+            ItemColor secondColor = colors[1];
+            for(int j = 0; j < jeans.toArray().length; j++){
+                Item bottom = jeans.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                    if(bottom.getStyle() == top.getStyle()){
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < pants.toArray().length; j++){
+                Item bottom = pants.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                    if(bottom.getStyle() == top.getStyle()){
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < skirts.toArray().length; j++){
+                Item bottom = skirts.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                    if(bottom.getStyle() == top.getStyle()){
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+
+        }
+        for(int i = 0; i < shirts.toArray().length; i++){
+            Item top = shirts.get(i);
+            ItemColor topColor = top.getItemColor();
+            ItemColor[] colors = colorGenerator.monoChromatic(topColor);
+            ItemColor firstColor = colors[0];
+            ItemColor secondColor = colors[1];
+            for(int j = 0; j < jeans.toArray().length; j++){
+                Item bottom = jeans.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                    if(bottom.getStyle() == top.getStyle()){
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < pants.toArray().length; j++){
+                Item bottom = pants.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                    if(bottom.getStyle() == top.getStyle()){
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < skirts.toArray().length; j++){
+                Item bottom = skirts.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                    if(bottom.getStyle() == top.getStyle()){
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+
+        }
+        for(int i = 0; i < tshirts.toArray().length; i++){
+            Item top = tshirts.get(i);
+            ItemColor topColor = top.getItemColor();
+            ItemColor[] colors = colorGenerator.monoChromatic(topColor);
+            ItemColor firstColor = colors[0];
+            ItemColor secondColor = colors[1];
+            for(int j = 0; j < jeans.toArray().length; j++){
+                Item bottom = jeans.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                    if(bottom.getStyle() == top.getStyle()){
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < pants.toArray().length; j++){
+                Item bottom = pants.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                    if(bottom.getStyle() == top.getStyle()){
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < skirts.toArray().length; j++){
+                Item bottom = skirts.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                    if(bottom.getStyle() == top.getStyle()){
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT"+outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(top);
+                        outfitItems.add(bottom);
+                        outfit.setItems(outfitItems);
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+
+        }
+        return outfitList;
+    }
+    @Override
+    public List<Outfit> recommendAnalogousOutfit(){
+        int outfitID;
+        JSONParser parser = new JSONParser();
+        try{
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json")); ;
+            outfitID = jsonArray.size();
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+            outfitID = 1;
+        }
+        ColorGenerator colorGenerator = new ColorGenerator();
+        List<Outfit> outfitList = new ArrayList<Outfit>();
+        List<Item> blouses = itemService.findItemsByCategory(ItemCategory.valueOf("BLOUSE"));
+        System.out.println(blouses);
+        List<Item> shirts = itemService.findItemsByCategory(ItemCategory.valueOf("SHIRT"));
+        System.out.println(shirts);
+        List<Item> tshirts = itemService.findItemsByCategory(ItemCategory.valueOf("TSHIRT"));
+        System.out.println(tshirts);
+        List<Item> jeans = itemService.findItemsByCategory(ItemCategory.valueOf("JEANS"));
+        System.out.println(jeans);
+        List<Item> pants = itemService.findItemsByCategory(ItemCategory.valueOf("PANTS"));
+        System.out.println(pants);
+        List<Item> skirts = itemService.findItemsByCategory(ItemCategory.valueOf("SKIRT"));
+        System.out.println(skirts);
+        for(int i = 0; i < blouses.toArray().length; i++){
+            Item top = blouses.get(i);
+            ItemColor topColor = top.getItemColor();
+            ItemColor[] colors = colorGenerator.analogous(topColor);
+            if(colors != null){
+                ItemColor firstColor = colors[0];
+                ItemColor secondColor = colors[1];
+                for(int j = 0; j < jeans.toArray().length; j++){
+                    Item bottom = jeans.get(j);
+                    if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                        if(bottom.getStyle() == top.getStyle()){
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+//                        writeOutfitToFile(outfit);
+                    }
+                }
+                for(int j = 0; j < pants.toArray().length; j++){
+                    Item bottom = pants.get(j);
+                    if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                        if(bottom.getStyle() == top.getStyle()){
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                    }
+                }
+                for(int j = 0; j < skirts.toArray().length; j++){
+                    Item bottom = skirts.get(j);
+                    if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                        if(bottom.getStyle() == top.getStyle()){
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                    }
+                }
+
+            }
+
+
+        }
+        for(int i = 0; i < shirts.toArray().length; i++){
+            Item top = shirts.get(i);
+            ItemColor topColor = top.getItemColor();
+            ItemColor[] colors = colorGenerator.analogous(topColor);
+            if(colors != null) {
+                ItemColor firstColor = colors[0];
+                ItemColor secondColor = colors[1];
+                for (int j = 0; j < jeans.toArray().length; j++) {
+                    Item bottom = jeans.get(j);
+                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                        if(bottom.getStyle() == top.getStyle()){
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+//                        writeOutfitToFile(outfit);
+                    }
+                }
+                for (int j = 0; j < pants.toArray().length; j++) {
+                    Item bottom = pants.get(j);
+                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                        if(bottom.getStyle() == top.getStyle()){
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                    }
+                }
+                for (int j = 0; j < skirts.toArray().length; j++) {
+                    Item bottom = skirts.get(j);
+                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                        if(bottom.getStyle() == top.getStyle()){
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                    }
+                }
+            }
+
+        }
+        for(int i = 0; i < tshirts.toArray().length; i++){
+            Item top = tshirts.get(i);
+            ItemColor topColor = top.getItemColor();
+            ItemColor[] colors = colorGenerator.analogous(topColor);
+            if(colors != null) {
+                ItemColor firstColor = colors[0];
+                ItemColor secondColor = colors[1];
+                for (int j = 0; j < jeans.toArray().length; j++) {
+                    Item bottom = jeans.get(j);
+                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                        if(bottom.getStyle() == top.getStyle())
+                        {
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+//                        writeOutfitToFile(outfit);
+                        }
+                }
+                for (int j = 0; j < pants.toArray().length; j++) {
+                    Item bottom = pants.get(j);
+                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                        if(bottom.getStyle() == top.getStyle()){
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                    }
+                }
+                for (int j = 0; j < skirts.toArray().length; j++) {
+                    Item bottom = skirts.get(j);
+                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
+                        if(bottom.getStyle() == top.getStyle()){
+                            Outfit outfit = new Outfit();
+                            outfit.setId((long) outfitID);
+                            outfit.setDescription("OUTFIT"+outfitID);
+                            outfitID += 1;
+                            List<Item> outfitItems = new ArrayList<Item>();
+                            outfitItems.add(top);
+                            outfitItems.add(bottom);
+                            outfit.setItems(outfitItems);
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                    }
+                }
+            }
+
+        }
+        return outfitList;
+    }
+    @Override
+    public List<Outfit> recommendPastelOutfit(){
+        int outfitID;
+        JSONParser parser = new JSONParser();
+        try{
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json")); ;
+            outfitID = jsonArray.size();
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+            outfitID = 1;
+        }
+        ColorGenerator colorGenerator = new ColorGenerator();
+        List<Outfit> outfitList = new ArrayList<Outfit>();
+        List<Item> blouses = itemService.findItemsByCategory(ItemCategory.valueOf("BLOUSE"));
+        System.out.println(blouses);
+        List<Item> shirts = itemService.findItemsByCategory(ItemCategory.valueOf("SHIRT"));
+        System.out.println(shirts);
+        List<Item> tshirts = itemService.findItemsByCategory(ItemCategory.valueOf("TSHIRT"));
+        System.out.println(tshirts);
+        List<Item> jeans = itemService.findItemsByCategory(ItemCategory.valueOf("JEANS"));
+        System.out.println(jeans);
+        List<Item> pants = itemService.findItemsByCategory(ItemCategory.valueOf("PANTS"));
+        System.out.println(pants);
+        List<Item> skirts = itemService.findItemsByCategory(ItemCategory.valueOf("SKIRT"));
+        System.out.println(skirts);
+        for(int i = 0; i < blouses.toArray().length; i++){
+            Item top = blouses.get(i);
+            ItemColor topColor = top.getItemColor();
+            ItemColor[] colors = colorGenerator.pastel(topColor);
+            ItemColor firstColor = colors[0];
+            ItemColor secondColor = colors[1];
+            for(int j = 0; j < jeans.toArray().length; j++){
+                Item bottom = jeans.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(top);
+                    outfitItems.add(bottom);
+                    outfit.setItems(outfitItems);
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < pants.toArray().length; j++){
+                Item bottom = pants.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(top);
+                    outfitItems.add(bottom);
+                    outfit.setItems(outfitItems);
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < skirts.toArray().length; j++){
+                Item bottom = skirts.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(top);
+                    outfitItems.add(bottom);
+                    outfit.setItems(outfitItems);
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+
+        }
+        for(int i = 0; i < shirts.toArray().length; i++){
+            Item top = shirts.get(i);
+            ItemColor topColor = top.getItemColor();
+            ItemColor[] colors = colorGenerator.pastel(topColor);
+            ItemColor firstColor = colors[0];
+            ItemColor secondColor = colors[1];
+            for(int j = 0; j < jeans.toArray().length; j++){
+                Item bottom = jeans.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(top);
+                    outfitItems.add(bottom);
+                    outfit.setItems(outfitItems);
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < pants.toArray().length; j++){
+                Item bottom = pants.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(top);
+                    outfitItems.add(bottom);
+                    outfit.setItems(outfitItems);
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < skirts.toArray().length; j++){
+                Item bottom = skirts.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(top);
+                    outfitItems.add(bottom);
+                    outfit.setItems(outfitItems);
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+
+        }
+        for(int i = 0; i < tshirts.toArray().length; i++){
+            Item top = tshirts.get(i);
+            ItemColor topColor = top.getItemColor();
+            ItemColor[] colors = colorGenerator.pastel(topColor);
+            ItemColor firstColor = colors[0];
+            ItemColor secondColor = colors[1];
+            for(int j = 0; j < jeans.toArray().length; j++){
+                Item bottom = jeans.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(top);
+                    outfitItems.add(bottom);
+                    outfit.setItems(outfitItems);
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < pants.toArray().length; j++){
+                Item bottom = pants.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(top);
+                    outfitItems.add(bottom);
+                    outfit.setItems(outfitItems);
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+            for(int j = 0; j < skirts.toArray().length; j++){
+                Item bottom = skirts.get(j);
+                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor){
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT"+outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(top);
+                    outfitItems.add(bottom);
+                    outfit.setItems(outfitItems);
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+//                    writeOutfitToFile(outfit);
+                }
+            }
+
+        }
+        return outfitList;
+    }
+
 }
