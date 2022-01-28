@@ -35,15 +35,30 @@ public class OutfitController {
     }
     @PostMapping("/recommendMonochromaticOutfit")
     public List<Outfit> recommendMonochromaticOutfit(){
-        return outfitService.recommendMonochromaticOutfit();
+        try {
+            return outfitService.recommendMonochromaticOutfit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     @PostMapping("/recommendAnalogousOutfit")
     public List<Outfit> recommendAnalogousOutfit(){
-        return outfitService.recommendAnalogousOutfit();
+        try {
+            return outfitService.recommendAnalogousOutfit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     @PostMapping("/recommendPastelOutfit")
     public List<Outfit> recommendPastelOutfit(){
-        return outfitService.recommendPastelOutfit();
+        try {
+            return outfitService.recommendPastelOutfit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
