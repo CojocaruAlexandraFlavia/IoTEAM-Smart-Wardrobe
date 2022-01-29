@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -37,6 +38,11 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> findItemsByCategory(ItemCategory itemCategory) {
         return itemRepository.findByItemCategory(itemCategory);
+    }
+    @Override
+    public List<Item> findItemIfDirty()
+    {
+        return itemRepository.findItemIfDirty();
     }
 
     @Override
@@ -73,6 +79,58 @@ public class ItemServiceImpl implements ItemService {
         item.setLastWearing(LocalDate.now());
         saveItem(item);
     }
+
+    @Override
+    public List<Item> getDirtyItems(String color)
+    {
+        List<Item> whiteDirtyItems = new ArrayList<>();
+        List<Item> blackDirtyItems = new ArrayList<>();
+        List<Item> colorDirtyItems = new ArrayList<>();
+        List<Item> dirtyItems = findItemIfDirty();
+        for (Item i: dirtyItems) {
+            if(i.getWashingZoneColor().name().equals("WHITE"))
+            {
+                whiteDirtyItems.add(i);
+            }
+            if(i.getWashingZoneColor().name().equals("BLACK"))
+            {
+                blackDirtyItems.add(i);
+            }
+            if(i.getWashingZoneColor().name().equals("COLOR")){
+                colorDirtyItems.add(i);
+            }
+        }
+        // daca se actualizeaaza statusul in baza de date de la purtat la spalat,
+        // cum arata aceste arraylists?
+
+//        if(whiteDirtyItems.size() >= 3)
+//        {
+//            System.out.println("U have more than 3 white items to wash");
+//        }
+//        if(blackDirtyItems.size() >= 3)
+//        {
+//            System.out.println("U have more than 3 black items to wash");
+//        }
+//        if(colorDirtyItems.size() >= 3)
+//        {
+//            System.out.println("U have more than 3 colored items to wash");
+//        }
+
+
+        if(color.equalsIgnoreCase("white"))
+        {
+            return whiteDirtyItems;
+        }
+        if (color.equalsIgnoreCase("black"))
+        {
+            return blackDirtyItems;
+        }
+
+        else
+            return colorDirtyItems;
+
+    }
+
 
     @Override
     public JSONArray createJsonArrayOfItems(List<Item> items) {

@@ -12,6 +12,8 @@ public interface ItemService {
     Item saveItem(Item item);
     Item findItemById(Long id);
     List<Item> findItemsByCategory(ItemCategory itemCategory);
+    List<Item> findItemIfDirty();
+    List<Item> getDirtyItems(String color);
     void deleteItemById(Long id);
     List<Item> findAllItems();
     List<Item> getItemsByStyleName(String styleName);

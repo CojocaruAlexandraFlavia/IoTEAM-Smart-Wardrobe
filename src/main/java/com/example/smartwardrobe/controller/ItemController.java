@@ -29,6 +29,16 @@ public class ItemController {
         return itemService.findAllItems();
     }
 
+    @GetMapping("/findDirty")
+    public List<Item> getDirtyItems(){
+        return itemService.findItemIfDirty();
+    }
+
+    @GetMapping("/findDirtyByColor/{color}")
+    public List<Item> getDirtyItemsByColor(@PathVariable("color") String color){
+        return itemService.getDirtyItems(color);
+    }
+
     @GetMapping("/{id}")
     public Item getItemById(@PathVariable("id") Long id){
         return itemService.findItemById(id);

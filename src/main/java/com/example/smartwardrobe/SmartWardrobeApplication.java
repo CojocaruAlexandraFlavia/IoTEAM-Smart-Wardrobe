@@ -24,4 +24,6 @@ public class SmartWardrobeApplication {
 		SpringApplication.run(SmartWardrobeApplication.class, args);
 	}
 
+
+
 }
