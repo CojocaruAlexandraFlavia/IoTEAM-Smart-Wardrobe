@@ -2,12 +2,16 @@ package com.example.smartwardrobe.controller;
 
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.service.ItemService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/item")
@@ -27,8 +31,15 @@ public class ItemController {
     }
 
     @GetMapping("/findDirtyByColor/{color}")
-    public List<Item> getDirtyItemsByColor(@PathVariable("color") String color){
-        return itemService.getDirtyItems(color);
+    public ResponseEntity<?> getDirtyItemsByColor(@PathVariable("color") String color) throws FileNotFoundException {
+        Pair<List<Item>, Set<JSONObject>> item = itemService.getDirtyItemsByColor(color);
+        if(color.equalsIgnoreCase("WHITE") || color.equalsIgnoreCase("BLACK") ||
+        color.equalsIgnoreCase("COLOR")){
+            return ResponseEntity.ok(item);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("WASH COLOR DOESN'T EXIST!");
+        }
+
     }
 
     @GetMapping("/{id}")
