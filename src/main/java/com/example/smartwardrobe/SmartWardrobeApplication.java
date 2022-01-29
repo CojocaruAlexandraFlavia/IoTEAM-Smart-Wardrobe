@@ -14,11 +14,11 @@ public class SmartWardrobeApplication {
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-		try{
-			WashingController.getInstructions();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try{
+//			WashingController.getInstructions();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		SpringApplication.run(SmartWardrobeApplication.class, args);
 	}
 
