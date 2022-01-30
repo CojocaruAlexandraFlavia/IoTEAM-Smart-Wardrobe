@@ -166,4 +166,21 @@ public class Coat {
     public Long getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":" + id +
+                ", \"material\":\"" + material.toString()+"\"" +
+                ", \"size\":\"" + size + "\""+
+                ", \"code\":\"" + code + "\"" +
+                ", \"itemColor\":\"" + itemColor.toString() +"\""+
+                ", \"style\":\"" + style.toString() +"\""+
+                ", \"coatCategory\":\"" + coatCategory.toString() +"\""+
+//                ", \"lastWearing\":" + lastWearing +
+//                ", \"lastWashingDay\":" + lastWashingDay +
+//                ", \"nrOfWearsSinceLastWash\":" + nrOfWearsSinceLastWash +
+                ", \"washingZoneColor\":\"" + washingZoneColor.toString() +"\""+
+                '}';
+    }
 }

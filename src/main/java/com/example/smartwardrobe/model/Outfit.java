@@ -86,4 +86,14 @@ public class Outfit {
     public void setItems(List<Item> items) {
         this.items = items;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":" + id +
+                ", \"description\":\"" + description + '\"' +
+                ", \"coat\":" + coat +
+                ", \"items\":" + items +
+                '}';
+    }
 }

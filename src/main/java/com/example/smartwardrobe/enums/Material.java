@@ -6,4 +6,5 @@ public enum Material {
     COTTON,
     CASHMERE,
     POLYESTER
+
 }

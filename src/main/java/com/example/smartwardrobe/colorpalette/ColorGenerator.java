@@ -112,14 +112,14 @@ public class ColorGenerator {
         max = colors.length - 1;
         ItemColor color2, color3;
         if(i > 0 && i < max) {
-             color2 = colors[i - 1][j];
-             color3 = colors[i + 1][j];
+            color2 = colors[i - 1][j];
+            color3 = colors[i + 1][j];
         } else if (i == 0){
-             color2 = colors[max][j];
-             color3 = colors[i + 1][j];
+            color2 = colors[max][j];
+            color3 = colors[i + 1][j];
         } else {
-             color2 = colors[i - 1][j];
-             color3 = colors[0][j];
+            color2 = colors[i - 1][j];
+            color3 = colors[0][j];
         }
         return new ItemColor[] {color2, color3};
     }

@@ -1,3 +1,4 @@
+
 package com.example.smartwardrobe.service;
 
 import com.example.smartwardrobe.model.Outfit;
@@ -16,8 +17,8 @@ public interface OutfitService{
     void writeOutfitToFile(Outfit outfit);
     JSONArray getOutfitsFromFile();
 
-    List<Outfit> recommendMonochromaticOutfit();
-    List<Outfit> recommendAnalogousOutfit();
-    List<Outfit> recommendPastelOutfit();
-
+    List<Outfit> recommendMonochromaticOutfit() throws Exception;
+    List<Outfit> recommendAnalogousOutfit() throws Exception;
+    List<Outfit> recommendPastelOutfit() throws Exception;
+    void selectRecommendedOutfit(Integer id);
 }

@@ -4,6 +4,7 @@ import com.example.smartwardrobe.enums.*;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.repository.ItemRepository;
 import com.example.smartwardrobe.service.ItemService;
+import org.springframework.data.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,8 +16,7 @@ import org.apache.commons.lang3.EnumUtils;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -37,6 +37,11 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> findItemsByCategory(ItemCategory itemCategory) {
         return itemRepository.findByItemCategory(itemCategory);
+    }
+    @Override
+    public List<Item> findItemIfDirty()
+    {
+        return itemRepository.findItemIfDirty();
     }
 
     @Override
@@ -73,6 +78,38 @@ public class ItemServiceImpl implements ItemService {
         item.setLastWearing(LocalDate.now());
         saveItem(item);
     }
+    @Override
+    public Pair<List<Item>, Set<JSONObject>> getDirtyItemsByColor(String color) {
+
+
+        List<Item> specificDirtyItems = new ArrayList<>();
+        List<Item> allDirtyItems = findItemIfDirty();
+        Set<JSONObject> instructions  = new HashSet<>();
+        JSONParser jsonParser = new JSONParser();
+        JSONObject da = null;
+        try(FileReader reader = new FileReader("src/main/java/com/example/smartwardrobe/json/wash_instructions.json"))
+        {
+            Object obj = jsonParser.parse(reader);
+            JSONObject d = (JSONObject) obj;
+
+            for (Item i: allDirtyItems) {
+                if(i.getWashingZoneColor().name().equalsIgnoreCase(color))
+                {
+                    specificDirtyItems.add(i);
+                    String specificInstr = i.getMaterial().name();
+                    da = (JSONObject) d.get(specificInstr);
+                    instructions.add(da);
+
+                }
+            }
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        return Pair.of(specificDirtyItems, instructions);
+
+    }
+
 
     @Override
     public JSONArray createJsonArrayOfItems(List<Item> items) {
