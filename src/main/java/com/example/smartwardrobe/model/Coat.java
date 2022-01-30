@@ -177,9 +177,9 @@ public class Coat {
                 ", \"itemColor\":\"" + itemColor.toString() +"\""+
                 ", \"style\":\"" + style.toString() +"\""+
                 ", \"coatCategory\":\"" + coatCategory.toString() +"\""+
-                ", \"lastWearing\":" + lastWearing.toString() +
-                ", \"lastWashingDay\":" + lastWashingDay.toString() +
-                ", \"nrOfWearsSinceLastWash\":" + nrOfWearsSinceLastWash +
+//                ", \"lastWearing\":" + lastWearing +
+//                ", \"lastWashingDay\":" + lastWashingDay +
+//                ", \"nrOfWearsSinceLastWash\":" + nrOfWearsSinceLastWash +
                 ", \"washingZoneColor\":\"" + washingZoneColor.toString() +"\""+
                 '}';
     }

@@ -188,9 +188,9 @@ public class Item {
                 ", \"itemColor\":\"" + itemColor.toString() +"\""+
                 ", \"style\":\"" + style.toString() +"\""+
                 ", \"itemCategory\":\"" + itemCategory.toString()+"\""+
-                ", \"lastWearing\":" + lastWearing +
-                ", \"lastWashingDay\":" + lastWashingDay +
-                ", \"nrOfWearsSinceLastWash\":" + nrOfWearsSinceLastWash +
+//                ", \"lastWearing\":" + lastWearing +
+//                ", \"lastWashingDay\":" + lastWashingDay +
+//                ", \"nrOfWearsSinceLastWash\":" + nrOfWearsSinceLastWash +
                 ", \"washingZoneColor\":\"" + washingZoneColor.toString() +"\""+
                 '}';
     }
