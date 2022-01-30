@@ -1,5 +1,6 @@
 package com.example.smartwardrobe.service;
 
+import com.example.smartwardrobe.enums.Size;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.model.Outfit;
 import com.example.smartwardrobe.model.User;
@@ -17,6 +18,6 @@ public interface UserService{
     JSONArray getUsersFromFile();
     User saveUserFromFile(User user);
     JSONArray createJsonArrayOfItems(List<Item> items);
-    String calculateUserSize(User user);
+    Size calculateUserSize(User user);
 
 }

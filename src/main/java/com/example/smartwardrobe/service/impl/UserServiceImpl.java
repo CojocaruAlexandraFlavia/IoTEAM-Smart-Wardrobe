@@ -3,6 +3,7 @@ package com.example.smartwardrobe.service.impl;
 import com.example.smartwardrobe.enums.EyeColor;
 import com.example.smartwardrobe.enums.Gender;
 import com.example.smartwardrobe.enums.HairColor;
+import com.example.smartwardrobe.enums.Size;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.model.Outfit;
 import com.example.smartwardrobe.model.User;
@@ -145,56 +146,56 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String calculateUserSize(User user){
+    public Size calculateUserSize(User user){
         double weight = user.getWeight();
         double height = user.getHeight();
         if(weight <= 50){
-            return "XS";
+            return Size.XS;
         }
         if(weight > 50 && weight <= 55 && height >= 155){
-            return "XS";
+            return Size.XS;
         }
         if(weight > 50 && weight <= 55 && height < 155){
-            return "S";
+            return Size.S;
         }
         if(weight > 55 && weight <= 60 && height > 170){
-            return "XS";
+            return Size.XS;
         }
         if(weight > 55 && weight <= 60 && height >= 155 && height < 170){
-            return "S";
+            return Size.S;
         }
         if(weight > 60 && weight <= 65 && height > 160){
-            return "S";
+            return Size.S;
         }
         if(weight > 60 && weight <= 65 && height < 160){
-            return "M";
+            return Size.M;
         }
         if(weight > 65 && weight <= 70 && height < 165){
-            return "L";
+            return Size.L;
         }
         if(weight > 65 && weight <= 70 && height >= 165){
-            return "M";
+            return Size.M;
         }
         if(weight > 70 && weight <= 75 && height < 155){
-            return "XL";
+            return Size.XL;
         }
         if(weight > 70 && weight <= 75 && height >= 155 && height < 170){
-            return "L";
+            return Size.L;
         }
         if(weight > 70 && weight <= 75 && height > 170){
-            return "M";
+            return Size.M;
         }
         if(weight > 75 && weight <= 80 && height < 160){
-            return "XL";
+            return Size.XL;
         }
         if(weight > 75 && weight <= 80 && height >= 160 ){
-            return "L";
+            return Size.L;
         }
         if(weight > 80 && weight <= 90){
-            return "XL";
+            return Size.XL;
         }
         if(weight > 90){
-            return "XXL";
+            return Size.XXL;
         }
 
         return null;

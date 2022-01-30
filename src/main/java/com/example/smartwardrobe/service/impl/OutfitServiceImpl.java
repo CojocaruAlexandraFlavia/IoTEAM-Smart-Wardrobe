@@ -4,16 +4,10 @@ import com.example.smartwardrobe.colorpalette.ColorGenerator;
 import com.example.smartwardrobe.controller.WeatherController;
 import com.example.smartwardrobe.enums.*;
 import com.example.smartwardrobe.exceptions.ItemException;
-import com.example.smartwardrobe.model.Coat;
-import com.example.smartwardrobe.model.History;
-import com.example.smartwardrobe.model.Item;
-import com.example.smartwardrobe.model.Outfit;
+import com.example.smartwardrobe.model.*;
 import com.example.smartwardrobe.repository.ItemRepository;
 import com.example.smartwardrobe.repository.OutfitRepository;
-import com.example.smartwardrobe.service.CoatService;
-import com.example.smartwardrobe.service.HistoryService;
-import com.example.smartwardrobe.service.ItemService;
-import com.example.smartwardrobe.service.OutfitService;
+import com.example.smartwardrobe.service.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -45,6 +39,9 @@ public class OutfitServiceImpl implements OutfitService {
 
     @Autowired
     private CoatService coatService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public Outfit saveOutfit(Outfit outfit) {
@@ -148,6 +145,9 @@ public class OutfitServiceImpl implements OutfitService {
 
         Double temperature = WeatherController.getTemperature();
 
+        User user = userService.findUserById(1L);
+        Size userSize = userService.calculateUserSize(user);
+
         ColorGenerator colorGenerator = new ColorGenerator();
 
         List<Outfit> outfitList = new ArrayList<Outfit>();
@@ -175,7 +175,7 @@ public class OutfitServiceImpl implements OutfitService {
             for(int j = 0; j < jeans.toArray().length; j++){
                 Item bottom = jeans.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                    if(bottom.getStyle() == top.getStyle()){
+                    if(bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize){
                         Outfit outfit = new Outfit();
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT"+outfitID);
@@ -189,7 +189,7 @@ public class OutfitServiceImpl implements OutfitService {
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                    if(coat.getStyle() == top.getStyle()){
+                                    if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                         outfit.setCoat(coat);
                                     }
                             }
@@ -210,7 +210,7 @@ public class OutfitServiceImpl implements OutfitService {
             for(int j = 0; j < pants.toArray().length; j++){
                 Item bottom = pants.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                    if(bottom.getStyle() == top.getStyle()){
+                    if(bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize){
                         Outfit outfit = new Outfit();
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT"+outfitID);
@@ -224,7 +224,7 @@ public class OutfitServiceImpl implements OutfitService {
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                    if(coat.getStyle() == top.getStyle()){
+                                    if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                         outfit.setCoat(coat);
                                     }
                             }
@@ -246,7 +246,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for(int j = 0; j < skirts.toArray().length; j++){
                     Item bottom = skirts.get(j);
                     if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if(bottom.getStyle() == top.getStyle()){
+                        if(bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize){
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT"+outfitID);
@@ -260,7 +260,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                        if(coat.getStyle() == top.getStyle()){
+                                        if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -289,7 +289,7 @@ public class OutfitServiceImpl implements OutfitService {
             for (int j = 0; j < jeans.toArray().length; j++) {
                 Item bottom = jeans.get(j);
                 if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                    if (bottom.getStyle() == top.getStyle()) {
+                    if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                         Outfit outfit = new Outfit();
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT" + outfitID);
@@ -303,7 +303,7 @@ public class OutfitServiceImpl implements OutfitService {
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                    if(coat.getStyle() == top.getStyle()){
+                                    if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                         outfit.setCoat(coat);
                                     }
                             }
@@ -323,7 +323,7 @@ public class OutfitServiceImpl implements OutfitService {
             for (int j = 0; j < pants.toArray().length; j++) {
                 Item bottom = pants.get(j);
                 if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                    if (bottom.getStyle() == top.getStyle()) {
+                    if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                         Outfit outfit = new Outfit();
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT" + outfitID);
@@ -337,7 +337,7 @@ public class OutfitServiceImpl implements OutfitService {
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                    if(coat.getStyle() == top.getStyle()){
+                                    if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                         outfit.setCoat(coat);
                                     }
                             }
@@ -359,7 +359,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < skirts.toArray().length; j++) {
                     Item bottom = skirts.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -373,7 +373,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                        if(coat.getStyle() == top.getStyle()){
+                                        if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -403,7 +403,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < jeans.toArray().length; j++) {
                     Item bottom = jeans.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -417,7 +417,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                        if(coat.getStyle() == top.getStyle()){
+                                        if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -438,7 +438,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < pants.toArray().length; j++) {
                     Item bottom = pants.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -452,7 +452,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                        if(coat.getStyle() == top.getStyle()){
+                                        if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -472,7 +472,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < skirts.toArray().length; j++) {
                     Item bottom = skirts.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -486,7 +486,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                        if(coat.getStyle() == top.getStyle()){
+                                        if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -510,36 +510,38 @@ public class OutfitServiceImpl implements OutfitService {
             List<Item> dresses = itemService.findItemsByCategory(ItemCategory.valueOf("DRESS"));
             for (int i = 0; i < dresses.toArray().length; i++) {
                 Item dress = dresses.get(i);
-                ItemColor topColor = dress.getItemColor();
-                ItemColor[] colors = colorGenerator.monoChromatic(topColor);
-                ItemColor firstColor = colors[0];
-                ItemColor secondColor = colors[1];
-                Outfit outfit = new Outfit();
-                outfit.setId((long) outfitID);
-                outfit.setDescription("OUTFIT" + outfitID);
-                outfitID += 1;
-                List<Item> outfitItems = new ArrayList<Item>();
-                outfitItems.add(dress);
-                outfit.setItems(outfitItems);
-                if(temperature < 18.0){
-                    Coat coat = new Coat();
-                    for(int k = 0; k < coats.toArray().length; k++){
-                        coat = coats.get(k);
-                        if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                            if(coat.getStyle() == dress.getStyle()){
-                                outfit.setCoat(coat);
-                            }
+                if(dress.getSize() == userSize) {
+                    ItemColor topColor = dress.getItemColor();
+                    ItemColor[] colors = colorGenerator.monoChromatic(topColor);
+                    ItemColor firstColor = colors[0];
+                    ItemColor secondColor = colors[1];
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT" + outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(dress);
+                    outfit.setItems(outfitItems);
+                    if (temperature < 18.0) {
+                        Coat coat = new Coat();
+                        for (int k = 0; k < coats.toArray().length; k++) {
+                            coat = coats.get(k);
+                            if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK)
+                                if (coat.getStyle() == dress.getStyle() && dress.getSize() == coat.getSize() && dress.getSize() == userSize) {
+                                    outfit.setCoat(coat);
+                                }
+                        }
+                        if (outfit.getCoat() == null) {
+                            incompleteList.add(outfit);
+                            missingPieces.add("COATS");
+                        }
                     }
-                    if(outfit.getCoat() == null){
+                    if (temperature < 18.0 && outfit.getCoat() == null) {
                         incompleteList.add(outfit);
-                        missingPieces.add("COATS");
+                    } else {
+                        outfitList.add(outfit);
+                        System.out.println(outfit);
                     }
-                }
-                if(temperature < 18.0 && outfit.getCoat() == null){
-                    incompleteList.add(outfit);
-                }else{
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
                 }
             }
         }
@@ -572,6 +574,8 @@ public class OutfitServiceImpl implements OutfitService {
             e.printStackTrace();
             outfitID = 1;
         }
+        User user = userService.findUserById(1L);
+        Size userSize = userService.calculateUserSize(user);
 
         Double temperature = WeatherController.getTemperature();
 
@@ -602,7 +606,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < jeans.toArray().length; j++) {
                     Item bottom = jeans.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -616,7 +620,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for (int k = 0; k < coats.toArray().length; k++) {
                                     coat = coats.get(k);
                                     if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                        if (coat.getStyle() == top.getStyle()) {
+                                        if (coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize) {
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -636,7 +640,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < pants.toArray().length; j++) {
                     Item bottom = pants.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -650,7 +654,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for (int k = 0; k < coats.toArray().length; k++) {
                                     coat = coats.get(k);
                                     if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                        if (coat.getStyle() == top.getStyle()) {
+                                        if (coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize) {
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -672,7 +676,7 @@ public class OutfitServiceImpl implements OutfitService {
                     for (int j = 0; j < skirts.toArray().length; j++) {
                         Item bottom = skirts.get(j);
                         if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                            if (bottom.getStyle() == top.getStyle()) {
+                            if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                                 Outfit outfit = new Outfit();
                                 outfit.setId((long) outfitID);
                                 outfit.setDescription("OUTFIT" + outfitID);
@@ -686,7 +690,7 @@ public class OutfitServiceImpl implements OutfitService {
                                     for (int k = 0; k < coats.toArray().length; k++) {
                                         coat = coats.get(k);
                                         if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                            if (coat.getStyle() == top.getStyle()) {
+                                            if (coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize) {
                                                 outfit.setCoat(coat);
                                             }
                                     }
@@ -717,7 +721,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < jeans.toArray().length; j++) {
                     Item bottom = jeans.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -731,7 +735,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for (int k = 0; k < coats.toArray().length; k++) {
                                     coat = coats.get(k);
                                     if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                        if (coat.getStyle() == top.getStyle()) {
+                                        if (coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize) {
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -752,7 +756,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < pants.toArray().length; j++) {
                     Item bottom = pants.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -766,7 +770,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for (int k = 0; k < coats.toArray().length; k++) {
                                     coat = coats.get(k);
                                     if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                        if (coat.getStyle() == top.getStyle()) {
+                                        if (coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize) {
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -788,7 +792,7 @@ public class OutfitServiceImpl implements OutfitService {
                     for (int j = 0; j < skirts.toArray().length; j++) {
                         Item bottom = skirts.get(j);
                         if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                            if (bottom.getStyle() == top.getStyle()) {
+                            if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                                 Outfit outfit = new Outfit();
                                 outfit.setId((long) outfitID);
                                 outfit.setDescription("OUTFIT" + outfitID);
@@ -802,7 +806,7 @@ public class OutfitServiceImpl implements OutfitService {
                                     for (int k = 0; k < coats.toArray().length; k++) {
                                         coat = coats.get(k);
                                         if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                            if (coat.getStyle() == top.getStyle()) {
+                                            if (coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize) {
                                                 outfit.setCoat(coat);
                                             }
                                     }
@@ -834,7 +838,7 @@ public class OutfitServiceImpl implements OutfitService {
                     for (int j = 0; j < jeans.toArray().length; j++) {
                         Item bottom = jeans.get(j);
                         if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                            if (bottom.getStyle() == top.getStyle()) {
+                            if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                                 Outfit outfit = new Outfit();
                                 outfit.setId((long) outfitID);
                                 outfit.setDescription("OUTFIT" + outfitID);
@@ -848,7 +852,7 @@ public class OutfitServiceImpl implements OutfitService {
                                     for (int k = 0; k < coats.toArray().length; k++) {
                                         coat = coats.get(k);
                                         if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                            if (coat.getStyle() == top.getStyle()) {
+                                            if (coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize) {
                                                 outfit.setCoat(coat);
                                             }
                                     }
@@ -868,7 +872,7 @@ public class OutfitServiceImpl implements OutfitService {
                     for (int j = 0; j < pants.toArray().length; j++) {
                         Item bottom = pants.get(j);
                         if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                            if (bottom.getStyle() == top.getStyle()) {
+                            if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                                 Outfit outfit = new Outfit();
                                 outfit.setId((long) outfitID);
                                 outfit.setDescription("OUTFIT" + outfitID);
@@ -882,7 +886,7 @@ public class OutfitServiceImpl implements OutfitService {
                                     for (int k = 0; k < coats.toArray().length; k++) {
                                         coat = coats.get(k);
                                         if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                            if (coat.getStyle() == top.getStyle()) {
+                                            if (coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize) {
                                                 outfit.setCoat(coat);
                                             }
                                     }
@@ -902,7 +906,7 @@ public class OutfitServiceImpl implements OutfitService {
                     for (int j = 0; j < skirts.toArray().length; j++) {
                         Item bottom = skirts.get(j);
                         if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                            if (bottom.getStyle() == top.getStyle()) {
+                            if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                                 Outfit outfit = new Outfit();
                                 outfit.setId((long) outfitID);
                                 outfit.setDescription("OUTFIT" + outfitID);
@@ -916,7 +920,7 @@ public class OutfitServiceImpl implements OutfitService {
                                     for (int k = 0; k < coats.toArray().length; k++) {
                                         coat = coats.get(k);
                                         if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                                            if (coat.getStyle() == top.getStyle()) {
+                                            if (coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize) {
                                                 outfit.setCoat(coat);
                                             }
                                     }
@@ -944,36 +948,40 @@ public class OutfitServiceImpl implements OutfitService {
             List<Item> dresses = itemService.findItemsByCategory(ItemCategory.valueOf("DRESS"));
             for (int i = 0; i < dresses.toArray().length; i++) {
                 Item dress = dresses.get(i);
-                ItemColor topColor = dress.getItemColor();
-                ItemColor[] colors = colorGenerator.analogous(topColor);
-                ItemColor firstColor = colors[0];
-                ItemColor secondColor = colors[1];
-                Outfit outfit = new Outfit();
-                outfit.setId((long) outfitID);
-                outfit.setDescription("OUTFIT" + outfitID);
-                outfitID += 1;
-                List<Item> outfitItems = new ArrayList<Item>();
-                outfitItems.add(dress);
-                outfit.setItems(outfitItems);
-                if (temperature < 18.0) {
-                    Coat coat = new Coat();
-                    for (int k = 0; k < coats.toArray().length; k++) {
-                        coat = coats.get(k);
-                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
-                            if (coat.getStyle() == dress.getStyle()) {
-                                outfit.setCoat(coat);
+                if(dress.getSize() == userSize) {
+                    ItemColor topColor = dress.getItemColor();
+                    ItemColor[] colors = colorGenerator.analogous(topColor);
+                    if (colors != null) {
+                        ItemColor firstColor = colors[0];
+                        ItemColor secondColor = colors[1];
+                        Outfit outfit = new Outfit();
+                        outfit.setId((long) outfitID);
+                        outfit.setDescription("OUTFIT" + outfitID);
+                        outfitID += 1;
+                        List<Item> outfitItems = new ArrayList<Item>();
+                        outfitItems.add(dress);
+                        outfit.setItems(outfitItems);
+                        if (temperature < 18.0) {
+                            Coat coat = new Coat();
+                            for (int k = 0; k < coats.toArray().length; k++) {
+                                coat = coats.get(k);
+                                if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK)
+                                    if (coat.getStyle() == dress.getStyle() && dress.getSize() == coat.getSize() && dress.getSize() == userSize) {
+                                        outfit.setCoat(coat);
+                                    }
                             }
+                            if (outfit.getCoat() == null) {
+                                incompleteList.add(outfit);
+                                missingPieces.add("COATS");
+                            }
+                        }
+                        if (temperature < 18.0 && outfit.getCoat() == null) {
+                            incompleteList.add(outfit);
+                        } else {
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+                        }
                     }
-                    if(outfit.getCoat() == null){
-                        incompleteList.add(outfit);
-                        missingPieces.add("COATS");
-                    }
-                }
-                if(temperature < 18.0 && outfit.getCoat() == null){
-                    incompleteList.add(outfit);
-                }else{
-                    outfitList.add(outfit);
-                    System.out.println(outfit);
                 }
             }
         }
@@ -1009,6 +1017,9 @@ public class OutfitServiceImpl implements OutfitService {
         }
         Double temperature = WeatherController.getTemperature();
 
+        User user = userService.findUserById(1L);
+        Size userSize = userService.calculateUserSize(user);
+
         ColorGenerator colorGenerator = new ColorGenerator();
         List<Outfit> outfitList = new ArrayList<Outfit>();
         List<Coat> coats = coatService.findAllCoats();
@@ -1033,7 +1044,7 @@ public class OutfitServiceImpl implements OutfitService {
             for(int j = 0; j < jeans.toArray().length; j++){
                 Item bottom = jeans.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                    if(bottom.getStyle() == top.getStyle()){
+                    if(bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize){
                         Outfit outfit = new Outfit();
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT"+outfitID);
@@ -1047,7 +1058,7 @@ public class OutfitServiceImpl implements OutfitService {
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
-                                    if(coat.getStyle() == top.getStyle()){
+                                    if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                         outfit.setCoat(coat);
                                     }
                             }
@@ -1062,7 +1073,7 @@ public class OutfitServiceImpl implements OutfitService {
             for(int j = 0; j < pants.toArray().length; j++){
                 Item bottom = pants.get(j);
                 if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                    if(bottom.getStyle() == top.getStyle()){
+                    if(bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize){
                         Outfit outfit = new Outfit();
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT"+outfitID);
@@ -1076,7 +1087,7 @@ public class OutfitServiceImpl implements OutfitService {
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
-                                    if(coat.getStyle() == top.getStyle()){
+                                    if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                         outfit.setCoat(coat);
                                     }
                             }
@@ -1093,7 +1104,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for(int j = 0; j < skirts.toArray().length; j++){
                     Item bottom = skirts.get(j);
                     if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if(bottom.getStyle() == top.getStyle()){
+                        if(bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize){
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT"+outfitID);
@@ -1107,7 +1118,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
-                                        if(coat.getStyle() == top.getStyle()){
+                                        if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -1131,7 +1142,7 @@ public class OutfitServiceImpl implements OutfitService {
             for (int j = 0; j < jeans.toArray().length; j++) {
                 Item bottom = jeans.get(j);
                 if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                    if (bottom.getStyle() == top.getStyle()) {
+                    if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                         Outfit outfit = new Outfit();
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT" + outfitID);
@@ -1145,7 +1156,7 @@ public class OutfitServiceImpl implements OutfitService {
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
-                                    if(coat.getStyle() == top.getStyle()){
+                                    if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                         outfit.setCoat(coat);
                                     }
                             }
@@ -1161,7 +1172,7 @@ public class OutfitServiceImpl implements OutfitService {
             for (int j = 0; j < pants.toArray().length; j++) {
                 Item bottom = pants.get(j);
                 if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                    if (bottom.getStyle() == top.getStyle()) {
+                    if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                         Outfit outfit = new Outfit();
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT" + outfitID);
@@ -1175,7 +1186,7 @@ public class OutfitServiceImpl implements OutfitService {
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
-                                    if(coat.getStyle() == top.getStyle()){
+                                    if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                         outfit.setCoat(coat);
                                     }
                             }
@@ -1192,7 +1203,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < skirts.toArray().length; j++) {
                     Item bottom = skirts.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -1206,7 +1217,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
-                                        if(coat.getStyle() == top.getStyle()){
+                                        if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -1232,7 +1243,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < jeans.toArray().length; j++) {
                     Item bottom = jeans.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -1246,7 +1257,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
-                                        if(coat.getStyle() == top.getStyle()){
+                                        if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -1262,7 +1273,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < pants.toArray().length; j++) {
                     Item bottom = pants.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -1276,7 +1287,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
-                                        if(coat.getStyle() == top.getStyle()){
+                                        if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -1292,7 +1303,7 @@ public class OutfitServiceImpl implements OutfitService {
                 for (int j = 0; j < skirts.toArray().length; j++) {
                     Item bottom = skirts.get(j);
                     if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)
-                        if (bottom.getStyle() == top.getStyle()) {
+                        if (bottom.getStyle() == top.getStyle() && top.getSize() == bottom.getSize() && top.getSize() == userSize) {
                             Outfit outfit = new Outfit();
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
@@ -1306,7 +1317,7 @@ public class OutfitServiceImpl implements OutfitService {
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
-                                        if(coat.getStyle() == top.getStyle()){
+                                        if(coat.getStyle() == top.getStyle() && top.getSize() == coat.getSize() && top.getSize() == userSize){
                                             outfit.setCoat(coat);
                                         }
                                 }
@@ -1326,31 +1337,33 @@ public class OutfitServiceImpl implements OutfitService {
             List<Item> dresses = itemService.findItemsByCategory(ItemCategory.valueOf("DRESS"));
             for (int i = 0; i < dresses.toArray().length; i++) {
                 Item dress = dresses.get(i);
-                ItemColor topColor = dress.getItemColor();
-                ItemColor[] colors = colorGenerator.pastel(topColor);
-                ItemColor firstColor = colors[0];
-                ItemColor secondColor = colors[1];
-                Outfit outfit = new Outfit();
-                outfit.setId((long) outfitID);
-                outfit.setDescription("OUTFIT" + outfitID);
-                outfitID += 1;
-                List<Item> outfitItems = new ArrayList<Item>();
-                outfitItems.add(dress);
-                outfit.setItems(outfitItems);
-                if(temperature < 18.0){
-                    Coat coat = new Coat();
-                    for(int k = 0; k < coats.toArray().length; k++){
-                        coat = coats.get(k);
-                        if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
-                            if(coat.getStyle() == dress.getStyle()){
-                                outfit.setCoat(coat);
-                            }
+                if(dress.getSize() == userSize) {
+                    ItemColor topColor = dress.getItemColor();
+                    ItemColor[] colors = colorGenerator.pastel(topColor);
+                    ItemColor firstColor = colors[0];
+                    ItemColor secondColor = colors[1];
+                    Outfit outfit = new Outfit();
+                    outfit.setId((long) outfitID);
+                    outfit.setDescription("OUTFIT" + outfitID);
+                    outfitID += 1;
+                    List<Item> outfitItems = new ArrayList<Item>();
+                    outfitItems.add(dress);
+                    outfit.setItems(outfitItems);
+                    if (temperature < 18.0) {
+                        Coat coat = new Coat();
+                        for (int k = 0; k < coats.toArray().length; k++) {
+                            coat = coats.get(k);
+                            if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                if (coat.getStyle() == dress.getStyle() && dress.getSize() == coat.getSize() && dress.getSize() == userSize) {
+                                    outfit.setCoat(coat);
+                                }
+                        }
+                        if (outfit.getCoat() == null) {
+                            throw new ItemException("COATS");
+                        }
                     }
-                    if(outfit.getCoat() == null){
-                        throw new ItemException("COATS");
-                    }
+                    outfitList.add(outfit);
                 }
-                outfitList.add(outfit);
             }
         }
         if(outfitList.size() == 0){
