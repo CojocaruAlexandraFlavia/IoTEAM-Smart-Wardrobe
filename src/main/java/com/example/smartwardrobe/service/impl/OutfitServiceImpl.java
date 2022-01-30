@@ -28,9 +28,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static com.example.smartwardrobe.enums.CoatCategory.CARDIGAN;
-import static com.example.smartwardrobe.enums.CoatCategory.JACKET;
-
 @Service
 public class OutfitServiceImpl implements OutfitService {
 
@@ -193,15 +190,12 @@ public class OutfitServiceImpl implements OutfitService {
                             }
                             if(coat.getCode() == null){
                                 //recommend buy some
-//                                coatService.readAllCoatsByCategoryFromStore(JACKET);
-//                                coatService.readAllCoatsByCategoryFromStore(CARDIGAN);
-//                                return null;
 
                             }
                         }
                         outfitList.add(outfit);
                         System.out.println(outfit);
-                }
+                    }
             }
             for(int j = 0; j < pants.toArray().length; j++){
                 Item bottom = pants.get(j);
@@ -231,7 +225,7 @@ public class OutfitServiceImpl implements OutfitService {
                         outfitList.add(outfit);
                         System.out.println(outfit);
 
-                }
+                    }
             }
             if(temperature > 5.0){
                 for(int j = 0; j < skirts.toArray().length; j++){
