@@ -177,8 +177,8 @@ public class Coat {
                 ", \"itemColor\":\"" + itemColor.toString() +"\""+
                 ", \"style\":\"" + style.toString() +"\""+
                 ", \"coatCategory\":\"" + coatCategory.toString() +"\""+
-                ", \"lastWearing\":" + lastWearing +
-                ", \"lastWashingDay\":" + lastWashingDay +
+                ", \"lastWearing\":" + lastWearing.toString() +
+                ", \"lastWashingDay\":" + lastWashingDay.toString() +
                 ", \"nrOfWearsSinceLastWash\":" + nrOfWearsSinceLastWash +
                 ", \"washingZoneColor\":\"" + washingZoneColor.toString() +"\""+
                 '}';
