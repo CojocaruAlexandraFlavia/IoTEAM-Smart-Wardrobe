@@ -2,8 +2,7 @@ package com.example.smartwardrobe.service.impl;
 
 import com.example.smartwardrobe.colorpalette.ColorGenerator;
 import com.example.smartwardrobe.controller.WeatherController;
-import com.example.smartwardrobe.enums.ItemCategory;
-import com.example.smartwardrobe.enums.ItemColor;
+import com.example.smartwardrobe.enums.*;
 import com.example.smartwardrobe.model.Coat;
 import com.example.smartwardrobe.model.History;
 import com.example.smartwardrobe.model.Item;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -98,7 +98,12 @@ public class OutfitServiceImpl implements OutfitService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", outfit.getId().toString());
         jsonObject.put("description", outfit.getDescription());
-        jsonObject.put("coat", outfit.getCoat().toString());
+        if( outfit.getCoat()!=null){
+            jsonObject.put("coat", outfit.getCoat().getCoatCategory().toString());
+        }else{
+            jsonObject.put("coat", null);
+        }
+
         jsonObject.put("items", itemService.createJsonArrayOfItems(outfit.getItems()));
         jsonArray.add(jsonObject);
         try {
@@ -185,6 +190,7 @@ public class OutfitServiceImpl implements OutfitService {
                             }
                             if(coat.getCode() == null){
                                 //recommend buy some
+
                             }
                         }
                         outfitList.add(outfit);
@@ -485,6 +491,10 @@ public class OutfitServiceImpl implements OutfitService {
                 outfitList.add(outfit);
             }
         }
+        FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json");
+        String jsonStr = JSONArray.toJSONString(outfitList);
+        file.write(jsonStr);
+        file.close();
         return outfitList;
     }
     @Override
@@ -855,6 +865,10 @@ public class OutfitServiceImpl implements OutfitService {
                 outfitList.add(outfit);
             }
         }
+        FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json");
+        String jsonStr = JSONArray.toJSONString(outfitList);
+        file.write(jsonStr);
+        file.close();
         return outfitList;
     }
     @Override
@@ -1214,7 +1228,84 @@ public class OutfitServiceImpl implements OutfitService {
                 outfitList.add(outfit);
             }
         }
-        return outfitList;
-    }
 
+        FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json");
+        String jsonStr = JSONArray.toJSONString(outfitList);
+        file.write(jsonStr);
+        file.close();
+        return outfitList;
+
+    }
+    @Override
+    public void selectRecommendedOutfit(Integer id){
+        JSONParser jsonParser = new JSONParser();
+        try (FileReader reader = new FileReader("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json"))
+        {
+            //Read JSON file
+            JSONArray obj = (JSONArray) jsonParser.parse(reader);
+            System.out.println("citit json");
+            for(int i = 0;i<obj.toArray().length;i++)
+            {
+                JSONObject jsonItem = (JSONObject) obj.get(i);
+//                System.out.println(obj.get(i));
+//                System.out.println();
+                if(id.equals(Integer.valueOf(jsonItem.get("id").toString()))){
+                    System.out.println("ok");
+                    Outfit outfit = new Outfit();
+                    JSONObject coatObj = (JSONObject) jsonItem.get("coat");
+                    if(coatObj!=null){
+                        Coat coat = new Coat();
+//                        coat.setId((Long) coatObj.get("id"));
+                        coat = coatService.findCoatById((Long) coatObj.get("id"));
+//                        coat.setCode((String)coatObj.get("code"));
+//                        coat.setMaterial(Material.valueOf((String) jsonItem.get("material")));
+//                        coat.setSize(Size.valueOf((String) jsonItem.get("size")));
+//                        coat.setCode((String) jsonItem.get("code"));
+//                        coat.setItemColor(ItemColor.valueOf((String) jsonItem.get("itemColor")));
+//                        coat.setStyle(Style.valueOf((String)  jsonItem.get("style")));
+//                        coat.setCoatCategory(CoatCategory.valueOf((String)  jsonItem.get("itemCategory")));
+//                        coat.setLastWashingDay(LocalDate.parse((String) coatObj.get("lastWashingDay")));
+//                        coat.setLastWearing(LocalDate.parse((String) coatObj.get("lastWearing")));
+//                        coat.setNrOfWearsSinceLastWash(Integer.parseInt((String) coatObj.get("nrOfWearsSinceLastWash")));
+//                        coat.setWashingZoneColor(WashingZoneColor.valueOf((String) jsonItem.get("washingZoneColor")));
+                        outfit.setCoat(coat);
+                    }
+
+
+                    JSONArray itemArray = (JSONArray) jsonItem.get("items");
+                    List<Item> itemList = new ArrayList<>();
+                    for(int j = 0;j<itemArray.toArray().length;j++)
+                    {
+                        JSONObject itemObj = (JSONObject) itemArray.get(j);
+                        Item item = new Item();
+                        item = itemService.findItemById((Long) itemObj.get("id"));
+//                        item.setId((Long) itemObj.get("id"));
+//                        item.setMaterial(Material.valueOf((String) itemObj.get("material")));
+//                        item.setSize(Size.valueOf((String) itemObj.get("size")));
+//                        item.setCode((String) itemObj.get("code"));
+//                        item.setItemColor(ItemColor.valueOf((String) itemObj.get("itemColor")));
+//                        item.setStyle(Style.valueOf((String)  itemObj.get("style")));
+//                        item.setItemCategory(ItemCategory.valueOf((String)  itemObj.get("itemCategory")));
+//                        item.setLastWashingDay(LocalDate.parse((String) itemObj.get("lastWashingDay")));
+//                        item.setLastWearing(LocalDate.parse((String) itemObj.get("lastWearing")));
+//                        item.setNrOfWearsSinceLastWash(Integer.parseInt((String) itemObj.get("nrOfWearsSinceLastWash")));
+//                        item.setWashingZoneColor(WashingZoneColor.valueOf((String) itemObj.get("washingZoneColor")));
+                        itemList.add(item);
+                    }
+                    outfit.setId(Long.valueOf(id));
+                    outfit.setDescription((String) jsonItem.get("description"));
+
+                    outfit.setItems(itemList);
+                    saveOutfit(outfit);
+                    System.out.println("outfitul este");
+                    System.out.println(outfit);
+                }
+
+            }
+
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -19,5 +19,5 @@ public interface OutfitService{
     List<Outfit> recommendMonochromaticOutfit() throws Exception;
     List<Outfit> recommendAnalogousOutfit() throws Exception;
     List<Outfit> recommendPastelOutfit() throws Exception;
-
+    void selectRecommendedOutfit(Integer id);
 }

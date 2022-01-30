@@ -60,5 +60,9 @@ public class OutfitController {
         }
         return null;
     }
+    @PostMapping("/selectRecommendedOutfit/{id}")
+    public void selectRecommendedOutfit(@PathVariable("id") Integer id){
+        outfitService.selectRecommendedOutfit(id);
+    }
 
 }
