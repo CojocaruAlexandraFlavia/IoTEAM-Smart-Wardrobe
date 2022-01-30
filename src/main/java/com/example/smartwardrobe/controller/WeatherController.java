@@ -30,7 +30,7 @@ public class WeatherController {
     }
     public static Double getTemperature() throws Exception {
         Double temperature;
-        getWeather();
+//        getWeather();
         JSONParser parser = new JSONParser();
         try{
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/weather.json")); ;

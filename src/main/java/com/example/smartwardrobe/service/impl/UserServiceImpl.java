@@ -103,21 +103,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUserFromFile(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
 
         JSONParser parser = new JSONParser();
         try{
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json")); ;
-            user.setId(Long.parseLong(jsonArray.get(0).toString()));
-            user.setEyeColor(EyeColor.valueOf((jsonArray.get(1).toString())));
-            user.setWeight(Double.parseDouble(jsonArray.get(2).toString()));
-            user.setHeight(Double.parseDouble(jsonArray.get(3).toString()));
-            user.setGender(Gender.valueOf((jsonArray.get(4).toString())));
-            user.setAge(Integer.parseInt(jsonArray.get(5).toString()));
-            user.setHairColor(HairColor.valueOf((jsonArray.get(6).toString())));
-            List<Item> listOfItems = convertObjectToList(jsonArray.get(7));
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json")); ;
+            user.setId(Long.parseLong(jsonObject.get("id").toString()));
+            user.setEyeColor(EyeColor.valueOf((jsonObject.get("eyeColor").toString())));
+            user.setWeight(Double.parseDouble(jsonObject.get("weight").toString()));
+            user.setHeight(Double.parseDouble(jsonObject.get("height").toString()));
+            user.setGender(Gender.valueOf((jsonObject.get("gender").toString())));
+            user.setAge(Integer.parseInt(jsonObject.get("age").toString()));
+            user.setHairColor(HairColor.valueOf((jsonObject.get("hairColor").toString())));
+            List<Item> listOfItems = convertObjectToList(jsonObject.get("items"));
             user.setItems(listOfItems);
-            user.setUsername(jsonArray.get(8).toString());
+            user.setUsername(jsonObject.get("username").toString());
+//            user.setPassword(jsonObject.get("password").toString());
+            user.setPassword(passwordEncoder.encode(jsonObject.get("password").toString()));
+            saveUser(user);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
