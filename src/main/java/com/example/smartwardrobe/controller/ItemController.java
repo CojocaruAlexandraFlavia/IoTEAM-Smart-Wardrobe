@@ -77,10 +77,12 @@ public class ItemController {
     public String washItem(@PathVariable("itemId") String itemId){
         return itemService.washItem(itemId);
     }
+
     @PostMapping("/getAllStore")
     public void readAllItemsFromStore(){
          itemService.readAllItemsFromStore();
     }
+
     @GetMapping("/getAllItemsByCategory/{category}")
     public ResponseEntity<?>  readAllItemsByCategoryFromStore(@PathVariable("category") String itemCategory){
         List<Item> items = itemService.readAllItemsByCategoryFromStore(ItemCategory.valueOf(itemCategory));
@@ -91,4 +93,13 @@ public class ItemController {
         }
     }
 
+    @PostMapping("/sortByLastWearingDate")
+    public ResponseEntity<?> sortItemsByLastWearingDate(){
+        List<Item> items = itemService.sortItemsByLastWearingDate();
+        if(items.size() != 0){
+            return ResponseEntity.ok(items);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Items not found for sorting!");
+        }
+    }
 }

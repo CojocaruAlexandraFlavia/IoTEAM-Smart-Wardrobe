@@ -27,4 +27,5 @@ public interface ItemService {
     JSONArray createJsonArrayOfItems(List<Item> items);
     void readAllItemsFromStore();
     List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory);
+    List<Item> sortItemsByLastWearingDate();
 }
