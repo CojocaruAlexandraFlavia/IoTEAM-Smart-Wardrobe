@@ -1,13 +1,23 @@
 package com.example.smartwardrobe.controller;
 
+import com.example.smartwardrobe.enums.ItemCategory;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.service.ItemService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/item")
@@ -27,8 +37,15 @@ public class ItemController {
     }
 
     @GetMapping("/findDirtyByColor/{color}")
-    public List<Item> getDirtyItemsByColor(@PathVariable("color") String color){
-        return itemService.getDirtyItems(color);
+    public ResponseEntity<?> getDirtyItemsByColor(@PathVariable("color") String color) throws FileNotFoundException {
+        Pair<List<Item>, Set<JSONObject>> item = itemService.getDirtyItemsByColor(color);
+        if(color.equalsIgnoreCase("WHITE") || color.equalsIgnoreCase("BLACK") ||
+                color.equalsIgnoreCase("COLOR")){
+            return ResponseEntity.ok(item);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("WASH COLOR DOESN'T EXIST!");
+        }
+
     }
 
     @GetMapping("/{id}")
@@ -59,6 +76,19 @@ public class ItemController {
     @PatchMapping ("/washing/{itemId}")
     public String washItem(@PathVariable("itemId") String itemId){
         return itemService.washItem(itemId);
+    }
+    @PostMapping("/getAllStore")
+    public void readAllItemsFromStore(){
+         itemService.readAllItemsFromStore();
+    }
+    @GetMapping("/getAllItemsByCategory/{category}")
+    public ResponseEntity<?>  readAllItemsByCategoryFromStore(@PathVariable("category") String itemCategory){
+        List<Item> items = itemService.readAllItemsByCategoryFromStore(ItemCategory.valueOf(itemCategory));
+        if(items.size() != 0){
+            return ResponseEntity.ok(items);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No items in this category!");
+        }
     }
 
 }

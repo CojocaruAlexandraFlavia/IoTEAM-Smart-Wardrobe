@@ -17,5 +17,6 @@ public interface UserService{
     JSONArray getUsersFromFile();
     User saveUserFromFile(User user);
     JSONArray createJsonArrayOfItems(List<Item> items);
+    String calculateUserSize(User user);
 
 }

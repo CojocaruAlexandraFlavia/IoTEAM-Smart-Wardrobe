@@ -1,20 +1,22 @@
 package com.example.smartwardrobe.service.impl;
 
-import com.example.smartwardrobe.enums.ItemCategory;
-import com.example.smartwardrobe.enums.Style;
+import com.example.smartwardrobe.enums.*;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.repository.ItemRepository;
 import com.example.smartwardrobe.service.ItemService;
+import org.springframework.data.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.EnumUtils;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -76,55 +78,35 @@ public class ItemServiceImpl implements ItemService {
         item.setLastWearing(LocalDate.now());
         saveItem(item);
     }
-
     @Override
-    public List<Item> getDirtyItems(String color)
-    {
-        List<Item> whiteDirtyItems = new ArrayList<>();
-        List<Item> blackDirtyItems = new ArrayList<>();
-        List<Item> colorDirtyItems = new ArrayList<>();
-        List<Item> dirtyItems = findItemIfDirty();
-        for (Item i: dirtyItems) {
-            if(i.getWashingZoneColor().name().equals("WHITE"))
-            {
-                whiteDirtyItems.add(i);
-            }
-            if(i.getWashingZoneColor().name().equals("BLACK"))
-            {
-                blackDirtyItems.add(i);
-            }
-            if(i.getWashingZoneColor().name().equals("COLOR")){
-                colorDirtyItems.add(i);
-            }
-        }
-        // daca se actualizeaaza statusul in baza de date de la purtat la spalat,
-        // cum arata aceste arraylists?
-
-//        if(whiteDirtyItems.size() >= 3)
-//        {
-//            System.out.println("U have more than 3 white items to wash");
-//        }
-//        if(blackDirtyItems.size() >= 3)
-//        {
-//            System.out.println("U have more than 3 black items to wash");
-//        }
-//        if(colorDirtyItems.size() >= 3)
-//        {
-//            System.out.println("U have more than 3 colored items to wash");
-//        }
+    public Pair<List<Item>, Set<JSONObject>> getDirtyItemsByColor(String color) {
 
 
-        if(color.equalsIgnoreCase("white"))
+        List<Item> specificDirtyItems = new ArrayList<>();
+        List<Item> allDirtyItems = findItemIfDirty();
+        Set<JSONObject> instructions  = new HashSet<>();
+        JSONParser jsonParser = new JSONParser();
+        JSONObject da = null;
+        try(FileReader reader = new FileReader("src/main/java/com/example/smartwardrobe/json/wash_instructions.json"))
         {
-            return whiteDirtyItems;
-        }
-        if (color.equalsIgnoreCase("black"))
-        {
-            return blackDirtyItems;
-        }
+            Object obj = jsonParser.parse(reader);
+            JSONObject d = (JSONObject) obj;
 
-        else
-            return colorDirtyItems;
+            for (Item i: allDirtyItems) {
+                if(i.getWashingZoneColor().name().equalsIgnoreCase(color))
+                {
+                    specificDirtyItems.add(i);
+                    String specificInstr = i.getMaterial().name();
+                    da = (JSONObject) d.get(specificInstr);
+                    instructions.add(da);
+
+                }
+            }
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+        return Pair.of(specificDirtyItems, instructions);
 
     }
 
@@ -156,4 +138,71 @@ public class ItemServiceImpl implements ItemService {
         }
         return jsonArray;
     }
+    @Override
+    public void readAllItemsFromStore(){
+        JSONParser jsonParser = new JSONParser();
+        try (FileReader reader = new FileReader("src/main/java/com/example/smartwardrobe/json/store.json"))
+        {
+            //Read JSON file
+            JSONObject obj = (JSONObject) jsonParser.parse(reader);
+
+            JSONArray itemList = (JSONArray) obj.get("items");
+            for(int i = 0;i<itemList.toArray().length;i++)
+            {
+                JSONObject jsonItem = (JSONObject) itemList.get(i);
+//                System.out.println(item);
+                Item item = new Item();
+                item.setMaterial(Material.valueOf((String) jsonItem.get("material")));
+                item.setSize(Size.valueOf((String) jsonItem.get("size")));
+                item.setCode((String) jsonItem.get("code"));
+                item.setItemColor(ItemColor.valueOf((String) jsonItem.get("itemColor")));
+                item.setStyle(Style.valueOf((String)  jsonItem.get("style")));
+                item.setItemCategory(ItemCategory.valueOf((String)  jsonItem.get("itemCategory")));
+                item.setWashingZoneColor(WashingZoneColor.valueOf((String) jsonItem.get("washingZoneColor")));
+                saveItem(item);
+            }
+
+            System.out.println(itemList);
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory){
+        List<Item> items = new ArrayList<Item>();
+        JSONParser jsonParser = new JSONParser();
+        try (FileReader reader = new FileReader("src/main/java/com/example/smartwardrobe/json/store.json"))
+        {
+            //Read JSON file
+            JSONObject obj = (JSONObject) jsonParser.parse(reader);
+
+            JSONArray itemList = (JSONArray) obj.get("items");
+            for(int i = 0;i<itemList.toArray().length;i++)
+            {
+                JSONObject jsonItem = (JSONObject) itemList.get(i);
+//                System.out.println(item);
+                Item item = new Item();
+                item.setMaterial(Material.valueOf((String) jsonItem.get("material")));
+                item.setSize(Size.valueOf((String) jsonItem.get("size")));
+                item.setCode((String) jsonItem.get("code"));
+                item.setItemColor(ItemColor.valueOf((String) jsonItem.get("itemColor")));
+                item.setStyle(Style.valueOf((String)  jsonItem.get("style")));
+                item.setItemCategory(ItemCategory.valueOf((String)  jsonItem.get("itemCategory")));
+                item.setWashingZoneColor(WashingZoneColor.valueOf((String) jsonItem.get("washingZoneColor")));
+
+                if(item.getItemCategory() == itemCategory){
+                    items.add(item);
+                }
+            }
+            System.out.println(itemList);
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        return items;
+    }
+
 }

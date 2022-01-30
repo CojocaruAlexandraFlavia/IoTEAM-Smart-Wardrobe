@@ -141,4 +141,60 @@ public class UserServiceImpl implements UserService {
         return jsonArray;
     }
 
+    @Override
+    public String calculateUserSize(User user){
+        double weight = user.getWeight();
+        double height = user.getHeight();
+        if(weight <= 50){
+            return "XS";
+        }
+        if(weight > 50 && weight <= 55 && height >= 155){
+            return "XS";
+        }
+        if(weight > 50 && weight <= 55 && height < 155){
+            return "S";
+        }
+        if(weight > 55 && weight <= 60 && height > 170){
+            return "XS";
+        }
+        if(weight > 55 && weight <= 60 && height >= 155 && height < 170){
+            return "S";
+        }
+        if(weight > 60 && weight <= 65 && height > 160){
+            return "S";
+        }
+        if(weight > 60 && weight <= 65 && height < 160){
+            return "M";
+        }
+        if(weight > 65 && weight <= 70 && height < 165){
+            return "L";
+        }
+        if(weight > 65 && weight <= 70 && height >= 165){
+            return "M";
+        }
+        if(weight > 70 && weight <= 75 && height < 155){
+            return "XL";
+        }
+        if(weight > 70 && weight <= 75 && height >= 155 && height < 170){
+            return "L";
+        }
+        if(weight > 70 && weight <= 75 && height > 170){
+            return "M";
+        }
+        if(weight > 75 && weight <= 80 && height < 160){
+            return "XL";
+        }
+        if(weight > 75 && weight <= 80 && height >= 160 ){
+            return "L";
+        }
+        if(weight > 80 && weight <= 90){
+            return "XL";
+        }
+        if(weight > 90){
+            return "XXL";
+        }
+
+        return null;
+    }
+
 }
