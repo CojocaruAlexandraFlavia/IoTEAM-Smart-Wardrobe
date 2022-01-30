@@ -22,6 +22,7 @@ public interface ItemService {
     List<Item> findAllItems();
     List<Item> getItemsByStyleName(String styleName);
     String washItem(String itemId);
+//    List<Item> getDirtyItems(String color);
     void updateItemAfterAddingOutfit(Long itemId);
     JSONArray createJsonArrayOfItems(List<Item> items);
 

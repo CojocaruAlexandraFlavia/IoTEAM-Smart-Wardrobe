@@ -12,8 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-//@JsonIgnoreProperties(value= {"outfits"})
-public class Item {
+public class Coat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -34,7 +33,7 @@ public class Item {
     private Style style;
 
     @Enumerated(EnumType.STRING)
-    private ItemCategory itemCategory;
+    private CoatCategory coatCategory;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
@@ -49,38 +48,10 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private WashingZoneColor washingZoneColor;
 
-    @ManyToMany(mappedBy = "items")
+    @OneToMany(mappedBy = "coat", cascade= CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Outfit> outfits;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
-
-    public Item(Long id, Material material, Size size, String code, ItemColor itemColor, Style style, ItemCategory itemCategory, LocalDate lastWearing, WashingZoneColor washingZoneColor, List<Outfit> outfits, User user) {
-        this.id = id;
-        this.material = material;
-        this.size = size;
-        this.code = code;
-        this.itemColor = itemColor;
-        this.style = style;
-        this.itemCategory = itemCategory;
-        this.lastWearing = lastWearing;
-        this.washingZoneColor = washingZoneColor;
-        this.outfits = outfits;
-        this.user = user;
-    }
-
-    public Item() { }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Material getMaterial() {
         return material;
@@ -122,12 +93,12 @@ public class Item {
         this.style = style;
     }
 
-    public ItemCategory getItemCategory() {
-        return itemCategory;
+    public CoatCategory getCoatCategory() {
+        return coatCategory;
     }
 
-    public void setItemCategory(ItemCategory itemCategory) {
-        this.itemCategory = itemCategory;
+    public void setCoatCategory(CoatCategory coatCategory) {
+        this.coatCategory = coatCategory;
     }
 
     public LocalDate getLastWearing() {
@@ -136,30 +107,6 @@ public class Item {
 
     public void setLastWearing(LocalDate lastWearing) {
         this.lastWearing = lastWearing;
-    }
-
-    public WashingZoneColor getWashingZoneColor() {
-        return washingZoneColor;
-    }
-
-    public void setWashingZoneColor(WashingZoneColor washingZoneColor) {
-        this.washingZoneColor = washingZoneColor;
-    }
-
-    public List<Outfit> getOutfits() {
-        return outfits;
-    }
-
-    public void setOutfits(List<Outfit> outfits) {
-        this.outfits = outfits;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public LocalDate getLastWashingDay() {
@@ -174,20 +121,62 @@ public class Item {
         return nrOfWearsSinceLastWash;
     }
 
-    public void setNrOfWearsSinceLastWash(int nrOfWearsSinceLastWashing) {
-        this.nrOfWearsSinceLastWash = nrOfWearsSinceLastWashing;
+    public void setNrOfWearsSinceLastWash(int nrOfWearsSinceLastWash) {
+        this.nrOfWearsSinceLastWash = nrOfWearsSinceLastWash;
+    }
+
+    public WashingZoneColor getWashingZoneColor() {
+        return washingZoneColor;
+    }
+
+    public Coat() {
+    }
+
+    public Coat(Long id, Material material, Size size, String code, ItemColor itemColor, Style style, CoatCategory coatCategory, LocalDate lastWearing, LocalDate lastWashingDay, int nrOfWearsSinceLastWash, WashingZoneColor washingZoneColor, List<Outfit> outfits) {
+        this.id = id;
+        this.material = material;
+        this.size = size;
+        this.code = code;
+        this.itemColor = itemColor;
+        this.style = style;
+        this.coatCategory = coatCategory;
+        this.lastWearing = lastWearing;
+        this.lastWashingDay = lastWashingDay;
+        this.nrOfWearsSinceLastWash = nrOfWearsSinceLastWash;
+        this.washingZoneColor = washingZoneColor;
+        this.outfits = outfits;
+    }
+
+    public void setWashingZoneColor(WashingZoneColor washingZoneColor) {
+        this.washingZoneColor = washingZoneColor;
+    }
+
+    public List<Outfit> getOutfits() {
+        return outfits;
+    }
+
+    public void setOutfits(List<Outfit> outfits) {
+        this.outfits = outfits;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override
     public String toString() {
         return "{" +
-                " \"id\":" + id +
-                ", \"material\":\"" + material.toString() +"\""+
+                "\"id\":" + id +
+                ", \"material\":\"" + material.toString()+"\"" +
                 ", \"size\":\"" + size + "\""+
                 ", \"code\":\"" + code + "\"" +
                 ", \"itemColor\":\"" + itemColor.toString() +"\""+
                 ", \"style\":\"" + style.toString() +"\""+
-                ", \"itemCategory\":\"" + itemCategory.toString()+"\""+
+                ", \"coatCategory\":\"" + coatCategory.toString() +"\""+
 //                ", \"lastWearing\":" + lastWearing +
 //                ", \"lastWashingDay\":" + lastWashingDay +
 //                ", \"nrOfWearsSinceLastWash\":" + nrOfWearsSinceLastWash +

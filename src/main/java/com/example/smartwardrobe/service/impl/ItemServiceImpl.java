@@ -1,21 +1,18 @@
 package com.example.smartwardrobe.service.impl;
 
-import com.example.smartwardrobe.enums.ItemCategory;
-import com.example.smartwardrobe.enums.Style;
-import com.example.smartwardrobe.enums.WashingZoneColor;
+import com.example.smartwardrobe.enums.*;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.repository.ItemRepository;
 import com.example.smartwardrobe.service.ItemService;
+import org.springframework.data.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.EnumUtils;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -81,7 +78,6 @@ public class ItemServiceImpl implements ItemService {
         item.setLastWearing(LocalDate.now());
         saveItem(item);
     }
-
     @Override
     public Pair<List<Item>, Set<JSONObject>> getDirtyItemsByColor(String color) {
 
@@ -142,4 +138,71 @@ public class ItemServiceImpl implements ItemService {
         }
         return jsonArray;
     }
+    @Override
+    public void readAllItemsFromStore(){
+        JSONParser jsonParser = new JSONParser();
+        try (FileReader reader = new FileReader("src/main/java/com/example/smartwardrobe/json/store.json"))
+        {
+            //Read JSON file
+            JSONObject obj = (JSONObject) jsonParser.parse(reader);
+
+            JSONArray itemList = (JSONArray) obj.get("items");
+            for(int i = 0;i<itemList.toArray().length;i++)
+            {
+                JSONObject jsonItem = (JSONObject) itemList.get(i);
+//                System.out.println(item);
+                Item item = new Item();
+                item.setMaterial(Material.valueOf((String) jsonItem.get("material")));
+                item.setSize(Size.valueOf((String) jsonItem.get("size")));
+                item.setCode((String) jsonItem.get("code"));
+                item.setItemColor(ItemColor.valueOf((String) jsonItem.get("itemColor")));
+                item.setStyle(Style.valueOf((String)  jsonItem.get("style")));
+                item.setItemCategory(ItemCategory.valueOf((String)  jsonItem.get("itemCategory")));
+                item.setWashingZoneColor(WashingZoneColor.valueOf((String) jsonItem.get("washingZoneColor")));
+                saveItem(item);
+            }
+
+            System.out.println(itemList);
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory){
+        List<Item> items = new ArrayList<Item>();
+        JSONParser jsonParser = new JSONParser();
+        try (FileReader reader = new FileReader("src/main/java/com/example/smartwardrobe/json/store.json"))
+        {
+            //Read JSON file
+            JSONObject obj = (JSONObject) jsonParser.parse(reader);
+
+            JSONArray itemList = (JSONArray) obj.get("items");
+            for(int i = 0;i<itemList.toArray().length;i++)
+            {
+                JSONObject jsonItem = (JSONObject) itemList.get(i);
+//                System.out.println(item);
+                Item item = new Item();
+                item.setMaterial(Material.valueOf((String) jsonItem.get("material")));
+                item.setSize(Size.valueOf((String) jsonItem.get("size")));
+                item.setCode((String) jsonItem.get("code"));
+                item.setItemColor(ItemColor.valueOf((String) jsonItem.get("itemColor")));
+                item.setStyle(Style.valueOf((String)  jsonItem.get("style")));
+                item.setItemCategory(ItemCategory.valueOf((String)  jsonItem.get("itemCategory")));
+                item.setWashingZoneColor(WashingZoneColor.valueOf((String) jsonItem.get("washingZoneColor")));
+
+                if(item.getItemCategory() == itemCategory){
+                    items.add(item);
+                }
+            }
+            System.out.println(itemList);
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
+
+        return items;
+    }
+
 }
