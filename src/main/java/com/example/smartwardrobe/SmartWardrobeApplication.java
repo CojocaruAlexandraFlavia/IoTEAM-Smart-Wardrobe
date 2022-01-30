@@ -9,6 +9,7 @@ import java.io.IOException;
 public class SmartWardrobeApplication {
 
 	public static void main(String[] args) {
+
 //		try{
 //		WeatherController.getWeather();
 //		} catch (Exception e) {
