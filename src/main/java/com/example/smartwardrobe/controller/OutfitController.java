@@ -33,36 +33,5 @@ public class OutfitController {
     public void deleteOutfitById(@PathVariable("id") Long id){
         outfitService.deleteOutfitById(id);
     }
-    @PostMapping("/recommendMonochromaticOutfit")
-    public List<Outfit> recommendMonochromaticOutfit(){
-        try {
-            return outfitService.recommendMonochromaticOutfit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    @PostMapping("/recommendAnalogousOutfit")
-    public List<Outfit> recommendAnalogousOutfit(){
-        try {
-            return outfitService.recommendAnalogousOutfit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    @PostMapping("/recommendPastelOutfit")
-    public List<Outfit> recommendPastelOutfit(){
-        try {
-            return outfitService.recommendPastelOutfit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    @PostMapping("/selectRecommendedOutfit/{id}")
-    public void selectRecommendedOutfit(@PathVariable("id") Integer id){
-        outfitService.selectRecommendedOutfit(id);
-    }
 
 }

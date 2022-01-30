@@ -25,6 +25,5 @@ public interface ItemService {
 //    List<Item> getDirtyItems(String color);
     void updateItemAfterAddingOutfit(Long itemId);
     JSONArray createJsonArrayOfItems(List<Item> items);
-    void readAllItemsFromStore();
-    List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory);
+
 }
