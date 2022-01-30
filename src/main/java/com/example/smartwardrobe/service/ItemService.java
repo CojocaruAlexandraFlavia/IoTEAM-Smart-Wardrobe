@@ -3,6 +3,7 @@ package com.example.smartwardrobe.service;
 import com.example.smartwardrobe.enums.ItemCategory;
 import com.example.smartwardrobe.enums.Style;
 import com.example.smartwardrobe.model.Item;
+import com.example.smartwardrobe.model.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.data.util.Pair;
@@ -27,4 +28,5 @@ public interface ItemService {
     JSONArray createJsonArrayOfItems(List<Item> items);
     void readAllItemsFromStore();
     List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory);
+    List<Item> updateWardrobe(User user);
 }
