@@ -1,14 +1,11 @@
 package com.example.smartwardrobe.service.impl;
 
-import com.example.smartwardrobe.enums.EyeColor;
-import com.example.smartwardrobe.enums.Gender;
-import com.example.smartwardrobe.enums.HairColor;
 import com.example.smartwardrobe.model.Item;
-import com.example.smartwardrobe.model.Outfit;
 import com.example.smartwardrobe.model.User;
 import com.example.smartwardrobe.repository.UserRepository;
 import com.example.smartwardrobe.service.ItemService;
 import com.example.smartwardrobe.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -32,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private ItemService userService;
+    private ItemService itemService;
 
     @Override
     public User saveUser(User user) {
@@ -53,27 +50,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public void writeUserToFile(User user) {
         JSONArray jsonArray = getUsersFromFile();
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", user.getId().toString());
-        jsonObject.put("eyeColor", user.getEyeColor().toString());
-        jsonObject.put("weight", String.valueOf(user.getWeight()));
-        jsonObject.put("height", String.valueOf(user.getHeight()));
-        jsonObject.put("gender", user.getGender().toString());
-        jsonObject.put("age", String.valueOf(user.getAge()));
-        jsonObject.put("hairColor", user.getHairColor());
-        jsonObject.put("items", userService.createJsonArrayOfItems(user.getItems()));
-        jsonObject.put("username", user.getUsername());
-        jsonObject.put("password", user.getPassword());
+        JSONParser jsonParser = new JSONParser();
+        ObjectMapper objectMapper = new ObjectMapper();
+//        jsonObject.put("id", user.getId().toString());
+//        jsonObject.put("eyeColor", user.getEyeColor().toString());
+//        jsonObject.put("weight", String.valueOf(user.getWeight()));
+//        jsonObject.put("height", String.valueOf(user.getHeight()));
+//        jsonObject.put("gender", user.getGender().toString());
+//        jsonObject.put("age", String.valueOf(user.getAge()));
+//        jsonObject.put("hairColor", user.getHairColor());
+//        jsonObject.put("items", itemService.createJsonArrayOfItems(user.getItems()));
+//        jsonObject.put("username", user.getUsername());
+//        jsonObject.put("password", user.getPassword());
         // jsonObject.put("coat", outfit.getCoat().toString());
         // jsonObject.put("items", itemService.createJsonArrayOfItems(outfit.getItems()));
-        jsonArray.add(jsonObject);
+       // jsonArray.add(jsonObject);
         try {
-            FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/users.json");
-            file.write(jsonArray.toJSONString());
-            file.close();
-            //Files.write(Paths.get("src/main/java/com/example/smartwardrobe/json/outfits.json"),jsonObject.toJSONString().getBytes());
-        } catch (IOException e) {
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(objectMapper.writeValueAsString(user));
+            jsonArray.add(jsonObject);
+            try (FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/users.json")) {
+                file.write(jsonArray.toJSONString());
+            }
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
 
@@ -83,12 +81,12 @@ public class UserServiceImpl implements UserService {
     public JSONArray getUsersFromFile() {
         JSONParser parser = new JSONParser();
         try{
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json")); ;
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json"));
             return jsonArray;
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return new JSONArray();
     }
 
     public static List<Item> convertObjectToList(Object obj) {
@@ -96,49 +94,25 @@ public class UserServiceImpl implements UserService {
         if (obj.getClass().isArray()) {
             list = Arrays.asList((Item[])obj);
         } else if (obj instanceof Collection) {
-            list = new ArrayList<Item>((Collection<Item>)obj);
+            list = new ArrayList<>((Collection<Item>)obj);
         }
         return list;
     }
 
     @Override
-    public User saveUserFromFile(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        JSONParser parser = new JSONParser();
-        try{
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json")); ;
-            user.setId(Long.parseLong(jsonArray.get(0).toString()));
-            user.setEyeColor(EyeColor.valueOf((jsonArray.get(1).toString())));
-            user.setWeight(Double.parseDouble(jsonArray.get(2).toString()));
-            user.setHeight(Double.parseDouble(jsonArray.get(3).toString()));
-            user.setGender(Gender.valueOf((jsonArray.get(4).toString())));
-            user.setAge(Integer.parseInt(jsonArray.get(5).toString()));
-            user.setHairColor(HairColor.valueOf((jsonArray.get(6).toString())));
-            List<Item> listOfItems = convertObjectToList(jsonArray.get(7));
-            user.setItems(listOfItems);
-            user.setUsername(jsonArray.get(8).toString());
-        } catch (ParseException | IOException e) {
+    public User saveUserFromFile() {
+        JSONArray fromFile = getUsersFromFile();
+        JSONObject userFromFile = (JSONObject) fromFile.get(0);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            User user = objectMapper.readValue(userFromFile.toJSONString(), User.class);
+            saveUser(user);
+            return user;
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return user;
+        return null;
     }
 
-    @Override
-    public JSONArray createJsonArrayOfItems(List<Item> items) {
-        JSONArray jsonArray = new JSONArray();
-        for(Item item: items){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", item.getId().toString());
-            jsonObject.put("material", item.getMaterial().toString());
-            jsonObject.put("size", item.getSize().toString());
-            jsonObject.put("code", item.getCode());
-            jsonObject.put("color", item.getItemColor().toString());
-            jsonObject.put("style", item.getStyle().toString());
-            jsonObject.put("category", item.getItemCategory().toString());
-            jsonArray.add(jsonObject);
-        }
-        return jsonArray;
-    }
 
 }

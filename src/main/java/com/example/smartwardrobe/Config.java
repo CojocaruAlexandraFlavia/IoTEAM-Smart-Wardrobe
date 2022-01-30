@@ -13,10 +13,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.security.web.authentication.session.ChangeSessionIdAuthenticationStrategy;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -30,14 +28,13 @@ public class Config extends WebSecurityConfigurerAdapter implements WebMvcConfig
     private final BasicAuthEntryPoint authenticationEntryPoint;
 
     @Autowired
-    private final UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    public Config(BasicAuthEntryPoint authenticationEntryPoint, UserDetailsServiceImpl userDetailsService, PasswordEncoder passwordEncoder) {
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    public Config(BasicAuthEntryPoint authenticationEntryPoint, PasswordEncoder passwordEncoder) {
         this.authenticationEntryPoint = authenticationEntryPoint;
-        this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -47,7 +44,7 @@ public class Config extends WebSecurityConfigurerAdapter implements WebMvcConfig
         return super.authenticationManagerBean();
     }
 
-    @Autowired
+    //@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
                 .withUser("user").password(passwordEncoder.encode("user"))

@@ -1,18 +1,15 @@
 package com.example.smartwardrobe.weather;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.Normalizer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 /**
  * Copyright 2017 Shynixn

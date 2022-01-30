@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Weather.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.weather</a> &gt; <span class="el_source">Weather.java</span></div><h1>Weather.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.weather;
+
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * Wrapper for the weather
+ */
+
+public class Weather implements Serializable {
+<span class="nc" id="L12">    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm&quot;);</span>
+    private int humidity;
+    private int is_day;
+    private float temp_c;
+    private Date last_updated;
+
+    /**
+     * Default constructor
+     */
+<span class="nc" id="L21">    public Weather() {</span>
+<span class="nc" id="L22">    }</span>
+
+    /**
+     * Initializes a new Weather
+     *
+     * @param humidity humidity
+     * @param is_day is_day
+     * @param temp_c temp_c
+     * @param last_updated last_updated
+     */
+<span class="nc" id="L32">    public Weather(int humidity, int is_day, float temp_c, String last_updated) throws Exception {</span>
+<span class="nc" id="L33">        this.humidity = humidity;</span>
+<span class="nc" id="L34">        this.is_day = is_day;</span>
+<span class="nc" id="L35">        this.temp_c = temp_c;</span>
+<span class="nc" id="L36">        this.last_updated = DATE_FORMAT.parse(last_updated);</span>
+<span class="nc" id="L37">    }</span>
+
+    /**
+     * Returns the code of the weather
+     *
+     * @return
+     */
+    public int getHumidity() {
+<span class="nc" id="L45">        return this.humidity;</span>
+    }
+
+    /**
+     * Returns the text
+     *
+     * @return text
+     */
+    public int getDay() {
+<span class="nc" id="L54">        return this.is_day;</span>
+    }
+
+    /**
+     * Returns the temp
+     *
+     * @return temp
+     */
+    public float getTemp() {
+<span class="nc" id="L63">        return this.temp_c;</span>
+    }
+
+    /**
+     * Returns the date
+     *
+     * @return date
+     */
+    public Date getDate() {
+<span class="nc" id="L72">        return this.last_updated;</span>
+    }
+
+    /**
+     * Displays the weather
+     *
+     * @return string
+     */
+    @Override
+    public String toString() {
+        String timeOfDay;
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if(this.is_day == 0){</span>
+<span class="nc" id="L84">            timeOfDay = &quot;night&quot;;</span>
+        }else{
+<span class="nc" id="L86">            timeOfDay = &quot;day&quot;;</span>
+        }
+<span class="nc" id="L88">        return &quot;Weather{&quot; +</span>
+                &quot;humidity=&quot; + this.humidity +
+                &quot;, timeOfDay='&quot; + timeOfDay + '\'' +
+                &quot;, temp=&quot; + this.temp_c +
+<span class="nc" id="L92">                &quot;, date='&quot; + DATE_FORMAT.format(this.last_updated) + '\'' +</span>
+                '}';
+    }
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

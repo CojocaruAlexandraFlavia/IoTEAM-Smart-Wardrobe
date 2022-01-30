@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OutfitController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.controller</a> &gt; <span class="el_source">OutfitController.java</span></div><h1>OutfitController.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.controller;
+
+import com.example.smartwardrobe.model.Outfit;
+import com.example.smartwardrobe.model.dto.OutfitDto;
+import com.example.smartwardrobe.service.OutfitService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/outfit&quot;)
+<span class="fc" id="L13">public class OutfitController {</span>
+
+    @Autowired
+    private OutfitService outfitService;
+
+    @GetMapping
+    public List&lt;Outfit&gt; getAllOutfits(){
+<span class="fc" id="L20">        return outfitService.findAllOutfits();</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public Outfit getOutfitById(@PathVariable(&quot;id&quot;) Long id){
+<span class="nc" id="L25">        return outfitService.findOutfitById(id);</span>
+    }
+
+    @PostMapping
+    public Outfit saveOutfit(@RequestBody OutfitDto outfitDto){
+<span class="nc" id="L30">        return outfitService.saveOutfit(outfitService.convertDtoToEntity(outfitDto));</span>
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    public void deleteOutfitById(@PathVariable(&quot;id&quot;) Long id){
+<span class="fc" id="L35">        outfitService.deleteOutfitById(id);</span>
+<span class="fc" id="L36">    }</span>
+
+    @PatchMapping(&quot;/{outfitId}/{nrOfStars}&quot;)
+    public Outfit rateOutfit(@PathVariable(&quot;outfitId&quot;) String outfitId, @PathVariable(&quot;nrOfStars&quot;) String nrOfStars){
+<span class="nc" id="L40">        return outfitService.giveStarsToOutfit(outfitId, Integer.parseInt(nrOfStars));</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

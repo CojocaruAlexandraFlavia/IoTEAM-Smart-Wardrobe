@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.smartwardrobe.service.impl.OutfitServiceImplTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.13 s - in com.example.smartwardrobe.service.impl.OutfitServiceImplTest

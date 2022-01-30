@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IpInformation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.weather</a> &gt; <span class="el_source">IpInformation.java</span></div><h1>IpInformation.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.weather;
+
+import java.io.Serializable;
+
+/**
+ * Wrapper for the ipInformation
+ */
+
+public class IpInformation implements Serializable {
+    private String country;
+    private String city;
+    private String timezone;
+    private String countryCode;
+
+    /**
+     * Default constructor
+     */
+<span class="nc" id="L18">    public IpInformation() {</span>
+<span class="nc" id="L19">    }</span>
+
+    /**
+     * Initializes a new ipInformation
+     *
+     * @param country     country
+     * @param city        city
+     * @param timezone    timezone
+     * @param countryCode countryCode
+     */
+<span class="nc" id="L29">    public IpInformation(String country, String city, String timezone, String countryCode) {</span>
+<span class="nc" id="L30">        this.country = country;</span>
+<span class="nc" id="L31">        this.city = city;</span>
+<span class="nc" id="L32">        this.countryCode = countryCode;</span>
+<span class="nc" id="L33">        this.timezone = timezone;</span>
+<span class="nc" id="L34">    }</span>
+
+    /**
+     * Returns the name of the country
+     *
+     * @return name
+     */
+    public String getCountry() {
+<span class="nc" id="L42">        return this.country;</span>
+    }
+
+    /**
+     * Returns the city
+     *
+     * @return city
+     */
+    public String getCity() {
+<span class="nc" id="L51">        return this.city;</span>
+    }
+
+    /**
+     * Returns the timeZone
+     *
+     * @return timeZone
+     */
+    public String getTimezone() {
+<span class="nc" id="L60">        return this.timezone;</span>
+    }
+
+    /**
+     * Returns the code of the country
+     *
+     * @return country
+     */
+    public String getCountryCode() {
+<span class="nc" id="L69">        return this.countryCode;</span>
+    }
+
+    /**
+     * Displays the ipInformation
+     *
+     * @return string
+     */
+    @Override
+    public String toString() {
+<span class="nc" id="L79">        return &quot;IpInformation{&quot; +</span>
+                &quot;country='&quot; + this.country + '\'' +
+                &quot;, city='&quot; + this.city + '\'' +
+                &quot;, timezone='&quot; + this.timezone + '\'' +
+                &quot;, countryCode='&quot; + this.countryCode + '\'' +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

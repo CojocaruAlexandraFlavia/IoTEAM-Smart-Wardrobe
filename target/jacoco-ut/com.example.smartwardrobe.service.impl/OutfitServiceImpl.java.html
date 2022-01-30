@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OutfitServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.service.impl</a> &gt; <span class="el_source">OutfitServiceImpl.java</span></div><h1>OutfitServiceImpl.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.service.impl;
+
+import com.example.smartwardrobe.enums.CoatCategory;
+import com.example.smartwardrobe.model.Coat;
+import com.example.smartwardrobe.model.History;
+import com.example.smartwardrobe.model.Item;
+import com.example.smartwardrobe.model.Outfit;
+import com.example.smartwardrobe.model.dto.CoatDto;
+import com.example.smartwardrobe.model.dto.OutfitDto;
+import com.example.smartwardrobe.repository.OutfitRepository;
+import com.example.smartwardrobe.service.HistoryService;
+import com.example.smartwardrobe.service.ItemService;
+import com.example.smartwardrobe.service.OutfitService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+<span class="fc" id="L33">public class OutfitServiceImpl implements OutfitService {</span>
+
+    @Autowired
+    private OutfitRepository outfitRepository;
+
+    @Autowired
+    private ItemService itemService;
+
+    @Autowired
+    private HistoryService historyService;
+
+    @Override
+    public Outfit saveOutfit(Outfit outfit) {
+<span class="nc" id="L46">        List&lt;Item&gt; outfitItems = outfit.getItems();</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        for(Item item: outfitItems){</span>
+<span class="nc" id="L48">            itemService.updateItemAfterAddingOutfit(item.getId());</span>
+<span class="nc" id="L49">        }</span>
+
+<span class="nc" id="L51">        Outfit savedOutfit = outfitRepository.save(outfit);</span>
+
+<span class="nc" id="L53">        History history = new History();</span>
+<span class="nc" id="L54">        history.setDateTime(LocalDate.now());</span>
+<span class="nc" id="L55">        history.setOutfit(savedOutfit);</span>
+<span class="nc" id="L56">        historyService.saveHistory(history);</span>
+
+<span class="nc" id="L58">        writeOutfitToFile(savedOutfit);</span>
+
+<span class="nc" id="L60">        return savedOutfit;</span>
+    }
+
+    @Override
+    public void deleteOutfitById(Long id) {
+<span class="fc" id="L65">        outfitRepository.deleteById(id);</span>
+<span class="fc" id="L66">    }</span>
+
+    @Override
+    public Outfit findOutfitById(Long id) {
+<span class="fc" id="L70">        return outfitRepository.findById(id).orElseThrow();</span>
+    }
+
+    @Override
+    public List&lt;Outfit&gt; findAllOutfits() {
+<span class="fc" id="L75">        return outfitRepository.findAll();</span>
+    }
+
+    @Override
+    public void writeOutfitToFile(Outfit outfit) {
+<span class="fc" id="L80">        JSONArray jsonArray = getOutfitsFromFile();</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if(jsonArray.size() == 7){</span>
+<span class="fc" id="L82">            jsonArray.remove(0);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">            for(int i = 0; i &lt; jsonArray.size() - 1; i++){</span>
+<span class="fc" id="L84">                jsonArray.set(i, jsonArray.get(i + 1));</span>
+            }
+        }
+<span class="fc" id="L87">        JSONObject jsonObject = transformOutfitToJsonObject(outfit);</span>
+<span class="fc" id="L88">        jsonArray.add(jsonObject);</span>
+        try {
+<span class="fc" id="L90">            try (FileWriter file = new FileWriter(&quot;src/main/java/com/example/smartwardrobe/json/outfits.json&quot;)) {</span>
+<span class="fc" id="L91">                file.write(jsonArray.toJSONString());</span>
+            }
+<span class="nc" id="L93">        } catch (IOException e) {</span>
+<span class="nc" id="L94">            e.printStackTrace();</span>
+<span class="fc" id="L95">        }</span>
+<span class="fc" id="L96">    }</span>
+
+    @Override
+    public JSONArray getOutfitsFromFile() {
+<span class="fc" id="L100">        JSONParser parser = new JSONParser();</span>
+        try{
+<span class="fc" id="L102">            return (JSONArray) parser.parse(new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/outfits.json&quot;));</span>
+<span class="nc" id="L103">        } catch (ParseException | IOException e) {</span>
+<span class="nc" id="L104">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L106">        return new JSONArray();</span>
+    }
+
+    @Override
+    public JSONObject transformOutfitToJsonObject(@NotNull Outfit outfit) {
+<span class="fc" id="L111">        JSONParser jsonParser = new JSONParser();</span>
+<span class="fc" id="L112">        ObjectMapper objectMapper = new ObjectMapper();</span>
+        try {
+<span class="fc" id="L114">            return (JSONObject) jsonParser.parse(objectMapper.writeValueAsString(outfit));</span>
+<span class="nc" id="L115">        } catch (ParseException | JsonProcessingException e) {</span>
+<span class="nc" id="L116">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L118">        return new JSONObject();</span>
+    }
+
+    @Override
+    public JSONObject transformCoatToJsonObject(Coat coat) {
+<span class="nc" id="L123">        JSONObject jsonObject = new JSONObject();</span>
+<span class="nc" id="L124">        jsonObject.put(&quot;id&quot;, coat.getId());</span>
+<span class="nc" id="L125">        jsonObject.put(&quot;coatCategory&quot;, coat.getCoatCategory());</span>
+<span class="nc" id="L126">        return jsonObject;</span>
+    }
+
+    @Override
+    public Outfit giveStarsToOutfit(String outfitId, int nrOfStars) {
+<span class="nc" id="L131">        Outfit outfit = findOutfitById(Long.valueOf(outfitId));</span>
+<span class="nc" id="L132">        outfit.setNrOfStars(outfit.getNrOfStars() + nrOfStars);</span>
+<span class="nc" id="L133">        outfit.setNrOfReviews(outfit.getNrOfReviews() + 1);</span>
+<span class="nc" id="L134">        outfit.setRating((double) outfit.getNrOfStars() / (double) outfit.getNrOfReviews());</span>
+<span class="nc" id="L135">        saveOutfit(outfit);</span>
+<span class="nc" id="L136">        return outfit;</span>
+    }
+
+    @Override
+    public List&lt;Outfit&gt; findOutfitsWithBestRating(double minimRating) {
+<span class="nc" id="L141">        return outfitRepository.findByRatingGreaterThanEqual(minimRating, Sort.by(Sort.Direction.DESC, &quot;rating&quot;));</span>
+    }
+
+    @Override
+    public Outfit convertDtoToEntity(OutfitDto outfitDto) {
+<span class="nc" id="L146">        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L147">        outfit.setCoat(convertCoatDtoToEntity(outfitDto.getCoatDto()));</span>
+<span class="nc" id="L148">        outfit.setItems(outfitDto.getItemDtoList().stream().map(itemDto -&gt; itemService.convertDtoToEntity(itemDto)).collect(Collectors.toList()));</span>
+<span class="nc" id="L149">        outfit.setDescription(outfitDto.getDescription());</span>
+<span class="nc" id="L150">        return outfit;</span>
+    }
+
+    @Override
+    public Coat convertCoatDtoToEntity(CoatDto coatDto) {
+<span class="nc" id="L155">        Coat coat = new Coat();</span>
+<span class="nc" id="L156">        coat.setCoatCategory(CoatCategory.valueOf(coatDto.getCoatCategory()));</span>
+<span class="nc" id="L157">        coat.setId(Long.valueOf(coatDto.getId()));</span>
+<span class="nc" id="L158">        return coat;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

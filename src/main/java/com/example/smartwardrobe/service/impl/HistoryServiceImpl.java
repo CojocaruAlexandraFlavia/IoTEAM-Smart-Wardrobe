@@ -1,8 +1,10 @@
 package com.example.smartwardrobe.service.impl;
 
 import com.example.smartwardrobe.model.History;
+import com.example.smartwardrobe.model.dto.HistoryDto;
 import com.example.smartwardrobe.repository.HistoryRepository;
 import com.example.smartwardrobe.service.HistoryService;
+import com.example.smartwardrobe.service.OutfitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +15,10 @@ import java.util.List;
 public class HistoryServiceImpl implements HistoryService {
 
     @Autowired
-    private final HistoryRepository historyRepository;
+    HistoryRepository historyRepository;
 
-    public HistoryServiceImpl(HistoryRepository historyRepository) {
-        this.historyRepository = historyRepository;
-    }
+    @Autowired
+    OutfitService outfitService;
 
     @Override
     public History findHistoryById(Long id) {
@@ -42,5 +43,13 @@ public class HistoryServiceImpl implements HistoryService {
     @Override
     public List<History> findAllHistories() {
         return historyRepository.findAll();
+    }
+
+    @Override
+    public History convertDtoToEntity(HistoryDto historyDto) {
+        History history = new History();
+        history.setDateTime(historyDto.getLocalDateTime());
+        history.setOutfit(outfitService.findOutfitById(historyDto.getOutfitId()));
+        return history;
     }
 }

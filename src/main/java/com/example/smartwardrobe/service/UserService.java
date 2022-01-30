@@ -15,7 +15,7 @@ public interface UserService{
     Optional<User> findUserByUsername(String username);
     void writeUserToFile(User user);
     JSONArray getUsersFromFile();
-    User saveUserFromFile(User user);
-    JSONArray createJsonArrayOfItems(List<Item> items);
+    User saveUserFromFile();
+    //JSONArray createJsonArrayOfItems(List<Item> items);
 
 }

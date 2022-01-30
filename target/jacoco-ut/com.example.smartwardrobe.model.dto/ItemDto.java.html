@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.model.dto</a> &gt; <span class="el_source">ItemDto.java</span></div><h1>ItemDto.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.model.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+<span class="nc bnc" id="L9" title="All 90 branches missed.">@Data</span>
+public class ItemDto {
+
+<span class="nc" id="L12">    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+
+    @JsonProperty(&quot;id&quot;)
+    private long id;
+
+    @JsonProperty(&quot;material&quot;)
+    private String material;
+
+    @JsonProperty(&quot;size&quot;)
+    private String size;
+
+    @JsonProperty(&quot;code&quot;)
+    private String code;
+
+    @JsonProperty(&quot;itemColor&quot;)
+    private String itemColor;
+
+    @JsonProperty(&quot;style&quot;)
+    private String style;
+
+    @JsonProperty(&quot;itemCategory&quot;)
+    private String itemCategory;
+
+    @JsonProperty(&quot;lastWearing&quot;)
+    private String lastWearing;
+
+    @JsonProperty(&quot;nrOfWearsSinceLastWash&quot;)
+    private int nrOfWearsSinceLastWash;
+
+    @JsonProperty(&quot;washingZoneColor&quot;)
+    private String washingZOneColor;
+
+    @JsonProperty(&quot;lastWashingDay&quot;)
+    private String lastWashingDay;
+
+    public String getMaterial() {
+<span class="nc" id="L48">        return material;</span>
+    }
+
+    public void setMaterial(String material) {
+<span class="nc" id="L52">        this.material = material;</span>
+<span class="nc" id="L53">    }</span>
+
+    public String getSize() {
+<span class="nc" id="L56">        return size;</span>
+    }
+
+    public void setSize(String size) {
+<span class="nc" id="L60">        this.size = size;</span>
+<span class="nc" id="L61">    }</span>
+
+    public String getCode() {
+<span class="nc" id="L64">        return code;</span>
+    }
+
+    public void setCode(String code) {
+<span class="nc" id="L68">        this.code = code;</span>
+<span class="nc" id="L69">    }</span>
+
+    public String getItemColor() {
+<span class="nc" id="L72">        return itemColor;</span>
+    }
+
+    public void setItemColor(String itemColor) {
+<span class="nc" id="L76">        this.itemColor = itemColor;</span>
+<span class="nc" id="L77">    }</span>
+
+    public String getStyle() {
+<span class="nc" id="L80">        return style;</span>
+    }
+
+    public void setStyle(String style) {
+<span class="nc" id="L84">        this.style = style;</span>
+<span class="nc" id="L85">    }</span>
+
+    public String getItemCategory() {
+<span class="nc" id="L88">        return itemCategory;</span>
+    }
+
+    public void setItemCategory(String itemCategory) {
+<span class="nc" id="L92">        this.itemCategory = itemCategory;</span>
+<span class="nc" id="L93">    }</span>
+
+    public String getLastWearing() {
+<span class="nc" id="L96">        return lastWearing;</span>
+    }
+
+    public void setLastWearing(String lastWearing) {
+<span class="nc" id="L100">        this.lastWearing = lastWearing;</span>
+<span class="nc" id="L101">    }</span>
+
+    public int getNrOfWearsSinceLastWash() {
+<span class="nc" id="L104">        return nrOfWearsSinceLastWash;</span>
+    }
+
+    public void setNrOfWearsSinceLastWash(int nrOfWearsSinceLastWash) {
+<span class="nc" id="L108">        this.nrOfWearsSinceLastWash = nrOfWearsSinceLastWash;</span>
+<span class="nc" id="L109">    }</span>
+
+    public String getWashingZOneColor() {
+<span class="nc" id="L112">        return washingZOneColor;</span>
+    }
+
+    public void setWashingZOneColor(String washingZOneColor) {
+<span class="nc" id="L116">        this.washingZOneColor = washingZOneColor;</span>
+<span class="nc" id="L117">    }</span>
+
+    public LocalDate getLastWearingDate(){
+<span class="nc" id="L120">        return LocalDate.parse(lastWearing, dateFormatter);</span>
+    }
+
+    public LocalDate getLastWashingDayDate(){
+<span class="nc" id="L124">        return LocalDate.parse(lastWashingDay, dateFormatter);</span>
+    }
+
+    public long getId() {
+<span class="nc" id="L128">        return id;</span>
+    }
+
+    public void setId(long id) {
+<span class="nc" id="L132">        this.id = id;</span>
+<span class="nc" id="L133">    }</span>
+
+    public String getLastWashingDay() {
+<span class="nc" id="L136">        return lastWashingDay;</span>
+    }
+
+    public void setLastWashingDay(String lastWashingDay) {
+<span class="nc" id="L140">        this.lastWashingDay = lastWashingDay;</span>
+<span class="nc" id="L141">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

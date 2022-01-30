@@ -1,6 +1,7 @@
 package com.example.smartwardrobe.controller;
 
 import com.example.smartwardrobe.model.Item;
+import com.example.smartwardrobe.model.dto.ItemDto;
 import com.example.smartwardrobe.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,8 @@ public class ItemController {
     }
 
     @PostMapping
-    public Item saveItem(@RequestBody Item item){
-        return itemService.saveItem(item);
+    public Item saveItem(@RequestBody ItemDto itemDto){
+        return itemService.saveItem(itemService.convertDtoToEntity(itemDto));
     }
 
     @DeleteMapping("/{id}")
@@ -47,9 +48,9 @@ public class ItemController {
     }
 
     @GetMapping("/getByStyle/{styleName}")
-    public ResponseEntity<?> getItemByStyle(@PathVariable("styleName") String styleName){
+    public ResponseEntity<Object> getItemByStyle(@PathVariable("styleName") String styleName){
         List<Item> item = itemService.getItemsByStyleName(styleName);
-        if(item.size() != 0){
+        if(!item.isEmpty()){
             return ResponseEntity.ok(item);
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Style or items not found!");
@@ -57,7 +58,7 @@ public class ItemController {
     }
 
     @PatchMapping ("/washing/{itemId}")
-    public String washItem(@PathVariable("itemId") String itemId){
+    public Item washItem(@PathVariable("itemId") String itemId){
         return itemService.washItem(itemId);
     }
 

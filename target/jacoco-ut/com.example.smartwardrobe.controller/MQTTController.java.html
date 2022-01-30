@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MQTTController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.controller</a> &gt; <span class="el_source">MQTTController.java</span></div><h1>MQTTController.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.controller;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
+<span class="nc" id="L8">public class MQTTController {</span>
+
+    public static void main(String[] args) {
+
+<span class="nc" id="L12">        String topic        = &quot;MQTT Examples&quot;;</span>
+<span class="nc" id="L13">        String content      = &quot;Message from MqttPublishSample&quot;;</span>
+<span class="nc" id="L14">        int qos             = 2;</span>
+<span class="nc" id="L15">        String broker       = &quot;tcp://localhost:1883&quot;;</span>
+<span class="nc" id="L16">        String clientId     = &quot;SmartWardrobeApplication&quot;;</span>
+<span class="nc" id="L17">        MemoryPersistence persistence = new MemoryPersistence();</span>
+
+        try {
+<span class="nc" id="L20">            MqttClient sampleClient = new MqttClient(broker, clientId, persistence);</span>
+<span class="nc" id="L21">            MqttConnectOptions connOpts = new MqttConnectOptions();</span>
+<span class="nc" id="L22">            connOpts.setCleanSession(true);</span>
+<span class="nc" id="L23">            System.out.println(&quot;Connecting to broker: &quot;+ broker);</span>
+<span class="nc" id="L24">            sampleClient.connect(connOpts);</span>
+<span class="nc" id="L25">            System.out.println(&quot;Connected&quot;);</span>
+<span class="nc" id="L26">            System.out.println(&quot;Publishing message: &quot;+content);</span>
+<span class="nc" id="L27">            MqttMessage message = new MqttMessage(content.getBytes());</span>
+<span class="nc" id="L28">            message.setQos(qos);</span>
+<span class="nc" id="L29">            sampleClient.publish(topic, message);</span>
+<span class="nc" id="L30">            System.out.println(&quot;Message published&quot;);</span>
+<span class="nc" id="L31">            sampleClient.disconnect();</span>
+<span class="nc" id="L32">            System.out.println(&quot;Disconnected&quot;);</span>
+<span class="nc" id="L33">            System.exit(0);</span>
+<span class="nc" id="L34">        } catch(MqttException me) {</span>
+<span class="nc" id="L35">            System.out.println(&quot;reason &quot;+me.getReasonCode());</span>
+<span class="nc" id="L36">            System.out.println(&quot;msg &quot;+me.getMessage());</span>
+<span class="nc" id="L37">            System.out.println(&quot;loc &quot;+me.getLocalizedMessage());</span>
+<span class="nc" id="L38">            System.out.println(&quot;cause &quot;+me.getCause());</span>
+<span class="nc" id="L39">            System.out.println(&quot;excep &quot;+me);</span>
+<span class="nc" id="L40">            me.printStackTrace();</span>
+<span class="nc" id="L41">        }</span>
+<span class="nc" id="L42">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Config.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe</a> &gt; <span class="el_source">Config.java</span></div><h1>Config.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe;
+
+import com.example.smartwardrobe.authentication.BasicAuthEntryPoint;
+import com.example.smartwardrobe.service.impl.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class Config extends WebSecurityConfigurerAdapter implements WebMvcConfigurer{
+
+    @Autowired
+    private final BasicAuthEntryPoint authenticationEntryPoint;
+
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+<span class="nc" id="L36">    public Config(BasicAuthEntryPoint authenticationEntryPoint, PasswordEncoder passwordEncoder) {</span>
+<span class="nc" id="L37">        this.authenticationEntryPoint = authenticationEntryPoint;</span>
+<span class="nc" id="L38">        this.passwordEncoder = passwordEncoder;</span>
+<span class="nc" id="L39">    }</span>
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+<span class="nc" id="L44">        return super.authenticationManagerBean();</span>
+    }
+
+    //@Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+<span class="nc" id="L49">        auth.inMemoryAuthentication()</span>
+<span class="nc" id="L50">                .withUser(&quot;user&quot;).password(passwordEncoder.encode(&quot;user&quot;))</span>
+<span class="nc" id="L51">                .authorities(&quot;ROLE_ADMIN&quot;);</span>
+<span class="nc" id="L52">    }</span>
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+<span class="nc" id="L56">        http.cors().disable().csrf().disable()</span>
+<span class="nc" id="L57">                .httpBasic().and()</span>
+<span class="nc" id="L58">                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()</span>
+<span class="nc" id="L59">                .authorizeRequests().antMatchers(&quot;/signIn&quot;).permitAll()</span>
+                //.anyRequest().authenticated()
+<span class="nc" id="L61">                .anyRequest().permitAll()</span>
+<span class="nc" id="L62">                .and()</span>
+<span class="nc" id="L63">                    .logout()</span>
+<span class="nc" id="L64">                    .logoutRequestMatcher(new AntPathRequestMatcher(&quot;/logout&quot;))</span>
+<span class="nc" id="L65">                    .invalidateHttpSession(true)        // set invalidation state when logout</span>
+<span class="nc" id="L66">                    .deleteCookies(&quot;JSESSIONID&quot;)</span>
+<span class="nc" id="L67">                    .clearAuthentication(true)</span>
+<span class="nc" id="L68">                    .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));</span>
+
+<span class="nc" id="L70">    }</span>
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+<span class="nc" id="L74">        registry.addMapping(&quot;/**&quot;).allowedMethods(&quot;HEAD&quot;, &quot;GET&quot;, &quot;PUT&quot;, &quot;POST&quot;, &quot;DELETE&quot;,</span>
+                &quot;PATCH&quot;);
+<span class="nc" id="L76">    }</span>
+
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+//    }
+
+//    @Override
+//    @Bean
+//    public UserDetailsService userDetailsServiceBean() throws Exception {
+//        return new UserDetailsServiceImpl();
+//    }
+//
+//    @Autowired
+//    public void configureGlobalSecurity(AuthenticationManagerBuilder authentication) throws Exception {
+//        authentication.userDetailsService(userDetailsServiceBean());
+//        //authentication.authenticationProvider(authenticationProvider());
+//    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+<span class="nc" id="L97">        auth.authenticationProvider(daoAuthenticationProvider());</span>
+<span class="nc" id="L98">    }</span>
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+<span class="nc" id="L102">        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();</span>
+<span class="nc" id="L103">        provider.setPasswordEncoder(passwordEncoder);</span>
+<span class="nc" id="L104">        provider.setUserDetailsService(userDetailsService);</span>
+<span class="nc" id="L105">        return provider;</span>
+    }
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

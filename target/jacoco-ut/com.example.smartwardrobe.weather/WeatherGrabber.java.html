@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WeatherGrabber.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.weather</a> &gt; <span class="el_source">WeatherGrabber.java</span></div><h1>WeatherGrabber.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.weather;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.text.Normalizer;
+
+/**
+ * Copyright 2017 Shynixn
+ * &lt;p&gt;
+ * Do not remove this header!
+ * &lt;p&gt;
+ * Version 1.0
+ * &lt;p&gt;
+ * MIT License
+ * &lt;p&gt;
+ * Copyright (c) 2016
+ * &lt;p&gt;
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * &lt;p&gt;
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * &lt;p&gt;
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+<span class="nc" id="L43">public class WeatherGrabber {</span>
+
+    /**
+     * Grabs the weather by ip from Yahoo Weather Api and ip-api.com
+     *
+     * @param ip ip
+     * @return weather
+     */
+    public static Weather grabWeatherFrom(String ip) throws Exception {
+<span class="nc" id="L52">        return grabWeatherFrom(grabLocationFrom(ip));</span>
+    }
+
+    /**
+     * Grabs the weather by ipInformation from Yahoo Weather Api
+     *
+     * @param ipInformation ipInformation
+     * @return weather
+     * @throws Exception exception
+     */
+    public static Weather grabWeatherFrom(IpInformation ipInformation) throws Exception {
+<span class="nc" id="L63">        return grabWeatherFrom(ipInformation.getCity(), ipInformation.getCountryCode());</span>
+    }
+
+    /**
+     *
+     * @param src
+     * @return
+     */
+    public static String unaccent(String src) {
+<span class="nc" id="L72">        return Normalizer</span>
+<span class="nc" id="L73">                .normalize(src, Normalizer.Form.NFD)</span>
+<span class="nc" id="L74">                .replaceAll(&quot;[^\\p{ASCII}]&quot;, &quot;&quot;);</span>
+    }
+    /**
+     * Grabs the weather by city and countryCode from Yahoo Weather Api
+     *
+     * @param city        city
+     * @param countryCode countryCode
+     * @return weather
+     * @throws Exception exception
+     */
+    public static Weather grabWeatherFrom(String city, String countryCode) throws Exception {
+<span class="nc" id="L85">        String city6 = unaccent(city);</span>
+<span class="nc" id="L86">        String data = city6 + &quot;, &quot; + countryCode;</span>
+<span class="nc" id="L87">        String YQL = String.format(&quot;select * from weather.forecast where woeid in (select woeid from geo.places(1) where text=\&quot;%s\&quot;) and u='c'&quot;, data);</span>
+<span class="nc" id="L88">        String endpoint = String.format(&quot;http://api.weatherapi.com/v1/current.json?key=7863f9f7b46547e5bf7222325221901&amp;q=&quot;+city6+&quot;&amp;aqi=no&quot;, URLEncoder.encode(YQL, &quot;UTF-8&quot;));</span>
+<span class="nc" id="L89">        URL url = new URL(endpoint);</span>
+<span class="nc" id="L90">        try (BufferedReader stream = new BufferedReader(new InputStreamReader(url.openStream()))) {</span>
+<span class="nc" id="L91">            JSONParser parser = new JSONParser();</span>
+<span class="nc" id="L92">            JSONObject jsonObject = (JSONObject) parser.parse(stream);</span>
+<span class="nc" id="L93">            JSONObject weatherData = (JSONObject) jsonObject.get(&quot;current&quot;);</span>
+<span class="nc" id="L94">            FileWriter file = new FileWriter(&quot;src/main/java/com/example/smartwardrobe/json/weather.json&quot;);</span>
+<span class="nc" id="L95">            JSONObject newData = new JSONObject();</span>
+<span class="nc" id="L96">            newData.put(&quot;humidity&quot;,weatherData.get(&quot;humidity&quot;));</span>
+<span class="nc" id="L97">            newData.put(&quot;is_day&quot;,weatherData.get(&quot;is_day&quot;));</span>
+<span class="nc" id="L98">            newData.put(&quot;feelslike_c&quot;,weatherData.get(&quot;feelslike_c&quot;));</span>
+<span class="nc" id="L99">            newData.put(&quot;last_updated&quot;,weatherData.get(&quot;last_updated&quot;));</span>
+<span class="nc" id="L100">            file.write(newData.toJSONString());</span>
+<span class="nc" id="L101">            file.close();</span>
+<span class="nc" id="L102">            return new Weather(Integer.parseInt(weatherData.get(&quot;humidity&quot;).toString()),</span>
+<span class="nc" id="L103">                    Integer.parseInt(weatherData.get(&quot;is_day&quot;).toString()),</span>
+<span class="nc" id="L104">                    Float.parseFloat(weatherData.get(&quot;feelslike_c&quot;).toString()),</span>
+<span class="nc" id="L105">                    weatherData.get(&quot;last_updated&quot;).toString());</span>
+        }
+    }
+
+    /**
+     * Grabs the ip information by javaSocketAddress from ip-api.com
+     *
+     * @param ip ip
+     * @return information
+     */
+    public static IpInformation grabLocationFrom(InetSocketAddress ip) throws Exception {
+<span class="nc" id="L116">        return grabLocationFrom(ip.getHostName());</span>
+    }
+
+    /**
+     * Grabs the ip information by javaSocketAddress from ip-api.com
+     *
+     * @param ip ip
+     * @return information
+     */
+    public static IpInformation grabLocationFrom(String ip) throws Exception {
+<span class="nc" id="L126">        URL url = new URL(&quot;http://ip-api.com/json/&quot; + ip);</span>
+<span class="nc" id="L127">        try (BufferedReader stream = new BufferedReader(new InputStreamReader(url.openStream()))) {</span>
+<span class="nc" id="L128">            JSONParser parser = new JSONParser();</span>
+<span class="nc" id="L129">            JSONObject jsonObject = (JSONObject) parser.parse(stream);</span>
+<span class="nc" id="L130">            FileWriter file = new FileWriter(&quot;src/main/java/com/example/smartwardrobe/json/ip.json&quot;);</span>
+<span class="nc" id="L131">            file.write(jsonObject.toJSONString());</span>
+<span class="nc" id="L132">            file.close();</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            if (((String) jsonObject.get(&quot;regionName&quot;)).equals(&quot;Bucharest&quot;)){</span>
+<span class="nc" id="L134">                return new IpInformation((String) jsonObject.get(&quot;country&quot;), (String) jsonObject.get(&quot;regionName&quot;), (String) jsonObject.get(&quot;timezone&quot;), (String) jsonObject.get(&quot;countryCode&quot;));</span>
+            }
+            else{
+<span class="nc" id="L137">                return new IpInformation((String) jsonObject.get(&quot;country&quot;), (String) jsonObject.get(&quot;city&quot;), (String) jsonObject.get(&quot;timezone&quot;), (String) jsonObject.get(&quot;countryCode&quot;));</span>
+            }
+
+<span class="nc" id="L140">        }</span>
+    }
+
+    /**
+     * JsonKeyHelper
+     *
+     * @param jsonObject jsonObject
+     * @param key        key
+     * @return value
+     */
+    private static JSONObject getValue(JSONObject jsonObject, String key) {
+<span class="nc" id="L151">        return (JSONObject) jsonObject.get(key);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

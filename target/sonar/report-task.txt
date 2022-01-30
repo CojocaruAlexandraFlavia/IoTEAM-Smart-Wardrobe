@@ -1,0 +1,6 @@
+projectKey=com.example:smart-wardrobe
+serverUrl=http://localhost:9000
+serverVersion=9.2.4.50792
+dashboardUrl=http://localhost:9000/dashboard?id=com.example%3Asmart-wardrobe
+ceTaskId=AX6slmzVMgaD04C8wJ2C
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AX6slmzVMgaD04C8wJ2C

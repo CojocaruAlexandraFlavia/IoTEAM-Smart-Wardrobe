@@ -1,20 +1,23 @@
 package com.example.smartwardrobe.service.impl;
 
-import com.example.smartwardrobe.enums.ItemCategory;
-import com.example.smartwardrobe.enums.Style;
+import com.example.smartwardrobe.enums.*;
 import com.example.smartwardrobe.model.Item;
+import com.example.smartwardrobe.model.dto.ItemDto;
 import com.example.smartwardrobe.repository.ItemRepository;
 import com.example.smartwardrobe.service.ItemService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.EnumUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.EnumUtils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -61,20 +64,19 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public String washItem(String itemId) {
+    public Item washItem(String itemId) {
         Item item = findItemById(Long.valueOf(itemId));
         item.setLastWashingDay(LocalDate.now());
         item.setNrOfWearsSinceLastWash(0);
-        itemRepository.save(item);
-        return "The item is clean!";
+        return saveItem(item);
     }
 
     @Override
-    public void updateItemAfterAddingOutfit(Long itemId) {
+    public Item updateItemAfterAddingOutfit(Long itemId) {
         Item item = findItemById(itemId);
         item.setNrOfWearsSinceLastWash(item.getNrOfWearsSinceLastWash() + 1);
         item.setLastWearing(LocalDate.now());
-        saveItem(item);
+        return saveItem(item);
     }
 
     @Override
@@ -97,22 +99,6 @@ public class ItemServiceImpl implements ItemService {
                 colorDirtyItems.add(i);
             }
         }
-        // daca se actualizeaaza statusul in baza de date de la purtat la spalat,
-        // cum arata aceste arraylists?
-
-//        if(whiteDirtyItems.size() >= 3)
-//        {
-//            System.out.println("U have more than 3 white items to wash");
-//        }
-//        if(blackDirtyItems.size() >= 3)
-//        {
-//            System.out.println("U have more than 3 black items to wash");
-//        }
-//        if(colorDirtyItems.size() >= 3)
-//        {
-//            System.out.println("U have more than 3 colored items to wash");
-//        }
-
 
         if(color.equalsIgnoreCase("white"))
         {
@@ -128,37 +114,49 @@ public class ItemServiceImpl implements ItemService {
 
     }
 
-
     @Override
     public JSONArray createJsonArrayOfItems(List<Item> items) {
         JSONArray jsonArray = new JSONArray();
         for(Item item: items){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", item.getId().toString());
-            jsonObject.put("material", item.getMaterial().toString());
-            jsonObject.put("size", item.getSize().toString());
-            jsonObject.put("code", item.getCode());
-            jsonObject.put("color", item.getItemColor().toString());
-            jsonObject.put("style", item.getStyle().toString());
-            jsonObject.put("category", item.getItemCategory().toString());
-            if(item.getLastWearing() == null){
-                jsonObject.put("lastWearingDate", "null");
-            }else{
-                jsonObject.put("lastWearingDate", item.getLastWearing().toString());
-            }
-            if(item.getLastWashingDay() == null){
-                jsonObject.put("lastWashingDay", "null");
-            }else{
-                jsonObject.put("lastWashingDay", item.getLastWashingDay().toString());
-            }
-            jsonObject.put("wearsSinceLastWashing", item.getNrOfWearsSinceLastWash());
-            jsonArray.add(jsonObject);
+            JSONObject object = createJsonObjectFromItem(item);
+            jsonArray.add(object);
         }
         return jsonArray;
     }
 
     @Override
+    public JSONObject createJsonObjectFromItem(Item item) {
+        JSONParser jsonParser = new JSONParser();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return (JSONObject) jsonParser.parse(objectMapper.writeValueAsString(item));
+        } catch (ParseException | JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return new JSONObject();
+    }
+
+    @Override
     public List<Item> findAll() {
         return itemRepository.findAll();
+    }
+
+    @Override
+    public Item convertDtoToEntity(ItemDto itemDto) {
+        Item item = new Item();
+        if(itemDto.getId() != 0){
+            item.setId(itemDto.getId());
+        }
+        item.setSize(Size.valueOf(itemDto.getSize()));
+        item.setItemColor(ItemColor.valueOf(itemDto.getItemColor()));
+        item.setItemCategory(ItemCategory.valueOf(itemDto.getItemCategory()));
+        item.setMaterial(Material.valueOf(itemDto.getMaterial()));
+        item.setCode(itemDto.getCode());
+        item.setStyle(Style.valueOf(itemDto.getStyle()));
+        item.setWashingZoneColor(WashingZoneColor.valueOf(itemDto.getWashingZOneColor()));
+        item.setNrOfWearsSinceLastWash(itemDto.getNrOfWearsSinceLastWash());
+        item.setLastWearing(itemDto.getLastWearingDate());
+        item.setLastWashingDay(itemDto.getLastWashingDayDate());
+        return item;
     }
 }
