@@ -2,6 +2,7 @@ package com.example.smartwardrobe.service.impl;
 
 import com.example.smartwardrobe.enums.*;
 import com.example.smartwardrobe.model.Item;
+import com.example.smartwardrobe.model.User;
 import com.example.smartwardrobe.repository.ItemRepository;
 import com.example.smartwardrobe.service.ItemService;
 import org.springframework.data.util.Pair;
@@ -12,6 +13,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.EnumUtils;
+import com.example.smartwardrobe.service.UserService;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,6 +25,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     ItemRepository itemRepository;
+
+    @Autowired
+    UserService userService;
 
     @Override
     public Item saveItem(Item item) {
@@ -204,5 +209,17 @@ public class ItemServiceImpl implements ItemService {
 
         return items;
     }
+
+    public List<Item> updateWardrobe(User user){
+        List<Item> itemsToReturn = new ArrayList<Item>();;
+        for(int i = 0; i < user.getItems().toArray().length; i++){
+            // user.setHairColor(HairColor.valueOf((jsonArray.get(6).toString())));
+            if(!findAllItems().get(i).getSize().toString().equals(userService.calculateUserSize(user))) {
+                itemsToReturn.add(user.getItems().get(i));
+            }
+        }
+        return itemsToReturn;
+    }
+
 
 }
