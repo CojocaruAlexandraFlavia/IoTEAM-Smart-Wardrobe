@@ -62,14 +62,5 @@ public class ItemController {
     public void readAllItemsFromStore(){
          itemService.readAllItemsFromStore();
     }
-    @GetMapping("/getAllItemsByCategory/{category}")
-    public ResponseEntity<?>  readAllItemsByCategoryFromStore(@PathVariable("category") String itemCategory){
-        List<Item> items = itemService.readAllItemsByCategoryFromStore(ItemCategory.valueOf(itemCategory));
-        if(items.size() != 0){
-            return ResponseEntity.ok(items);
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No items in this category!");
-        }
-    }
 
 }
