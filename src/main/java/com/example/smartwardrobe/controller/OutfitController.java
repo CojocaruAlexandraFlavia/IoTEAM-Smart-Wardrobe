@@ -1,8 +1,11 @@
 package com.example.smartwardrobe.controller;
 
+import com.example.smartwardrobe.exceptions.ItemException;
 import com.example.smartwardrobe.model.Outfit;
 import com.example.smartwardrobe.service.OutfitService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,29 +37,44 @@ public class OutfitController {
         outfitService.deleteOutfitById(id);
     }
     @PostMapping("/recommendMonochromaticOutfit")
-    public List<Outfit> recommendMonochromaticOutfit(){
+    public ResponseEntity<?> recommendMonochromaticOutfit(){
         try {
-            return outfitService.recommendMonochromaticOutfit();
-        } catch (Exception e) {
+            return ResponseEntity.ok(outfitService.recommendMonochromaticOutfit());
+        }
+        catch (ItemException itemException){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You need to buy more " + itemException.getCode());
+        }
+        catch (Exception e) {
             e.printStackTrace();
+
         }
         return null;
     }
     @PostMapping("/recommendAnalogousOutfit")
-    public List<Outfit> recommendAnalogousOutfit(){
+    public ResponseEntity<?>  recommendAnalogousOutfit(){
         try {
-            return outfitService.recommendAnalogousOutfit();
-        } catch (Exception e) {
+            return ResponseEntity.ok(outfitService.recommendAnalogousOutfit());
+        }
+        catch (ItemException itemException){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You need to buy more " + itemException.getCode());
+        }
+        catch (Exception e) {
             e.printStackTrace();
+
         }
         return null;
     }
     @PostMapping("/recommendPastelOutfit")
-    public List<Outfit> recommendPastelOutfit(){
+    public ResponseEntity<?> recommendPastelOutfit(){
         try {
-            return outfitService.recommendPastelOutfit();
-        } catch (Exception e) {
+            return ResponseEntity.ok(outfitService.recommendPastelOutfit());
+        }
+        catch (ItemException itemException){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You need to buy more " + itemException.getCode());
+        }
+        catch (Exception e) {
             e.printStackTrace();
+
         }
         return null;
     }

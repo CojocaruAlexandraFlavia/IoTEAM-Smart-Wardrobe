@@ -3,6 +3,7 @@ package com.example.smartwardrobe.service.impl;
 import com.example.smartwardrobe.colorpalette.ColorGenerator;
 import com.example.smartwardrobe.controller.WeatherController;
 import com.example.smartwardrobe.enums.*;
+import com.example.smartwardrobe.exceptions.ItemException;
 import com.example.smartwardrobe.model.Coat;
 import com.example.smartwardrobe.model.History;
 import com.example.smartwardrobe.model.Item;
@@ -27,6 +28,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+
+
 
 @Service
 public class OutfitServiceImpl implements OutfitService {
@@ -148,6 +151,8 @@ public class OutfitServiceImpl implements OutfitService {
         ColorGenerator colorGenerator = new ColorGenerator();
 
         List<Outfit> outfitList = new ArrayList<Outfit>();
+        List<Outfit> incompleteList = new ArrayList<Outfit>();
+        Set<String> missingPieces = new HashSet<>();
         List<Coat> coats = coatService.findAllCoats();
         List<Item> blouses = itemService.findItemsByCategory(ItemCategory.BLOUSE);
         System.out.println(blouses);
@@ -183,18 +188,23 @@ public class OutfitServiceImpl implements OutfitService {
                             Coat coat = new Coat();
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
-                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                     if(coat.getStyle() == top.getStyle()){
                                         outfit.setCoat(coat);
                                     }
                             }
-                            if(coat.getCode() == null){
-                                //recommend buy some
-
+                            if(outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                                missingPieces.add("COATS");
                             }
                         }
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                        if(temperature < 18.0 && outfit.getCoat() == null){
+                            incompleteList.add(outfit);
+                        }else{
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+                        }
+
                     }
             }
             for(int j = 0; j < pants.toArray().length; j++){
@@ -213,17 +223,22 @@ public class OutfitServiceImpl implements OutfitService {
                             Coat coat = new Coat();
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
-                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                     if(coat.getStyle() == top.getStyle()){
                                         outfit.setCoat(coat);
                                     }
                             }
-                            if(coat.getCode() == null){
-                                //recommend buy some
+                            if(outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                                missingPieces.add("COATS");
                             }
                         }
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                        if(temperature < 18.0 && outfit.getCoat() == null){
+                            incompleteList.add(outfit);
+                        }else{
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+                        }
 
                     }
             }
@@ -244,17 +259,22 @@ public class OutfitServiceImpl implements OutfitService {
                                 Coat coat = new Coat();
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
-                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                         if(coat.getStyle() == top.getStyle()){
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if(coat.getCode() == null){
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                    missingPieces.add("COATS");
                                 }
                             }
-                            outfitList.add(outfit);
-                            System.out.println(outfit);
+                            if(temperature < 18.0 && outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                            }else{
+                                outfitList.add(outfit);
+                                System.out.println(outfit);
+                            }
 
                         }
                 }
@@ -282,18 +302,22 @@ public class OutfitServiceImpl implements OutfitService {
                             Coat coat = new Coat();
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
-                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                     if(coat.getStyle() == top.getStyle()){
                                         outfit.setCoat(coat);
                                     }
                             }
-                            if(coat.getCode() == null){
-                                //recommend buy some
+                            if(outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                                missingPieces.add("COATS");
                             }
                         }
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
+                        if(temperature < 18.0 && outfit.getCoat() == null){
+                            incompleteList.add(outfit);
+                        }else{
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+                        }
                     }
             }
             for (int j = 0; j < pants.toArray().length; j++) {
@@ -312,17 +336,22 @@ public class OutfitServiceImpl implements OutfitService {
                             Coat coat = new Coat();
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
-                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                     if(coat.getStyle() == top.getStyle()){
                                         outfit.setCoat(coat);
                                     }
                             }
-                            if(coat.getCode() == null){
-                                //recommend buy some
+                            if(outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                                missingPieces.add("COATS");
                             }
                         }
-                        outfitList.add(outfit);
-                        System.out.println(outfit);
+                        if(temperature < 18.0 && outfit.getCoat() == null){
+                            incompleteList.add(outfit);
+                        }else{
+                            outfitList.add(outfit);
+                            System.out.println(outfit);
+                        }
 //                    writeOutfitToFile(outfit);
                     }
             }
@@ -343,18 +372,22 @@ public class OutfitServiceImpl implements OutfitService {
                                 Coat coat = new Coat();
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
-                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                         if(coat.getStyle() == top.getStyle()){
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if(coat.getCode() == null){
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                    missingPieces.add("COATS");
                                 }
                             }
-                            outfitList.add(outfit);
-                            System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
+                            if(temperature < 18.0 && outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                            }else{
+                                outfitList.add(outfit);
+                                System.out.println(outfit);
+                            }
                         }
                 }
 
@@ -383,17 +416,22 @@ public class OutfitServiceImpl implements OutfitService {
                                 Coat coat = new Coat();
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
-                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                         if(coat.getStyle() == top.getStyle()){
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if(coat.getCode() == null){
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                    missingPieces.add("COATS");
                                 }
                             }
-                            outfitList.add(outfit);
-                            System.out.println(outfit);
+                            if(temperature < 18.0 && outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                            }else{
+                                outfitList.add(outfit);
+                                System.out.println(outfit);
+                            }
 //                    writeOutfitToFile(outfit);
                         }
                 }
@@ -413,18 +451,22 @@ public class OutfitServiceImpl implements OutfitService {
                                 Coat coat = new Coat();
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
-                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                         if(coat.getStyle() == top.getStyle()){
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if(coat.getCode() == null){
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                    missingPieces.add("COATS");
                                 }
                             }
-                            outfitList.add(outfit);
-                            System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
+                            if(temperature < 18.0 && outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                            }else{
+                                outfitList.add(outfit);
+                                System.out.println(outfit);
+                            }
                         }
                 }
                 for (int j = 0; j < skirts.toArray().length; j++) {
@@ -443,18 +485,22 @@ public class OutfitServiceImpl implements OutfitService {
                                 Coat coat = new Coat();
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
-                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                         if(coat.getStyle() == top.getStyle()){
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if(coat.getCode() == null){
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                    missingPieces.add("COATS");
                                 }
                             }
-                            outfitList.add(outfit);
-                            System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
+                            if(temperature < 18.0 && outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                            }else{
+                                outfitList.add(outfit);
+                                System.out.println(outfit);
+                            }
                         }
                 }
 
@@ -479,17 +525,35 @@ public class OutfitServiceImpl implements OutfitService {
                     Coat coat = new Coat();
                     for(int k = 0; k < coats.toArray().length; k++){
                         coat = coats.get(k);
-                        if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                        if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                             if(coat.getStyle() == dress.getStyle()){
                                 outfit.setCoat(coat);
                             }
                     }
-                    if(coat.getCode() == null){
-                        //recommend buy some
+                    if(outfit.getCoat() == null){
+                        incompleteList.add(outfit);
+                        missingPieces.add("COATS");
                     }
                 }
-                outfitList.add(outfit);
+                if(temperature < 18.0 && outfit.getCoat() == null){
+                    incompleteList.add(outfit);
+                }else{
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+                }
             }
+        }
+        if (incompleteList.size() > outfitList.size()){
+            String shop = new String();
+            System.out.println(missingPieces);
+            for(String item: missingPieces){
+                shop = shop.concat(item);
+                shop = shop.concat(" ");
+            }
+            throw new ItemException(shop);
+        }
+        if(outfitList.size() == 0){
+            throw new ItemException("TOPS AND BOTTOMS");
         }
         FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json");
         String jsonStr = JSONArray.toJSONString(outfitList);
@@ -513,7 +577,8 @@ public class OutfitServiceImpl implements OutfitService {
 
         ColorGenerator colorGenerator = new ColorGenerator();
         List<Outfit> outfitList = new ArrayList<>();
-
+        List<Outfit> incompleteList = new ArrayList<Outfit>();
+        Set<String> missingPieces = new HashSet<>();
         List<Coat> coats = coatService.findAllCoats();
         List<Item> blouses = itemService.findItemsByCategory(ItemCategory.valueOf("BLOUSE"));
         System.out.println(blouses);
@@ -550,17 +615,22 @@ public class OutfitServiceImpl implements OutfitService {
                                 Coat coat = new Coat();
                                 for (int k = 0; k < coats.toArray().length; k++) {
                                     coat = coats.get(k);
-                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                         if (coat.getStyle() == top.getStyle()) {
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if (coat.getCode() == null) {
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                    missingPieces.add("COATS");
                                 }
                             }
-                            outfitList.add(outfit);
-                            System.out.println(outfit);
+                            if(temperature < 18.0 && outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                            }else{
+                                outfitList.add(outfit);
+                                System.out.println(outfit);
+                            }
                         }
                 }
                 for (int j = 0; j < pants.toArray().length; j++) {
@@ -579,17 +649,22 @@ public class OutfitServiceImpl implements OutfitService {
                                 Coat coat = new Coat();
                                 for (int k = 0; k < coats.toArray().length; k++) {
                                     coat = coats.get(k);
-                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                         if (coat.getStyle() == top.getStyle()) {
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if (coat.getCode() == null) {
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                    missingPieces.add("COATS");
                                 }
                             }
-                            outfitList.add(outfit);
-                            System.out.println(outfit);
+                            if(temperature < 18.0 && outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                            }else{
+                                outfitList.add(outfit);
+                                System.out.println(outfit);
+                            }
 
                         }
                 }
@@ -610,17 +685,22 @@ public class OutfitServiceImpl implements OutfitService {
                                     Coat coat = new Coat();
                                     for (int k = 0; k < coats.toArray().length; k++) {
                                         coat = coats.get(k);
-                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                             if (coat.getStyle() == top.getStyle()) {
                                                 outfit.setCoat(coat);
                                             }
                                     }
-                                    if (coat.getCode() == null) {
-                                        //recommend buy some
+                                    if(outfit.getCoat() == null){
+                                        incompleteList.add(outfit);
+                                        missingPieces.add("COATS");
                                     }
                                 }
-                                outfitList.add(outfit);
-                                System.out.println(outfit);
+                                if(temperature < 18.0 && outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                }else{
+                                    outfitList.add(outfit);
+                                    System.out.println(outfit);
+                                }
 
                             }
                     }
@@ -650,17 +730,22 @@ public class OutfitServiceImpl implements OutfitService {
                                 Coat coat = new Coat();
                                 for (int k = 0; k < coats.toArray().length; k++) {
                                     coat = coats.get(k);
-                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                         if (coat.getStyle() == top.getStyle()) {
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if (coat.getCode() == null) {
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                    missingPieces.add("COATS");
                                 }
                             }
-                            outfitList.add(outfit);
-                            System.out.println(outfit);
+                            if(temperature < 18.0 && outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                            }else{
+                                outfitList.add(outfit);
+                                System.out.println(outfit);
+                            }
 //                    writeOutfitToFile(outfit);
                         }
                 }
@@ -680,17 +765,22 @@ public class OutfitServiceImpl implements OutfitService {
                                 Coat coat = new Coat();
                                 for (int k = 0; k < coats.toArray().length; k++) {
                                     coat = coats.get(k);
-                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                         if (coat.getStyle() == top.getStyle()) {
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if (coat.getCode() == null) {
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                    missingPieces.add("COATS");
                                 }
                             }
-                            outfitList.add(outfit);
-                            System.out.println(outfit);
+                            if(temperature < 18.0 && outfit.getCoat() == null){
+                                incompleteList.add(outfit);
+                            }else{
+                                outfitList.add(outfit);
+                                System.out.println(outfit);
+                            }
 //                    writeOutfitToFile(outfit);
                         }
                 }
@@ -711,18 +801,22 @@ public class OutfitServiceImpl implements OutfitService {
                                     Coat coat = new Coat();
                                     for (int k = 0; k < coats.toArray().length; k++) {
                                         coat = coats.get(k);
-                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                             if (coat.getStyle() == top.getStyle()) {
                                                 outfit.setCoat(coat);
                                             }
                                     }
-                                    if (coat.getCode() == null) {
-                                        //recommend buy some
+                                    if(outfit.getCoat() == null){
+                                        incompleteList.add(outfit);
+                                        missingPieces.add("COATS");
                                     }
                                 }
-                                outfitList.add(outfit);
-                                System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
+                                if(temperature < 18.0 && outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                }else{
+                                    outfitList.add(outfit);
+                                    System.out.println(outfit);
+                                }
                             }
                     }
                 }
@@ -753,18 +847,22 @@ public class OutfitServiceImpl implements OutfitService {
                                     Coat coat = new Coat();
                                     for (int k = 0; k < coats.toArray().length; k++) {
                                         coat = coats.get(k);
-                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                             if (coat.getStyle() == top.getStyle()) {
                                                 outfit.setCoat(coat);
                                             }
                                     }
-                                    if (coat.getCode() == null) {
-                                        //recommend buy some
+                                    if(outfit.getCoat() == null){
+                                        incompleteList.add(outfit);
+                                        missingPieces.add("COATS");
                                     }
                                 }
-                                outfitList.add(outfit);
-                                System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
+                                if(temperature < 18.0 && outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                }else{
+                                    outfitList.add(outfit);
+                                    System.out.println(outfit);
+                                }
                             }
                     }
                     for (int j = 0; j < pants.toArray().length; j++) {
@@ -783,18 +881,22 @@ public class OutfitServiceImpl implements OutfitService {
                                     Coat coat = new Coat();
                                     for (int k = 0; k < coats.toArray().length; k++) {
                                         coat = coats.get(k);
-                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                             if (coat.getStyle() == top.getStyle()) {
                                                 outfit.setCoat(coat);
                                             }
                                     }
-                                    if (coat.getCode() == null) {
-                                        //recommend buy some
+                                    if(outfit.getCoat() == null){
+                                        incompleteList.add(outfit);
+                                        missingPieces.add("COATS");
                                     }
                                 }
-                                outfitList.add(outfit);
-                                System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
+                                if(temperature < 18.0 && outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                }else{
+                                    outfitList.add(outfit);
+                                    System.out.println(outfit);
+                                }
                             }
                     }
                     for (int j = 0; j < skirts.toArray().length; j++) {
@@ -813,18 +915,22 @@ public class OutfitServiceImpl implements OutfitService {
                                     Coat coat = new Coat();
                                     for (int k = 0; k < coats.toArray().length; k++) {
                                         coat = coats.get(k);
-                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                                             if (coat.getStyle() == top.getStyle()) {
                                                 outfit.setCoat(coat);
                                             }
                                     }
-                                    if (coat.getCode() == null) {
-                                        //recommend buy some
+                                    if(outfit.getCoat() == null){
+                                        incompleteList.add(outfit);
+                                        missingPieces.add("COATS");
                                     }
                                 }
-                                outfitList.add(outfit);
-                                System.out.println(outfit);
-//                    writeOutfitToFile(outfit);
+                                if(temperature < 18.0 && outfit.getCoat() == null){
+                                    incompleteList.add(outfit);
+                                }else{
+                                    outfitList.add(outfit);
+                                    System.out.println(outfit);
+                                }
                             }
 
                     }
@@ -853,18 +959,37 @@ public class OutfitServiceImpl implements OutfitService {
                     Coat coat = new Coat();
                     for (int k = 0; k < coats.toArray().length; k++) {
                         coat = coats.get(k);
-                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
+                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
                             if (coat.getStyle() == dress.getStyle()) {
                                 outfit.setCoat(coat);
                             }
                     }
-                    if (coat.getCode() == null) {
-                        //recommend buy some
+                    if(outfit.getCoat() == null){
+                        incompleteList.add(outfit);
+                        missingPieces.add("COATS");
                     }
                 }
-                outfitList.add(outfit);
+                if(temperature < 18.0 && outfit.getCoat() == null){
+                    incompleteList.add(outfit);
+                }else{
+                    outfitList.add(outfit);
+                    System.out.println(outfit);
+                }
             }
         }
+        if (incompleteList.size() > outfitList.size()){
+            String shop = new String();
+            System.out.println(missingPieces);
+            for(String item: missingPieces){
+                shop = shop.concat(item);
+                shop = shop.concat(" ");
+            }
+            throw new ItemException(shop);
+        }
+        if(outfitList.size() == 0){
+            throw new ItemException("TOPS AND BOTTOMS");
+        }
+
         FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json");
         String jsonStr = JSONArray.toJSONString(outfitList);
         file.write(jsonStr);
@@ -926,8 +1051,8 @@ public class OutfitServiceImpl implements OutfitService {
                                         outfit.setCoat(coat);
                                     }
                             }
-                            if(coat.getCode() == null){
-                                //recommend buy some
+                            if(outfit.getCoat() == null){
+                                throw new ItemException("COATS");
                             }
                         }
                         outfitList.add(outfit);
@@ -955,8 +1080,8 @@ public class OutfitServiceImpl implements OutfitService {
                                         outfit.setCoat(coat);
                                     }
                             }
-                            if(coat.getCode() == null){
-                                //recommend buy some
+                            if(outfit.getCoat() == null){
+                                throw new ItemException("COATS");
                             }
                         }
                         outfitList.add(outfit);
@@ -986,8 +1111,8 @@ public class OutfitServiceImpl implements OutfitService {
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if(coat.getCode() == null){
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    throw new ItemException("COATS");
                                 }
                             }
                             outfitList.add(outfit);
@@ -1024,8 +1149,8 @@ public class OutfitServiceImpl implements OutfitService {
                                         outfit.setCoat(coat);
                                     }
                             }
-                            if(coat.getCode() == null){
-                                //recommend buy some
+                            if(outfit.getCoat() == null){
+                                throw new ItemException("COATS");
                             }
                         }
                         outfitList.add(outfit);
@@ -1054,8 +1179,8 @@ public class OutfitServiceImpl implements OutfitService {
                                         outfit.setCoat(coat);
                                     }
                             }
-                            if(coat.getCode() == null){
-                                //recommend buy some
+                            if(outfit.getCoat() == null){
+                                throw new ItemException("COATS");
                             }
                         }
                         outfitList.add(outfit);
@@ -1085,8 +1210,8 @@ public class OutfitServiceImpl implements OutfitService {
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if(coat.getCode() == null){
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    throw new ItemException("COATS");
                                 }
                             }
                             outfitList.add(outfit);
@@ -1125,8 +1250,8 @@ public class OutfitServiceImpl implements OutfitService {
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if(coat.getCode() == null){
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    throw new ItemException("COATS");
                                 }
                             }
                             outfitList.add(outfit);
@@ -1155,8 +1280,8 @@ public class OutfitServiceImpl implements OutfitService {
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if(coat.getCode() == null){
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    throw new ItemException("COATS");
                                 }
                             }
                             outfitList.add(outfit);
@@ -1185,8 +1310,8 @@ public class OutfitServiceImpl implements OutfitService {
                                             outfit.setCoat(coat);
                                         }
                                 }
-                                if(coat.getCode() == null){
-                                    //recommend buy some
+                                if(outfit.getCoat() == null){
+                                    throw new ItemException("COATS");
                                 }
                             }
                             outfitList.add(outfit);
@@ -1221,14 +1346,16 @@ public class OutfitServiceImpl implements OutfitService {
                                 outfit.setCoat(coat);
                             }
                     }
-                    if(coat.getCode() == null){
-                        //recommend buy some
+                    if(outfit.getCoat() == null){
+                        throw new ItemException("COATS");
                     }
                 }
                 outfitList.add(outfit);
             }
         }
-
+        if(outfitList.size() == 0){
+            throw new ItemException("TOPS AND BOTTOMS");
+        }
         FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json");
         String jsonStr = JSONArray.toJSONString(outfitList);
         file.write(jsonStr);
