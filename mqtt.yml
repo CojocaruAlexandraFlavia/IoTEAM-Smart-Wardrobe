@@ -18,17 +18,16 @@ channels:
       operationId: publishAllDirtyClothes
       message:
         $ref : '#/components/messages/DirtyClothes'
-#  api/mqtt/publish/WeatherConditions:
-#    subscribe:
-#      operationId: publishWeatherConditions
-#      message:
-#        $ref: '#/components/messages/WeatherConditions'
+  api/mqtt/publish/WeatherConditions:
+    publish:
+      operationId: publishWeatherConditions
+      message:
+        $ref: '#/components/messages/WeatherConditions'
 #  api/mqtt/publish/Items:
 #    subscribe:
 #      operationId: publishItems
 #        message:
 #          $ref: '#/components/messages/AllItems'
-
 
 components:
   messages:
@@ -39,13 +38,13 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/dirtyClothesPayload'
-#    WeatherConditions:
-#      name: weather
-#      title: Weather condition outside
-#      summary: Inform about weather outside
-#      contentType: application/json
-#      payload:
-#          $ref: '#/components/schemas/weatherPayload'
+    WeatherConditions:
+      name: weather
+      title: Weather condition outside
+      summary: Inform about weather outside
+      contentType: application/json
+      payload:
+          $ref: '#/components/schemas/weatherPayload'
 #    AllItems:
 #      name: items
 #      title: All items
@@ -58,7 +57,7 @@ components:
   schemas:
     dirtyClothesPayload:
       type: string
-#    weatherPayload:
-#      type: string
+    weatherPayload:
+      type: string
 #    itemsPayload:
 #      type: string
