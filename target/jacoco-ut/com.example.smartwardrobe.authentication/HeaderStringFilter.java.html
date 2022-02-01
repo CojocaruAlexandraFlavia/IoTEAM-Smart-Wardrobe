@@ -16,12 +16,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-<span class="nc" id="L19">public class HeaderStringFilter extends OncePerRequestFilter {</span>
+<span class="fc" id="L19">public class HeaderStringFilter extends OncePerRequestFilter {</span>
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
 
-<span class="nc" id="L24">        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);</span>
+<span class="fc" id="L24">        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);</span>
 <span class="nc bnc" id="L25" title="All 2 branches missed.">        if(!authorizationHeader.startsWith(&quot;Basic &quot;)){</span>
 <span class="nc" id="L26">            filterChain.doFilter(request, response);</span>
         }

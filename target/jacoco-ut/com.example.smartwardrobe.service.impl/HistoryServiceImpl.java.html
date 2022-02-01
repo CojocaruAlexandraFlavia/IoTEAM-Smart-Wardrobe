@@ -8,11 +8,12 @@ import com.example.smartwardrobe.service.OutfitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-<span class="nc" id="L15">public class HistoryServiceImpl implements HistoryService {</span>
+<span class="nc" id="L16">public class HistoryServiceImpl implements HistoryService {</span>
 
     @Autowired
     HistoryRepository historyRepository;
@@ -22,35 +23,35 @@ import java.util.List;
 
     @Override
     public History findHistoryById(Long id) {
-<span class="nc" id="L25">        return historyRepository.findById(id).orElseThrow();</span>
+<span class="nc" id="L26">        return historyRepository.findById(id).orElseThrow();</span>
     }
 
     @Override
     public History saveHistory(History history) {
-<span class="nc" id="L30">        return historyRepository.save(history);</span>
+<span class="nc" id="L31">        return historyRepository.save(history);</span>
     }
 
     @Override
-    public History findHistoryByDateTime(LocalDateTime localDateTime) {
-<span class="nc" id="L35">        return historyRepository.findByDateTime(localDateTime).orElseThrow();</span>
+    public History findHistoryByDateTime(LocalDate localDate) {
+<span class="nc" id="L36">        return historyRepository.findByDateTime(localDate).orElseThrow();</span>
     }
 
     @Override
     public void deleteHistoryById(Long id) {
-<span class="nc" id="L40">        historyRepository.deleteById(id);</span>
-<span class="nc" id="L41">    }</span>
+<span class="nc" id="L41">        historyRepository.deleteById(id);</span>
+<span class="nc" id="L42">    }</span>
 
     @Override
     public List&lt;History&gt; findAllHistories() {
-<span class="nc" id="L45">        return historyRepository.findAll();</span>
+<span class="nc" id="L46">        return historyRepository.findAll();</span>
     }
 
     @Override
     public History convertDtoToEntity(HistoryDto historyDto) {
-<span class="nc" id="L50">        History history = new History();</span>
-<span class="nc" id="L51">        history.setDateTime(historyDto.getLocalDateTime());</span>
-<span class="nc" id="L52">        history.setOutfit(outfitService.findOutfitById(historyDto.getOutfitId()));</span>
-<span class="nc" id="L53">        return history;</span>
+<span class="nc" id="L51">        History history = new History();</span>
+<span class="nc" id="L52">        history.setDateTime(historyDto.getLocalDateTime());</span>
+<span class="nc" id="L53">        history.setOutfit(outfitService.findOutfitById(historyDto.getOutfitId()));</span>
+<span class="nc" id="L54">        return history;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,15 +1,9 @@
 package com.example.smartwardrobe.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
-@Data
 public class CoatDto {
 
-    @JsonProperty("id")
     private String id;
 
-    @JsonProperty("coatCategory")
     private String coatCategory;
 
     public String getId() {

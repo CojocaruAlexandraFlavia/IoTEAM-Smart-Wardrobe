@@ -1,7 +1,11 @@
 package com.example.smartwardrobe.service.impl;
 
+import com.example.smartwardrobe.enums.EyeColor;
+import com.example.smartwardrobe.enums.Gender;
+import com.example.smartwardrobe.enums.HairColor;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.model.User;
+import com.example.smartwardrobe.model.dto.UserDto;
 import com.example.smartwardrobe.repository.UserRepository;
 import com.example.smartwardrobe.service.ItemService;
 import com.example.smartwardrobe.service.UserService;
@@ -81,8 +85,7 @@ public class UserServiceImpl implements UserService {
     public JSONArray getUsersFromFile() {
         JSONParser parser = new JSONParser();
         try{
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json"));
-            return jsonArray;
+            return (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json"));
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
@@ -112,6 +115,23 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public User convertDtoToEntity(UserDto userDto) {
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        if(userDto.getId() != 0){
+            user.setId(userDto.getId());
+        }
+        user.setEyeColor(EyeColor.valueOf(userDto.getEyeColor()));
+        user.setAge(userDto.getAge());
+        user.setGender(Gender.valueOf(userDto.getGender()));
+        user.setWeight(userDto.getWeight());
+        user.setHeight(user.getHeight());
+        user.setHairColor(HairColor.valueOf(userDto.getHairColor()));
+        user.setPassword(userDto.getPassword());
+        return user;
     }
 
 

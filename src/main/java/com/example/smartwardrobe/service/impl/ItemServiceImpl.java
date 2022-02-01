@@ -153,10 +153,10 @@ public class ItemServiceImpl implements ItemService {
         item.setMaterial(Material.valueOf(itemDto.getMaterial()));
         item.setCode(itemDto.getCode());
         item.setStyle(Style.valueOf(itemDto.getStyle()));
-        item.setWashingZoneColor(WashingZoneColor.valueOf(itemDto.getWashingZOneColor()));
+        item.setWashingZoneColor(WashingZoneColor.valueOf(itemDto.getWashingZoneColor()));
         item.setNrOfWearsSinceLastWash(itemDto.getNrOfWearsSinceLastWash());
-        item.setLastWearing(itemDto.getLastWearingDate());
-        item.setLastWashingDay(itemDto.getLastWashingDayDate());
+        item.setLastWearing(LocalDate.parse(itemDto.getLastWearing()));
+        item.setLastWashingDay(LocalDate.parse(itemDto.getLastWashingDay()));
         return item;
     }
 }

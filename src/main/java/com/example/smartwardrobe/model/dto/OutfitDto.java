@@ -1,21 +1,20 @@
 package com.example.smartwardrobe.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
 import java.util.List;
 
-@Data
 public class OutfitDto {
 
-    @JsonProperty("description")
     private String description;
 
-    @JsonProperty("coat")
-    private CoatDto coatDto;
+    private CoatDto coat;
 
-    @JsonProperty("items")
-    private List<ItemDto> itemDtoList;
+    private int nrOfStars;
+
+    private int nrOfReviews;
+
+    private double rating;
+
+    private List<ItemDto> items;
 
     public String getDescription() {
         return description;
@@ -25,19 +24,43 @@ public class OutfitDto {
         this.description = description;
     }
 
-    public CoatDto getCoatDto() {
-        return coatDto;
+    public CoatDto getCoat() {
+        return coat;
     }
 
-    public void setCoatDto(CoatDto coatDto) {
-        this.coatDto = coatDto;
+    public void setCoat(CoatDto coatDto) {
+        this.coat = coatDto;
     }
 
-    public List<ItemDto> getItemDtoList() {
-        return itemDtoList;
+    public List<ItemDto> getItems() {
+        return items;
     }
 
-    public void setItemDtoList(List<ItemDto> itemDtoList) {
-        this.itemDtoList = itemDtoList;
+    public void setItems(List<ItemDto> itemDtoList) {
+        this.items = itemDtoList;
+    }
+
+    public int getNrOfStars() {
+        return nrOfStars;
+    }
+
+    public void setNrOfStars(int nrOfStars) {
+        this.nrOfStars = nrOfStars;
+    }
+
+    public int getNrOfReviews() {
+        return nrOfReviews;
+    }
+
+    public void setNrOfReviews(int nrOfReviews) {
+        this.nrOfReviews = nrOfReviews;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

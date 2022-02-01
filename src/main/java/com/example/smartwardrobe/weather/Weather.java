@@ -9,7 +9,7 @@ import java.util.Date;
  */
 
 public class Weather implements Serializable {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private int humidity;
     private int is_day;
     private float temp_c;

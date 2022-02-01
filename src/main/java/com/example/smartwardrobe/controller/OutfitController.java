@@ -40,4 +40,9 @@ public class OutfitController {
         return outfitService.giveStarsToOutfit(outfitId, Integer.parseInt(nrOfStars));
     }
 
+    @GetMapping("/getFavouriteOutfits/{minimRating}")
+    public List<Outfit> getFavouriteOutfits(@PathVariable("minimRating") double minimRating){
+        return outfitService.findOutfitsWithBestRating(minimRating);
+    }
+
 }

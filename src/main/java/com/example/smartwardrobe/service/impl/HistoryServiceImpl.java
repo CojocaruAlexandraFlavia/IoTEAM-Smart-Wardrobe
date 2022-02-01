@@ -8,6 +8,7 @@ import com.example.smartwardrobe.service.OutfitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,8 +32,8 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public History findHistoryByDateTime(LocalDateTime localDateTime) {
-        return historyRepository.findByDateTime(localDateTime).orElseThrow();
+    public History findHistoryByDateTime(LocalDate localDate) {
+        return historyRepository.findByDateTime(localDate).orElseThrow();
     }
 
     @Override

@@ -44,15 +44,12 @@ public class UsernameAndPasswordFilter extends UsernamePasswordAuthenticationFil
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
-
         StringBuilder toBeEncoded = new StringBuilder(authResult.getName() + "/");
         List<String> authorities = authResult.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         authorities.forEach(a -> toBeEncoded.append(a).append("/"));
         String encodedString = Base64.getEncoder().encodeToString(toBeEncoded.toString().getBytes());
-
         response.addHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedString);
-
     }
 
 }

@@ -5,40 +5,36 @@ import lombok.Data;
 
 import java.util.List;
 
-<span class="nc bnc" id="L8" title="All 30 branches missed.">@Data</span>
-public class OutfitDto {
+<span class="fc" id="L8">public class OutfitDto {</span>
 
-    @JsonProperty(&quot;description&quot;)
     private String description;
 
-    @JsonProperty(&quot;coat&quot;)
-    private CoatDto coatDto;
+    private CoatDto coat;
 
-    @JsonProperty(&quot;items&quot;)
-    private List&lt;ItemDto&gt; itemDtoList;
+    private List&lt;ItemDto&gt; items;
 
     public String getDescription() {
-<span class="nc" id="L21">        return description;</span>
+<span class="fc" id="L17">        return description;</span>
     }
 
     public void setDescription(String description) {
-<span class="nc" id="L25">        this.description = description;</span>
-<span class="nc" id="L26">    }</span>
+<span class="fc" id="L21">        this.description = description;</span>
+<span class="fc" id="L22">    }</span>
 
-    public CoatDto getCoatDto() {
-<span class="nc" id="L29">        return coatDto;</span>
+    public CoatDto getCoat() {
+<span class="fc" id="L25">        return coat;</span>
     }
 
-    public void setCoatDto(CoatDto coatDto) {
-<span class="nc" id="L33">        this.coatDto = coatDto;</span>
-<span class="nc" id="L34">    }</span>
+    public void setCoat(CoatDto coatDto) {
+<span class="fc" id="L29">        this.coat = coatDto;</span>
+<span class="fc" id="L30">    }</span>
 
-    public List&lt;ItemDto&gt; getItemDtoList() {
-<span class="nc" id="L37">        return itemDtoList;</span>
+    public List&lt;ItemDto&gt; getItems() {
+<span class="fc" id="L33">        return items;</span>
     }
 
-    public void setItemDtoList(List&lt;ItemDto&gt; itemDtoList) {
-<span class="nc" id="L41">        this.itemDtoList = itemDtoList;</span>
-<span class="nc" id="L42">    }</span>
+    public void setItems(List&lt;ItemDto&gt; itemDtoList) {
+<span class="nc" id="L37">        this.items = itemDtoList;</span>
+<span class="nc" id="L38">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

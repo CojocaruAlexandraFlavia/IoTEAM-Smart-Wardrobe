@@ -52,7 +52,7 @@ public class Config extends WebSecurityConfigurerAdapter implements WebMvcConfig
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) throws Exception {
         http.cors().disable().csrf().disable()
                 .httpBasic().and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
@@ -93,7 +93,7 @@ public class Config extends WebSecurityConfigurerAdapter implements WebMvcConfig
 //    }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 

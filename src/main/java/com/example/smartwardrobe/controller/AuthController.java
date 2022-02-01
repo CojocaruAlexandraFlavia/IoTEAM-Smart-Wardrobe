@@ -1,6 +1,6 @@
 package com.example.smartwardrobe.controller;
 
-import com.example.smartwardrobe.model.LoginRequest;
+import com.example.smartwardrobe.authentication.UsernameAndPasswordAuthenticationRequest;
 import com.example.smartwardrobe.model.User;
 import com.example.smartwardrobe.service.UserService;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<String> authenticateUser(@NotNull @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<String> authenticateUser(@NotNull @RequestBody UsernameAndPasswordAuthenticationRequest loginRequest){
 
         Object existingAuthenticated = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

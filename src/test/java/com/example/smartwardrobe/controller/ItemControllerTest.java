@@ -51,7 +51,7 @@ class ItemControllerTest {
     private ItemService itemService;
 
     @Test
-    public void contextLoads() {
+    void contextLoads() {
         assertThat(itemController).isNotNull();
     }
 

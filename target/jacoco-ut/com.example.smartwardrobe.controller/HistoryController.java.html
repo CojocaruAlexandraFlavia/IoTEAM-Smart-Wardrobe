@@ -6,36 +6,37 @@ import com.example.smartwardrobe.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
 @RequestMapping(&quot;/history&quot;)
-<span class="fc" id="L15">public class HistoryController {</span>
+<span class="fc" id="L16">public class HistoryController {</span>
 
     @Autowired
     private HistoryService historyService;
 
     @GetMapping
     public List&lt;History&gt; getAllHistories() {
-<span class="fc" id="L22">        return historyService.findAllHistories();</span>
+<span class="fc" id="L23">        return historyService.findAllHistories();</span>
     }
 
     @GetMapping(&quot;/{id}&quot;)
     public History getHistoryById(@PathVariable(&quot;id&quot;) Long id){
-<span class="nc" id="L27">        return historyService.findHistoryById(id);</span>
+<span class="nc" id="L28">        return historyService.findHistoryById(id);</span>
     }
 
     @GetMapping(&quot;/{date}&quot;)
     public History getHistoryByDate(@PathVariable(&quot;date&quot;) String date){
-<span class="nc" id="L32">        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd_HH-mm-ss&quot;);</span>
-<span class="nc" id="L33">        return historyService.findHistoryByDateTime(LocalDateTime.parse(date, formatter));</span>
+<span class="nc" id="L33">        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd_HH-mm-ss&quot;);</span>
+<span class="nc" id="L34">        return historyService.findHistoryByDateTime(LocalDate.parse(date, formatter));</span>
     }
 
     @PostMapping
     public History saveHistory(@RequestBody HistoryDto historyDto){
-<span class="nc" id="L38">        return historyService.saveHistory(historyService.convertDtoToEntity(historyDto));</span>
+<span class="nc" id="L39">        return historyService.saveHistory(historyService.convertDtoToEntity(historyDto));</span>
     }
 
 

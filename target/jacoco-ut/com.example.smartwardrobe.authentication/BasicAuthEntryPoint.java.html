@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-<span class="nc" id="L12">public class BasicAuthEntryPoint implements AuthenticationEntryPoint {</span>
+<span class="fc" id="L12">public class BasicAuthEntryPoint implements AuthenticationEntryPoint {</span>
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
-<span class="nc" id="L16">            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, &quot;Error: Unauthorized&quot;);</span>
-<span class="nc" id="L17">    }</span>
+<span class="fc" id="L16">            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, &quot;Error: Unauthorized&quot;);</span>
+<span class="fc" id="L17">    }</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

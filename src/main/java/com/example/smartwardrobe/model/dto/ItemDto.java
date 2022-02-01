@@ -1,47 +1,27 @@
 package com.example.smartwardrobe.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
-@Data
 public class ItemDto {
 
-    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    @JsonProperty("id")
     private long id;
 
-    @JsonProperty("material")
     private String material;
 
-    @JsonProperty("size")
     private String size;
 
-    @JsonProperty("code")
     private String code;
 
-    @JsonProperty("itemColor")
     private String itemColor;
 
-    @JsonProperty("style")
     private String style;
 
-    @JsonProperty("itemCategory")
     private String itemCategory;
 
-    @JsonProperty("lastWearing")
     private String lastWearing;
 
-    @JsonProperty("nrOfWearsSinceLastWash")
     private int nrOfWearsSinceLastWash;
 
-    @JsonProperty("washingZoneColor")
-    private String washingZOneColor;
+    private String washingZoneColor;
 
-    @JsonProperty("lastWashingDay")
     private String lastWashingDay;
 
     public String getMaterial() {
@@ -108,20 +88,12 @@ public class ItemDto {
         this.nrOfWearsSinceLastWash = nrOfWearsSinceLastWash;
     }
 
-    public String getWashingZOneColor() {
-        return washingZOneColor;
+    public String getWashingZoneColor() {
+        return washingZoneColor;
     }
 
-    public void setWashingZOneColor(String washingZOneColor) {
-        this.washingZOneColor = washingZOneColor;
-    }
-
-    public LocalDate getLastWearingDate(){
-        return LocalDate.parse(lastWearing, dateFormatter);
-    }
-
-    public LocalDate getLastWashingDayDate(){
-        return LocalDate.parse(lastWashingDay, dateFormatter);
+    public void setWashingZoneColor(String washingZoneColor) {
+        this.washingZoneColor = washingZoneColor;
     }
 
     public long getId() {

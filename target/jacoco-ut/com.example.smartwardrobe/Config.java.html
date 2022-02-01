@@ -33,47 +33,47 @@ public class Config extends WebSecurityConfigurerAdapter implements WebMvcConfig
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-<span class="nc" id="L36">    public Config(BasicAuthEntryPoint authenticationEntryPoint, PasswordEncoder passwordEncoder) {</span>
-<span class="nc" id="L37">        this.authenticationEntryPoint = authenticationEntryPoint;</span>
-<span class="nc" id="L38">        this.passwordEncoder = passwordEncoder;</span>
-<span class="nc" id="L39">    }</span>
+<span class="fc" id="L36">    public Config(BasicAuthEntryPoint authenticationEntryPoint, PasswordEncoder passwordEncoder) {</span>
+<span class="fc" id="L37">        this.authenticationEntryPoint = authenticationEntryPoint;</span>
+<span class="fc" id="L38">        this.passwordEncoder = passwordEncoder;</span>
+<span class="fc" id="L39">    }</span>
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
-<span class="nc" id="L44">        return super.authenticationManagerBean();</span>
+<span class="fc" id="L44">        return super.authenticationManagerBean();</span>
     }
 
     //@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-<span class="nc" id="L49">        auth.inMemoryAuthentication()</span>
-<span class="nc" id="L50">                .withUser(&quot;user&quot;).password(passwordEncoder.encode(&quot;user&quot;))</span>
-<span class="nc" id="L51">                .authorities(&quot;ROLE_ADMIN&quot;);</span>
-<span class="nc" id="L52">    }</span>
+<span class="fc" id="L49">        auth.inMemoryAuthentication()</span>
+<span class="fc" id="L50">                .withUser(&quot;user&quot;).password(passwordEncoder.encode(&quot;user&quot;))</span>
+<span class="fc" id="L51">                .authorities(&quot;ROLE_ADMIN&quot;);</span>
+<span class="fc" id="L52">    }</span>
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-<span class="nc" id="L56">        http.cors().disable().csrf().disable()</span>
-<span class="nc" id="L57">                .httpBasic().and()</span>
-<span class="nc" id="L58">                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()</span>
-<span class="nc" id="L59">                .authorizeRequests().antMatchers(&quot;/signIn&quot;).permitAll()</span>
+<span class="fc" id="L56">        http.cors().disable().csrf().disable()</span>
+<span class="fc" id="L57">                .httpBasic().and()</span>
+<span class="fc" id="L58">                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()</span>
+<span class="fc" id="L59">                .authorizeRequests().antMatchers(&quot;/signIn&quot;).permitAll()</span>
                 //.anyRequest().authenticated()
-<span class="nc" id="L61">                .anyRequest().permitAll()</span>
-<span class="nc" id="L62">                .and()</span>
-<span class="nc" id="L63">                    .logout()</span>
-<span class="nc" id="L64">                    .logoutRequestMatcher(new AntPathRequestMatcher(&quot;/logout&quot;))</span>
-<span class="nc" id="L65">                    .invalidateHttpSession(true)        // set invalidation state when logout</span>
-<span class="nc" id="L66">                    .deleteCookies(&quot;JSESSIONID&quot;)</span>
-<span class="nc" id="L67">                    .clearAuthentication(true)</span>
-<span class="nc" id="L68">                    .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));</span>
+<span class="fc" id="L61">                .anyRequest().permitAll()</span>
+<span class="fc" id="L62">                .and()</span>
+<span class="fc" id="L63">                    .logout()</span>
+<span class="fc" id="L64">                    .logoutRequestMatcher(new AntPathRequestMatcher(&quot;/logout&quot;))</span>
+<span class="fc" id="L65">                    .invalidateHttpSession(true)        // set invalidation state when logout</span>
+<span class="fc" id="L66">                    .deleteCookies(&quot;JSESSIONID&quot;)</span>
+<span class="fc" id="L67">                    .clearAuthentication(true)</span>
+<span class="fc" id="L68">                    .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));</span>
 
-<span class="nc" id="L70">    }</span>
+<span class="fc" id="L70">    }</span>
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-<span class="nc" id="L74">        registry.addMapping(&quot;/**&quot;).allowedMethods(&quot;HEAD&quot;, &quot;GET&quot;, &quot;PUT&quot;, &quot;POST&quot;, &quot;DELETE&quot;,</span>
+<span class="fc" id="L74">        registry.addMapping(&quot;/**&quot;).allowedMethods(&quot;HEAD&quot;, &quot;GET&quot;, &quot;PUT&quot;, &quot;POST&quot;, &quot;DELETE&quot;,</span>
                 &quot;PATCH&quot;);
-<span class="nc" id="L76">    }</span>
+<span class="fc" id="L76">    }</span>
 
 //    @Override
 //    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -94,15 +94,15 @@ public class Config extends WebSecurityConfigurerAdapter implements WebMvcConfig
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-<span class="nc" id="L97">        auth.authenticationProvider(daoAuthenticationProvider());</span>
-<span class="nc" id="L98">    }</span>
+<span class="fc" id="L97">        auth.authenticationProvider(daoAuthenticationProvider());</span>
+<span class="fc" id="L98">    }</span>
 
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
-<span class="nc" id="L102">        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();</span>
-<span class="nc" id="L103">        provider.setPasswordEncoder(passwordEncoder);</span>
-<span class="nc" id="L104">        provider.setUserDetailsService(userDetailsService);</span>
-<span class="nc" id="L105">        return provider;</span>
+<span class="fc" id="L102">        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();</span>
+<span class="fc" id="L103">        provider.setPasswordEncoder(passwordEncoder);</span>
+<span class="fc" id="L104">        provider.setUserDetailsService(userDetailsService);</span>
+<span class="fc" id="L105">        return provider;</span>
     }
 }
 

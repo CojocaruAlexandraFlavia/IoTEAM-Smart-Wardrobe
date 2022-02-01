@@ -1,6 +1,7 @@
 package com.example.smartwardrobe.controller;
 
 import com.example.smartwardrobe.model.User;
+import com.example.smartwardrobe.model.dto.UserDto;
 import com.example.smartwardrobe.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,8 +16,8 @@ public class UserController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public User saveUser(@RequestBody User user){
-        return userService.saveUser(user);
+    public User saveUser(@RequestBody UserDto userDto){
+        return userService.saveUser(userService.convertDtoToEntity(userDto));
     }
 
     @GetMapping("/{id}")

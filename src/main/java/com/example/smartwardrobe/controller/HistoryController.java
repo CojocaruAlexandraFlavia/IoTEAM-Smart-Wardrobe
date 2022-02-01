@@ -6,6 +6,7 @@ import com.example.smartwardrobe.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -30,7 +31,7 @@ public class HistoryController {
     @GetMapping("/{date}")
     public History getHistoryByDate(@PathVariable("date") String date){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        return historyService.findHistoryByDateTime(LocalDateTime.parse(date, formatter));
+        return historyService.findHistoryByDateTime(LocalDate.parse(date, formatter));
     }
 
     @PostMapping

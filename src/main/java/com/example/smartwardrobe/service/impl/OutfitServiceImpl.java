@@ -6,6 +6,7 @@ import com.example.smartwardrobe.model.History;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.model.Outfit;
 import com.example.smartwardrobe.model.dto.CoatDto;
+import com.example.smartwardrobe.model.dto.ItemDto;
 import com.example.smartwardrobe.model.dto.OutfitDto;
 import com.example.smartwardrobe.repository.OutfitRepository;
 import com.example.smartwardrobe.service.HistoryService;
@@ -26,6 +27,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -144,8 +146,15 @@ public class OutfitServiceImpl implements OutfitService {
     @Override
     public Outfit convertDtoToEntity(OutfitDto outfitDto) {
         Outfit outfit = new Outfit();
-        outfit.setCoat(convertCoatDtoToEntity(outfitDto.getCoatDto()));
-        outfit.setItems(outfitDto.getItemDtoList().stream().map(itemDto -> itemService.convertDtoToEntity(itemDto)).collect(Collectors.toList()));
+        outfit.setCoat(convertCoatDtoToEntity(outfitDto.getCoat()));
+        List<Item> items = new ArrayList<>();
+        for(ItemDto itemDto: outfitDto.getItems()){
+            items.add(itemService.convertDtoToEntity(itemDto));
+        }
+        outfit.setRating(outfitDto.getRating());
+        outfit.setNrOfReviews(outfitDto.getNrOfReviews());
+        outfit.setNrOfStars(outfitDto.getNrOfStars());
+        outfit.setItems(items);
         outfit.setDescription(outfitDto.getDescription());
         return outfit;
     }

@@ -86,9 +86,9 @@ class OutfitServiceImplTest {
         outfit.setNrOfStars(1);
         outfit.setRating(10.0);
         Optional<Outfit> ofResult = Optional.of(outfit);
-        when(this.outfitRepository.findById((Long) any())).thenReturn(ofResult);
+        when(this.outfitRepository.findById(any())).thenReturn(ofResult);
         assertSame(outfit, this.outfitServiceImpl.findOutfitById(123L));
-        verify(this.outfitRepository).findById((Long) any());
+        verify(this.outfitRepository).findById(any());
         assertTrue(this.outfitServiceImpl.findAllOutfits().isEmpty());
     }
 

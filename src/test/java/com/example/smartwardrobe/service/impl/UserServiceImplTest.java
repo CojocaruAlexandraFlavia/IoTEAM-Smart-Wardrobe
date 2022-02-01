@@ -90,9 +90,9 @@ class UserServiceImplTest {
         user.setUsername("janedoe");
         user.setWeight(10.0);
         Optional<User> ofResult = Optional.of(user);
-        when(this.userRepository.findById((Long) any())).thenReturn(ofResult);
+        when(this.userRepository.findById(any())).thenReturn(ofResult);
         assertSame(user, this.userServiceImpl.findUserById(123L));
-        verify(this.userRepository).findById((Long) any());
+        verify(this.userRepository).findById(any());
     }
 
     @Test

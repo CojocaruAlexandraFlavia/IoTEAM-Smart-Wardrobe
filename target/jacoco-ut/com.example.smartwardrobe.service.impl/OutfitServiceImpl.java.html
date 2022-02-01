@@ -144,8 +144,8 @@ import java.util.stream.Collectors;
     @Override
     public Outfit convertDtoToEntity(OutfitDto outfitDto) {
 <span class="nc" id="L146">        Outfit outfit = new Outfit();</span>
-<span class="nc" id="L147">        outfit.setCoat(convertCoatDtoToEntity(outfitDto.getCoatDto()));</span>
-<span class="nc" id="L148">        outfit.setItems(outfitDto.getItemDtoList().stream().map(itemDto -&gt; itemService.convertDtoToEntity(itemDto)).collect(Collectors.toList()));</span>
+<span class="nc" id="L147">        outfit.setCoat(convertCoatDtoToEntity(outfitDto.getCoat()));</span>
+<span class="nc" id="L148">        outfit.setItems(outfitDto.getItems().stream().map(itemDto -&gt; itemService.convertDtoToEntity(itemDto)).collect(Collectors.toList()));</span>
 <span class="nc" id="L149">        outfit.setDescription(outfitDto.getDescription());</span>
 <span class="nc" id="L150">        return outfit;</span>
     }
