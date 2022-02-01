@@ -14,10 +14,21 @@ servers:
     description: Test MQTT broker
 channels:
   api/mqtt/publish/AllDirtyClothes:
-    subscribe:
+    publish:
       operationId: publishAllDirtyClothes
       message:
         $ref : '#/components/messages/DirtyClothes'
+#  api/mqtt/publish/WeatherConditions:
+#    subscribe:
+#      operationId: publishWeatherConditions
+#      message:
+#        $ref: '#/components/messages/WeatherConditions'
+#  api/mqtt/publish/Items:
+#    subscribe:
+#      operationId: publishItems
+#        message:
+#          $ref: '#/components/messages/AllItems'
+
 
 components:
   messages:
@@ -28,21 +39,26 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/dirtyClothesPayload'
+#    WeatherConditions:
+#      name: weather
+#      title: Weather condition outside
+#      summary: Inform about weather outside
+#      contentType: application/json
+#      payload:
+#          $ref: '#/components/schemas/weatherPayload'
+#    AllItems:
+#      name: items
+#      title: All items
+#      summary: Inform about items in garderobe
+#      contentType: application/json
+#      payload:
+#        $ref: '#/components/schemas/itemsPayload'
+
 
   schemas:
     dirtyClothesPayload:
       type: string
-#      properties:
-#        firstName:
-#          type: string
-#          description: "foo"
-#        lastName:
-#          type: string
-#          description: "bar"
-#        email:
-#          type: string
-#          format: email
-#          description: "baz"
-#        createdAt:
-#          type: string
-#          format: date-time
+#    weatherPayload:
+#      type: string
+#    itemsPayload:
+#      type: string

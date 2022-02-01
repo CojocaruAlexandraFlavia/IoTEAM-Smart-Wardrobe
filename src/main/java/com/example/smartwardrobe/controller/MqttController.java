@@ -40,6 +40,32 @@ public class MqttController {
         mqttMessage.setRetained(messagePublishModel.getRetained());
         Mqtt.getInstance().publish(messagePublishModel.getTopic(), mqttMessage);
         System.out.println("Message published");
+    }
+
+    @PostMapping("publish/Items")
+    public void publishItems()
+    {
+        int MINUTES = 1; // The delay in minutes
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @SneakyThrows
+            @Override
+            public void run() {
+                String topic = "items";
+                String message = itemService.findAllItems().toString();
+                MqttPublishModel messagePublishModel = new MqttPublishModel();
+                messagePublishModel.setTopic(topic);
+                messagePublishModel.setQos(0);
+                messagePublishModel.setRetained(true);
+                MqttMessage mqttMessage = new MqttMessage(message.getBytes());
+                mqttMessage.setQos(messagePublishModel.getQos());
+                mqttMessage.setRetained(messagePublishModel.getRetained());
+                Mqtt.getInstance().publish(topic, mqttMessage);
+                System.out.println("All items published successfully!");
+
+            }
+
+            }, 0, 1000*60*MINUTES);
 
     }
 
@@ -63,7 +89,7 @@ public class MqttController {
                 Mqtt.getInstance().publish(topic, mqttMessage);
                 System.out.println("AllDirtyClothes published successfully!");
             }
-        }, 0, 1000);
+        }, 0, 1000*60*MINUTES);
 
 
     }
