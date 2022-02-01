@@ -36,6 +36,8 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
+    @Autowired
+    MqttController mqttController;
 
     @Autowired
     public AuthController(UserService userService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
@@ -45,7 +47,7 @@ public class AuthController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<?> authenticateUser(@NotNull @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> authenticateUser(@NotNull @RequestBody LoginRequest loginRequest) throws Exception {
 
         Object existingAuthenticated = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -67,7 +69,7 @@ public class AuthController {
                         loginRequest.getPassword()));
 
         getContext().setAuthentication(authentication);
-
+        mqttController.publishAllDirtyClothes();
         return ResponseEntity.ok().body("Login successful for: \n " + loginRequest.getUsername());
 
     }
