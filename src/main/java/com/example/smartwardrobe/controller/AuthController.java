@@ -70,6 +70,7 @@ public class AuthController {
 
         getContext().setAuthentication(authentication);
         mqttController.publishAllDirtyClothes();
+        mqttController.publishItems();
         return ResponseEntity.ok().body("Login successful for: \n " + loginRequest.getUsername());
 
     }
