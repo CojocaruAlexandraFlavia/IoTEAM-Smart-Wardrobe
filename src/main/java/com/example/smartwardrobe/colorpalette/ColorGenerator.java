@@ -38,6 +38,15 @@ public class ColorGenerator {
     }
 
     public ItemColor[] monoChromatic(ItemColor color){
+        if(color == GREY || color == WHITE || color == BLACK){
+            if(color == GREY)
+                return new ItemColor[]{BLACK, WHITE};
+            if(color == BLACK)
+                return new ItemColor[]{GREY, WHITE};
+            if(color == WHITE)
+                return new ItemColor[]{BLACK, GREY};
+        }
+        System.out.println(color);
         int i,j,max;
         i = colorNumber(color)[0];
         j = colorNumber(color)[1];
@@ -58,6 +67,8 @@ public class ColorGenerator {
 
     }
     public ItemColor getPastel(ItemColor color){
+        if(color == GREY || color == WHITE || color == BLACK)
+            return GREY;
         int i,j,max;
         i = colorNumber(color)[0];
         j = colors[i].length - 1;
@@ -71,8 +82,7 @@ public class ColorGenerator {
          */
         int i,j,max;
         color = getPastel(color);
-        i = colorNumber(color)[0];
-        j = colorNumber(color)[1];
+        j = 7;
         max = colors.length;
         Random rand = new Random();
         ItemColor color2 = colors[rand.nextInt(max)][j];
@@ -93,20 +103,23 @@ public class ColorGenerator {
         according to color theory, analogous
         comprises colors that are right next to each other on the color wheel
          */
+        if(color == GREY || color == WHITE || color == BLACK){
+            return null;
+        }
         int i,j,max;
         i = colorNumber(color)[0];
         j = colorNumber(color)[1];
         max = colors.length - 1;
         ItemColor color2, color3;
         if(i > 0 && i < max) {
-             color2 = colors[i - 1][j];
-             color3 = colors[i + 1][j];
+            color2 = colors[i - 1][j];
+            color3 = colors[i + 1][j];
         } else if (i == 0){
-             color2 = colors[max][j];
-             color3 = colors[i + 1][j];
+            color2 = colors[max][j];
+            color3 = colors[i + 1][j];
         } else {
-             color2 = colors[i - 1][j];
-             color3 = colors[0][j];
+            color2 = colors[i - 1][j];
+            color3 = colors[0][j];
         }
         return new ItemColor[] {color2, color3};
     }

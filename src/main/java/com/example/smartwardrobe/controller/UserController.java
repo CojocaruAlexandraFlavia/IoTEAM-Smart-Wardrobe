@@ -25,4 +25,9 @@ public class UserController {
     public User getUserById(@PathVariable("id") Long id){
         return userService.findUserById(id);
     }
+
+    @PostMapping("/saveUser")
+    public User saveUserFromFile(User user){
+        return userService.saveUserFromFile(user);
+    }
 }

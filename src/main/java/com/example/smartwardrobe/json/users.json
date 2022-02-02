@@ -1,1 +1,14 @@
-[{"id": "1", "eyeColor":  "BLUE", "weight":  "70.5", "height": "170", "gender": "FEMALE", "age":  "20", "hairColor": "BLONDE", "username":  "username", "password":  "password"}]
+
+  {
+    "id": 1,
+    "eyeColor": "BLUE",
+    "weight": 70,
+    "height": 165.0,
+    "gender": "FEMALE",
+    "age": 21,
+    "hairColor": "BLONDE",
+    "items": [],
+    "username": "username1",
+    "password": "092384928364"
+  }
+

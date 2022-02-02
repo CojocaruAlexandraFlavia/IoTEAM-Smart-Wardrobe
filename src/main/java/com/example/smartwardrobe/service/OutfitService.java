@@ -1,3 +1,4 @@
+
 package com.example.smartwardrobe.service;
 
 import com.example.smartwardrobe.model.Coat;
@@ -13,6 +14,7 @@ public interface OutfitService{
 
     Outfit saveOutfit( Outfit outfit);
     void deleteOutfitById(Long id);
+    void deleteOutfit(Outfit outfit);
     Outfit findOutfitById(Long id);
     List<Outfit> findAllOutfits();
     void writeOutfitToFile(Outfit outfit);
@@ -23,4 +25,9 @@ public interface OutfitService{
     List<Outfit> findOutfitsWithBestRating(double minimRating);
     Outfit convertDtoToEntity(OutfitDto outfitDto);
     Coat convertCoatDtoToEntity(CoatDto coatDto);
+
+    List<Outfit> recommendMonochromaticOutfit() throws Exception;
+    List<Outfit> recommendAnalogousOutfit() throws Exception;
+    List<Outfit> recommendPastelOutfit() throws Exception;
+    void selectRecommendedOutfit(Integer id);
 }

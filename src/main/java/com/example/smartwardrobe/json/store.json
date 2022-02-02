@@ -47,7 +47,7 @@
 
   { "material":"CASHMERE", "size":"XS", "code":"2245/742", "itemColor":"BLACK", "style":"CASUAL", "itemCategory":"SHIRT", "washingZoneColor":"BLACK" },
   { "material":"CASHMERE", "size":"S", "code":"3666/063", "itemColor":"WHITE", "style":"ELEGANT", "itemCategory":"SHIRT", "washingZoneColor":"WHITE" },
-  { "material":"CASHMERE", "size":"M", "code":"2177/555", "itemColor":"GREY", "style":"OFFICE", "itemCategory":"SHIRT", "washingZoneColor":"COLWHITEOR" },
+  { "material":"CASHMERE", "size":"M", "code":"2177/555", "itemColor":"GREY", "style":"OFFICE", "itemCategory":"SHIRT", "washingZoneColor":"WHITE" },
   { "material":"CASHMERE", "size":"L", "code":"1971/064", "itemColor":"RUBY", "style":"CASUAL", "itemCategory":"SHIRT", "washingZoneColor":"COLOR" },
   { "material":"CASHMERE", "size":"XL", "code":"1165/057", "itemColor":"ORANGE", "style":"ELEGANT", "itemCategory":"SHIRT", "washingZoneColor":"COLOR" },
   { "material":"CASHMERE", "size":"XXL", "code":"2492/056", "itemColor":"GOLD", "style":"OFFICE", "itemCategory":"SHIRT", "washingZoneColor":"COLOR" },

@@ -1,5 +1,6 @@
 package com.example.smartwardrobe.model;
 
+import com.example.smartwardrobe.enums.CoatCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,15 @@ public class Outfit {
     )
     private List<Item> items;
 
+
+    public Outfit(Long id, String description, Coat coat) {
+        this.id = id;
+        this.description = description;
+        this.coat = coat;
+    }
+
+    public Outfit() { }
+
     public String getDescription() {
         return description;
     }
@@ -79,6 +89,16 @@ public class Outfit {
 
     public void setItems(List<Item> items) {
         this.items = items;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":" + id +
+                ", \"description\":\"" + description + '\"' +
+                ", \"coat\":" + coat +
+                ", \"items\":" + items +
+                '}';
     }
 
     public int getNrOfStars() {

@@ -3,6 +3,7 @@ package com.example.smartwardrobe.service.impl;
 import com.example.smartwardrobe.enums.EyeColor;
 import com.example.smartwardrobe.enums.Gender;
 import com.example.smartwardrobe.enums.HairColor;
+import com.example.smartwardrobe.enums.Size;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.model.User;
 import com.example.smartwardrobe.model.dto.UserDto;
@@ -112,6 +113,26 @@ public class UserServiceImpl implements UserService {
             saveUser(user);
             return user;
         } catch (IOException e) {
+    public User saveUserFromFile(User user) {
+
+
+        JSONParser parser = new JSONParser();
+        try{
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json")); ;
+            user.setId(Long.parseLong(jsonObject.get("id").toString()));
+            user.setEyeColor(EyeColor.valueOf((jsonObject.get("eyeColor").toString())));
+            user.setWeight(Double.parseDouble(jsonObject.get("weight").toString()));
+            user.setHeight(Double.parseDouble(jsonObject.get("height").toString()));
+            user.setGender(Gender.valueOf((jsonObject.get("gender").toString())));
+            user.setAge(Integer.parseInt(jsonObject.get("age").toString()));
+            user.setHairColor(HairColor.valueOf((jsonObject.get("hairColor").toString())));
+            List<Item> listOfItems = convertObjectToList(jsonObject.get("items"));
+            user.setItems(listOfItems);
+            user.setUsername(jsonObject.get("username").toString());
+//            user.setPassword(jsonObject.get("password").toString());
+            user.setPassword(passwordEncoder.encode(jsonObject.get("password").toString()));
+            saveUser(user);
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
         return null;
@@ -134,5 +155,61 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+
+    @Override
+    public Size calculateUserSize(User user){
+        double weight = user.getWeight();
+        double height = user.getHeight();
+        if(weight <= 50){
+            return Size.XS;
+        }
+        if(weight > 50 && weight <= 55 && height >= 155){
+            return Size.XS;
+        }
+        if(weight > 50 && weight <= 55 && height < 155){
+            return Size.S;
+        }
+        if(weight > 55 && weight <= 60 && height > 170){
+            return Size.XS;
+        }
+        if(weight > 55 && weight <= 60 && height >= 155 && height < 170){
+            return Size.S;
+        }
+        if(weight > 60 && weight <= 65 && height > 160){
+            return Size.S;
+        }
+        if(weight > 60 && weight <= 65 && height < 160){
+            return Size.M;
+        }
+        if(weight > 65 && weight <= 70 && height < 165){
+            return Size.L;
+        }
+        if(weight > 65 && weight <= 70 && height >= 165){
+            return Size.M;
+        }
+        if(weight > 70 && weight <= 75 && height < 155){
+            return Size.XL;
+        }
+        if(weight > 70 && weight <= 75 && height >= 155 && height < 170){
+            return Size.L;
+        }
+        if(weight > 70 && weight <= 75 && height > 170){
+            return Size.M;
+        }
+        if(weight > 75 && weight <= 80 && height < 160){
+            return Size.XL;
+        }
+        if(weight > 75 && weight <= 80 && height >= 160 ){
+            return Size.L;
+        }
+        if(weight > 80 && weight <= 90){
+            return Size.XL;
+        }
+        if(weight > 90){
+            return Size.XXL;
+        }
+
+        return null;
+    }
 
 }
