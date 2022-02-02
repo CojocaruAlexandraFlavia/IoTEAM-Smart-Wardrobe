@@ -8,6 +8,7 @@ import com.example.smartwardrobe.service.ItemService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.EnumUtils;
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -56,7 +57,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getItemsByStyleName(String styleName) {
+    public List<Item> getItemsByStyleName(@NotNull String styleName) {
         if (!EnumUtils.isValidEnum(Style.class, styleName.toUpperCase()) ){
             return new ArrayList<>();
         }
@@ -115,7 +116,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public JSONArray createJsonArrayOfItems(List<Item> items) {
+    public JSONArray createJsonArrayOfItems(@NotNull List<Item> items) {
         JSONArray jsonArray = new JSONArray();
         for(Item item: items){
             JSONObject object = createJsonObjectFromItem(item);
@@ -142,7 +143,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item convertDtoToEntity(ItemDto itemDto) {
+    public Item convertDtoToEntity(@NotNull ItemDto itemDto) {
         Item item = new Item();
         if(itemDto.getId() != 0){
             item.setId(itemDto.getId());

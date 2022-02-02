@@ -17,8 +17,7 @@ class PasswordConfigTest {
 
     @Test
     void testEncoder() {
-        assertTrue(
-                this.passwordConfig.encoder() instanceof org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder);
+        assertTrue(this.passwordConfig.encoder() instanceof org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder);
     }
 }
 
