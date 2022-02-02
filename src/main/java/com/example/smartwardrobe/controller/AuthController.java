@@ -34,6 +34,8 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
+    @Autowired
+    MqttController mqttController;
 
     @Autowired
     public AuthController(UserService userService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
@@ -62,7 +64,8 @@ public class AuthController {
                         loginRequest.getPassword()));
 
         getContext().setAuthentication(authentication);
-
+        mqttController.publishAllDirtyClothes();
+        mqttController.publishItems();
         return ResponseEntity.ok().body("Login successful for: \n " + loginRequest.getUsername());
 
     }

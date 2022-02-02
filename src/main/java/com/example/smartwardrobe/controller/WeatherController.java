@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 
@@ -28,6 +29,19 @@ public class WeatherController {
         Weather weatherConditions = WeatherGrabber.grabWeatherFrom(ipInformation);
         System.out.println(weatherConditions.toString());
     }
+
+    //this is used for mqqt
+    public static String getWeatherConditions() throws Exception {
+        InetAddress ip;
+        String ipNo;
+        URL whatismyip = new URL("http://checkip.amazonaws.com");
+        BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()));
+        ipNo = in.readLine();
+        IpInformation ipInformation = WeatherGrabber.grabLocationFrom(ipNo);
+        Weather weatherConditions = WeatherGrabber.grabWeatherFrom(ipInformation);
+        return(weatherConditions.toString());
+    }
+
     public static Double getTemperature() throws Exception {
         Double temperature;
 //        getWeather();
