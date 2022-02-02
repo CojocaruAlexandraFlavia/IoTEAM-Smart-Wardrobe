@@ -4,6 +4,7 @@ import com.example.smartwardrobe.enums.ItemCategory;
 import com.example.smartwardrobe.enums.Style;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.model.dto.ItemDto;
+import com.example.smartwardrobe.model.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.data.util.Pair;
@@ -32,4 +33,5 @@ public interface ItemService {
     void readAllItemsFromStore();
     List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory);
     List<Item> sortItemsByLastWearingDate();
+    List<Item> updateWardrobe(User user);
 }
