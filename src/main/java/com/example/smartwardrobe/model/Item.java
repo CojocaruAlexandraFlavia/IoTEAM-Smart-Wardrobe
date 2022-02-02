@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -118,6 +119,15 @@ public class Item {
 
     public void setLastWearing(LocalDate lastWearing) {
         this.lastWearing = lastWearing;
+    }
+
+    public static class SortByDate implements Comparator<Item> {
+        @Override
+        public int compare(Item a, Item b) {
+            if (a.lastWearing == null || b.lastWearing == null)
+                return 0;
+            return a.lastWearing.compareTo(b.lastWearing);
+        }
     }
 
     public WashingZoneColor getWashingZoneColor() {

@@ -228,4 +228,14 @@ public class ItemServiceImpl implements ItemService {
         return items;
     }
 
+    @Override
+    public List<Item> sortItemsByLastWearingDate(){
+        List<Item> items = findAllItems();
+        //sort ASC by lastWearing date
+        Collections.sort(items, new Item.SortByDate() );
+        System.out.println(items);
+
+        return items;
+    }
+
 }

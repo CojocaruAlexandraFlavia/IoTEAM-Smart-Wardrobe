@@ -31,4 +31,5 @@ public interface ItemService {
     Item convertDtoToEntity(ItemDto itemDto);
     void readAllItemsFromStore();
     List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory);
+    List<Item> sortItemsByLastWearingDate();
 }
