@@ -93,6 +93,22 @@ public class UserServiceImpl implements UserService {
         return new JSONArray();
     }
 
+    @Override
+    public JSONArray createJsonArrayOfItems(List<Item> items) {
+        JSONArray jsonArray = new JSONArray();
+        for(Item item: items){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("id", item.getId().toString());
+            jsonObject.put("material", item.getMaterial().toString());
+            jsonObject.put("size", item.getSize().toString());
+            jsonObject.put("code", item.getCode());
+            jsonObject.put("color", item.getItemColor().toString());
+            jsonObject.put("style", item.getStyle().toString());
+            jsonObject.put("category", item.getItemCategory().toString());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray;
+    }
     public static List<Item> convertObjectToList(Object obj) {
         List<Item> list = new ArrayList<>();
         if (obj.getClass().isArray()) {
@@ -113,29 +129,9 @@ public class UserServiceImpl implements UserService {
             saveUser(user);
             return user;
         } catch (IOException e) {
-    public User saveUserFromFile(User user) {
-
-
-        JSONParser parser = new JSONParser();
-        try{
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json")); ;
-            user.setId(Long.parseLong(jsonObject.get("id").toString()));
-            user.setEyeColor(EyeColor.valueOf((jsonObject.get("eyeColor").toString())));
-            user.setWeight(Double.parseDouble(jsonObject.get("weight").toString()));
-            user.setHeight(Double.parseDouble(jsonObject.get("height").toString()));
-            user.setGender(Gender.valueOf((jsonObject.get("gender").toString())));
-            user.setAge(Integer.parseInt(jsonObject.get("age").toString()));
-            user.setHairColor(HairColor.valueOf((jsonObject.get("hairColor").toString())));
-            List<Item> listOfItems = convertObjectToList(jsonObject.get("items"));
-            user.setItems(listOfItems);
-            user.setUsername(jsonObject.get("username").toString());
-//            user.setPassword(jsonObject.get("password").toString());
-            user.setPassword(passwordEncoder.encode(jsonObject.get("password").toString()));
-            saveUser(user);
-        } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return new User();
     }
 
     @Override

@@ -65,7 +65,7 @@ public class OutfitServiceImpl implements OutfitService {
     @Override
     public Outfit saveOutfit(Outfit outfit) {
         List<Item> outfitItems = outfit.getItems();
-        for(Item item: outfitItems){
+        for (Item item : outfitItems) {
             itemService.updateItemAfterAddingOutfit(item.getId());
         }
 
@@ -99,9 +99,9 @@ public class OutfitServiceImpl implements OutfitService {
     @Override
     public void writeOutfitToFile(Outfit outfit) {
         JSONArray jsonArray = getOutfitsFromFile();
-        if(jsonArray.size() == 7){
+        if (jsonArray.size() == 7) {
             jsonArray.remove(0);
-            for(int i = 0; i < jsonArray.size() - 1; i++){
+            for (int i = 0; i < jsonArray.size() - 1; i++) {
                 jsonArray.set(i, jsonArray.get(i + 1));
             }
         }
@@ -109,9 +109,9 @@ public class OutfitServiceImpl implements OutfitService {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", outfit.getId().toString());
         jsonObject.put("description", outfit.getDescription());
-        if( outfit.getCoat()!=null){
+        if (outfit.getCoat() != null) {
             jsonObject.put("coat", outfit.getCoat().getCoatCategory().toString());
-        }else{
+        } else {
             jsonObject.put("coat", null);
         }
 
@@ -130,7 +130,7 @@ public class OutfitServiceImpl implements OutfitService {
     @Override
     public JSONArray getOutfitsFromFile() {
         JSONParser parser = new JSONParser();
-        try{
+        try {
             return (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json"));
         } catch (ParseException | IOException e) {
             e.printStackTrace();
@@ -138,7 +138,59 @@ public class OutfitServiceImpl implements OutfitService {
         return new JSONArray();
     }
 
-
+    @Override
+    public JSONObject transformOutfitToJsonObject(@NotNull Outfit outfit) {
+        JSONParser jsonParser = new JSONParser();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return (JSONObject) jsonParser.parse(objectMapper.writeValueAsString(outfit));
+        } catch (ParseException | JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return new JSONObject();
+    }
+    @Override
+    public JSONObject transformCoatToJsonObject(Coat coat) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", coat.getId());
+        jsonObject.put("coatCategory", coat.getCoatCategory());
+        return jsonObject;
+    }
+    @Override
+    public Outfit giveStarsToOutfit(String outfitId, int nrOfStars) {
+        Outfit outfit = findOutfitById(Long.valueOf(outfitId));
+        outfit.setNrOfStars(outfit.getNrOfStars() + nrOfStars);
+        outfit.setNrOfReviews(outfit.getNrOfReviews() + 1);
+        outfit.setRating((double) outfit.getNrOfStars() / (double) outfit.getNrOfReviews());
+        saveOutfit(outfit);
+        return outfit;
+    }
+    @Override
+    public List<Outfit> findOutfitsWithBestRating(double minimRating) {
+        return outfitRepository.findByRatingGreaterThanEqual(minimRating, Sort.by(Sort.Direction.DESC, "rating"));
+    }
+    @Override
+    public Outfit convertDtoToEntity(OutfitDto outfitDto) {
+        Outfit outfit = new Outfit();
+        outfit.setCoat(convertCoatDtoToEntity(outfitDto.getCoat()));
+        List<Item> items = new ArrayList<>();
+        for(ItemDto itemDto: outfitDto.getItems()){
+            items.add(itemService.convertDtoToEntity(itemDto));
+        }
+        outfit.setRating(outfitDto.getRating());
+        outfit.setNrOfReviews(outfitDto.getNrOfReviews());
+        outfit.setNrOfStars(outfitDto.getNrOfStars());
+        outfit.setItems(items);
+        outfit.setDescription(outfitDto.getDescription());
+        return outfit;
+    }
+    @Override
+    public Coat convertCoatDtoToEntity(CoatDto coatDto) {
+        Coat coat = new Coat();
+        coat.setCoatCategory(CoatCategory.valueOf(coatDto.getCoatCategory()));
+        coat.setId(Long.valueOf(coatDto.getId()));
+        return coat;
+    }
 
     @Override
     public List<Outfit> recommendMonochromaticOutfit() throws Exception {
@@ -580,17 +632,9 @@ public class OutfitServiceImpl implements OutfitService {
             JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json")); ;
             outfitID = jsonArray.size();
         } catch (ParseException | IOException e) {
-    public JSONObject transformOutfitToJsonObject(@NotNull Outfit outfit) {
-        JSONParser jsonParser = new JSONParser();
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return (JSONObject) jsonParser.parse(objectMapper.writeValueAsString(outfit));
-        } catch (ParseException | JsonProcessingException e) {
             e.printStackTrace();
             outfitID = 1;
         }
-        return new JSONObject();
-    }
         User user = userService.findUserById(1L);
         Size userSize = userService.calculateUserSize(user);
 
@@ -1022,35 +1066,6 @@ public class OutfitServiceImpl implements OutfitService {
         return outfitList;
     }
     @Override
-    public JSONObject transformCoatToJsonObject(Coat coat) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", coat.getId());
-        jsonObject.put("coatCategory", coat.getCoatCategory());
-        return jsonObject;
-    }
-
-    @Override
-    public Outfit giveStarsToOutfit(String outfitId, int nrOfStars) {
-        Outfit outfit = findOutfitById(Long.valueOf(outfitId));
-        outfit.setNrOfStars(outfit.getNrOfStars() + nrOfStars);
-        outfit.setNrOfReviews(outfit.getNrOfReviews() + 1);
-        outfit.setRating((double) outfit.getNrOfStars() / (double) outfit.getNrOfReviews());
-        saveOutfit(outfit);
-        return outfit;
-    }
-
-    @Override
-    public List<Outfit> findOutfitsWithBestRating(double minimRating) {
-        return outfitRepository.findByRatingGreaterThanEqual(minimRating, Sort.by(Sort.Direction.DESC, "rating"));
-    }
-
-    @Override
-    public Outfit convertDtoToEntity(OutfitDto outfitDto) {
-        Outfit outfit = new Outfit();
-        outfit.setCoat(convertCoatDtoToEntity(outfitDto.getCoat()));
-        List<Item> items = new ArrayList<>();
-        for(ItemDto itemDto: outfitDto.getItems()){
-            items.add(itemService.convertDtoToEntity(itemDto));
     public List<Outfit> recommendPastelOutfit() throws Exception {
         int outfitID;
         JSONParser parser = new JSONParser();
@@ -1376,24 +1391,6 @@ public class OutfitServiceImpl implements OutfitService {
 //                    writeOutfitToFile(outfit);
                         }
                 }
-        outfit.setRating(outfitDto.getRating());
-        outfit.setNrOfReviews(outfitDto.getNrOfReviews());
-        outfit.setNrOfStars(outfitDto.getNrOfStars());
-        outfit.setItems(items);
-        outfit.setDescription(outfitDto.getDescription());
-        return outfit;
-    }
-
-    @Override
-    public Coat convertCoatDtoToEntity(CoatDto coatDto) {
-        Coat coat = new Coat();
-        coat.setCoatCategory(CoatCategory.valueOf(coatDto.getCoatCategory()));
-        coat.setId(Long.valueOf(coatDto.getId()));
-        return coat;
-    }
-
-
-}
 
             }
         }
@@ -1512,4 +1509,6 @@ public class OutfitServiceImpl implements OutfitService {
             e.printStackTrace();
         }
     }
+
 }
+

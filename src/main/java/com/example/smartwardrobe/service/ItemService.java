@@ -33,5 +33,5 @@ public interface ItemService {
     void readAllItemsFromStore();
     List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory);
     List<Item> sortItemsByLastWearingDate();
-    List<Item> updateWardrobe(User user);
+    List<Item> updateWardrobe(String userId);
 }

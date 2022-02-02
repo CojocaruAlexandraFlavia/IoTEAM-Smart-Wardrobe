@@ -47,7 +47,7 @@ public class WeatherController {
 //        getWeather();
         JSONParser parser = new JSONParser();
         try{
-            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/weather.json")); ;
+            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/weather2.json"));
             temperature = (Double) jsonObject.get("feelslike_c");
         } catch (ParseException | IOException e) {
             e.printStackTrace();

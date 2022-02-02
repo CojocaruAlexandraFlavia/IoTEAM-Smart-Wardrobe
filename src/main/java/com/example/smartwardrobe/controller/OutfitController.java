@@ -37,16 +37,18 @@ public class OutfitController {
     public void deleteOutfitById(@PathVariable("id") Long id){
         outfitService.deleteOutfitById(id);
     }
+
     @PostMapping("/recommendMonochromaticOutfit")
-    public ResponseEntity<?> recommendMonochromaticOutfit(){
+    public ResponseEntity<?> recommendMonochromaticOutfit() {
         try {
             return ResponseEntity.ok(outfitService.recommendMonochromaticOutfit());
-        }
-        catch (ItemException itemException){
+        } catch (ItemException itemException) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You need to buy more " + itemException.getCode());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
 
     @PatchMapping("/{outfitId}/{nrOfStars}")
     public Outfit rateOutfit(@PathVariable("outfitId") String outfitId, @PathVariable("nrOfStars") String nrOfStars){
@@ -58,10 +60,6 @@ public class OutfitController {
         return outfitService.findOutfitsWithBestRating(minimRating);
     }
 
-}
-        }
-        return null;
-    }
     @PostMapping("/recommendAnalogousOutfit")
     public ResponseEntity<?>  recommendAnalogousOutfit(){
         try {
@@ -90,6 +88,7 @@ public class OutfitController {
         }
         return null;
     }
+
     @PostMapping("/selectRecommendedOutfit/{id}")
     public void selectRecommendedOutfit(@PathVariable("id") Integer id){
         outfitService.selectRecommendedOutfit(id);

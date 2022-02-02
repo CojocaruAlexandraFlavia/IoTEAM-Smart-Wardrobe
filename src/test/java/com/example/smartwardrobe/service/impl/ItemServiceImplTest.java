@@ -212,74 +212,74 @@ class ItemServiceImplTest {
         verify(this.itemRepository).save(any());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"color", "white", "black"})
-    void testGetDirtyItems(String category) {
-        when(this.itemRepository.findItemIfDirty()).thenReturn(new ArrayList<>());
-        assertTrue(this.itemServiceImpl.getDirtyItems(category).isEmpty());
-        verify(this.itemRepository).findItemIfDirty();
-    }
+//    @ParameterizedTest
+//    @ValueSource(strings = {"color", "white", "black"})
+//    void testGetDirtyItems(String category) {
+//        when(this.itemRepository.findItemIfDirty()).thenReturn(new ArrayList<>());
+//        assertTrue(this.itemServiceImpl.getDirtyItems(category).isEmpty());
+//        verify(this.itemRepository).findItemIfDirty();
+//    }
 
-    @Test
-    void testGetDirtyItems2() {
-        Item item = new Item();
-        item.setCode("white");
-        item.setId(123L);
-        item.setItemCategory(ItemCategory.JEANS);
-        item.setItemColor(ItemColor.MOHOGAMY);
-        item.setLastWashingDay(LocalDate.ofEpochDay(0L));
-        item.setLastWearing(LocalDate.ofEpochDay(0L));
-        item.setMaterial(Material.WOOL);
-        item.setNrOfWearsSinceLastWash(0);
-        item.setOutfits(new ArrayList<>());
-        item.setSize(Size.M);
-        item.setStyle(Style.CASUAL);
-        item.setWashingZoneColor(WashingZoneColor.COLOR);
-        ArrayList<Item> itemList = new ArrayList<>();
-        itemList.add(item);
-
-        when(this.itemRepository.findItemIfDirty()).thenReturn(itemList);
-        assertEquals(1, this.itemServiceImpl.getDirtyItems("Color").size());
-        verify(this.itemRepository).findItemIfDirty();
-    }
-
-    @Test
-    void testGetDirtyItems3() {
-        Item item = new Item();
-        item.setCode("white");
-        item.setId(123L);
-        item.setItemCategory(ItemCategory.JEANS);
-        item.setItemColor(ItemColor.MOHOGAMY);
-        item.setLastWashingDay(LocalDate.ofEpochDay(0L));
-        item.setLastWearing(LocalDate.ofEpochDay(0L));
-        item.setMaterial(Material.WOOL);
-        item.setNrOfWearsSinceLastWash(0);
-        item.setOutfits(new ArrayList<>());
-        item.setSize(Size.M);
-        item.setStyle(Style.CASUAL);
-        item.setWashingZoneColor(WashingZoneColor.BLACK);
-
-        Item item1 = new Item();
-        item1.setCode("WHITE");
-        item1.setId(123L);
-        item1.setItemCategory(ItemCategory.JEANS);
-        item1.setItemColor(ItemColor.MOHOGAMY);
-        item1.setLastWashingDay(LocalDate.ofEpochDay(0L));
-        item1.setLastWearing(LocalDate.ofEpochDay(0L));
-        item1.setMaterial(Material.WOOL);
-        item1.setNrOfWearsSinceLastWash(0);
-        item1.setOutfits(new ArrayList<>());
-        item1.setSize(Size.M);
-        item1.setStyle(Style.CASUAL);
-        item1.setWashingZoneColor(WashingZoneColor.COLOR);
-        ArrayList<Item> itemList = new ArrayList<>();
-        itemList.add(item1);
-        itemList.add(item);
-
-        when(this.itemRepository.findItemIfDirty()).thenReturn(itemList);
-        assertEquals(1, this.itemServiceImpl.getDirtyItems("Color").size());
-        verify(this.itemRepository).findItemIfDirty();
-    }
+//    @Test
+//    void testGetDirtyItems2() {
+//        Item item = new Item();
+//        item.setCode("white");
+//        item.setId(123L);
+//        item.setItemCategory(ItemCategory.JEANS);
+//        item.setItemColor(ItemColor.MOHOGAMY);
+//        item.setLastWashingDay(LocalDate.ofEpochDay(0L));
+//        item.setLastWearing(LocalDate.ofEpochDay(0L));
+//        item.setMaterial(Material.WOOL);
+//        item.setNrOfWearsSinceLastWash(0);
+//        item.setOutfits(new ArrayList<>());
+//        item.setSize(Size.M);
+//        item.setStyle(Style.CASUAL);
+//        item.setWashingZoneColor(WashingZoneColor.COLOR);
+//        ArrayList<Item> itemList = new ArrayList<>();
+//        itemList.add(item);
+//
+//        when(this.itemRepository.findItemIfDirty()).thenReturn(itemList);
+//        assertEquals(1, this.itemServiceImpl.getDirtyItems("Color").size());
+//        verify(this.itemRepository).findItemIfDirty();
+//    }
+//
+//    @Test
+//    void testGetDirtyItems3() {
+//        Item item = new Item();
+//        item.setCode("white");
+//        item.setId(123L);
+//        item.setItemCategory(ItemCategory.JEANS);
+//        item.setItemColor(ItemColor.MOHOGAMY);
+//        item.setLastWashingDay(LocalDate.ofEpochDay(0L));
+//        item.setLastWearing(LocalDate.ofEpochDay(0L));
+//        item.setMaterial(Material.WOOL);
+//        item.setNrOfWearsSinceLastWash(0);
+//        item.setOutfits(new ArrayList<>());
+//        item.setSize(Size.M);
+//        item.setStyle(Style.CASUAL);
+//        item.setWashingZoneColor(WashingZoneColor.BLACK);
+//
+//        Item item1 = new Item();
+//        item1.setCode("WHITE");
+//        item1.setId(123L);
+//        item1.setItemCategory(ItemCategory.JEANS);
+//        item1.setItemColor(ItemColor.MOHOGAMY);
+//        item1.setLastWashingDay(LocalDate.ofEpochDay(0L));
+//        item1.setLastWearing(LocalDate.ofEpochDay(0L));
+//        item1.setMaterial(Material.WOOL);
+//        item1.setNrOfWearsSinceLastWash(0);
+//        item1.setOutfits(new ArrayList<>());
+//        item1.setSize(Size.M);
+//        item1.setStyle(Style.CASUAL);
+//        item1.setWashingZoneColor(WashingZoneColor.COLOR);
+//        ArrayList<Item> itemList = new ArrayList<>();
+//        itemList.add(item1);
+//        itemList.add(item);
+//
+//        when(this.itemRepository.findItemIfDirty()).thenReturn(itemList);
+//        assertEquals(1, this.itemServiceImpl.getDirtyItems("Color").size());
+//        verify(this.itemRepository).findItemIfDirty();
+//    }
 
     @Test
     void testCreateJsonArrayOfItems() {

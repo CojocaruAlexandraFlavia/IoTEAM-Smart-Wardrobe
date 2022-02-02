@@ -79,7 +79,7 @@ public class ItemController {
         return itemService.washItem(itemId);
     }
 
-    @PostMapping("/getAllStore")
+    @GetMapping("/getAllStore")
     public void readAllItemsFromStore(){
          itemService.readAllItemsFromStore();
     }
@@ -94,7 +94,7 @@ public class ItemController {
         }
     }
 
-    @PostMapping("/sortByLastWearingDate")
+    @GetMapping("/sortByLastWearingDate")
     public ResponseEntity<?> sortItemsByLastWearingDate(){
         List<Item> items = itemService.sortItemsByLastWearingDate();
         if(items.size() != 0){
@@ -102,5 +102,10 @@ public class ItemController {
         }else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Items not found for sorting!");
         }
+    }
+
+    @PostMapping("/updateWardrobe/{userId}")
+    public List<Item> updateUserDetails(@PathVariable("userId") String userId){
+        return itemService.updateWardrobe(userId);
     }
 }

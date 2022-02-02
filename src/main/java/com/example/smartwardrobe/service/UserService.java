@@ -7,6 +7,7 @@ import com.example.smartwardrobe.model.User;
 import com.example.smartwardrobe.model.dto.UserDto;
 import org.json.simple.JSONArray;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService{
@@ -16,11 +17,9 @@ public interface UserService{
     Optional<User> findUserByUsername(String username);
     void writeUserToFile(User user);
     JSONArray getUsersFromFile();
-    User saveUserFromFile(User user);
     JSONArray createJsonArrayOfItems(List<Item> items);
     Size calculateUserSize(User user);
     User saveUserFromFile();
-    //JSONArray createJsonArrayOfItems(List<Item> items);
     User convertDtoToEntity(UserDto userDto);
 
 }

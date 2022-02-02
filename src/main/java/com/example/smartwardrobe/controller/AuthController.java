@@ -45,7 +45,7 @@ public class AuthController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<String> authenticateUser(@NotNull @RequestBody UsernameAndPasswordAuthenticationRequest loginRequest){
+    public ResponseEntity<String> authenticateUser(@NotNull @RequestBody UsernameAndPasswordAuthenticationRequest loginRequest) throws Exception {
 
         Object existingAuthenticated = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

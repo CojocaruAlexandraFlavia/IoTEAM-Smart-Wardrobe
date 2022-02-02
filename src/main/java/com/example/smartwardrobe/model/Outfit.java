@@ -49,8 +49,6 @@ public class Outfit {
         this.coat = coat;
     }
 
-    public Outfit() { }
-
     public String getDescription() {
         return description;
     }

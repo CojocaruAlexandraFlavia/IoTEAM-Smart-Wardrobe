@@ -15,19 +15,17 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public User saveUser(@RequestBody UserDto userDto){
         return userService.saveUser(userService.convertDtoToEntity(userDto));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public User getUserById(@PathVariable("id") Long id){
         return userService.findUserById(id);
     }
 
-    @PostMapping("/saveUser")
-    public User saveUserFromFile(User user){
-        return userService.saveUserFromFile(user);
-    }
+//    @PostMapping("/saveUser")
+//    public User saveUserFromFile(User user){
+//        return userService.saveUserFromFile(user);
+//    }
 }

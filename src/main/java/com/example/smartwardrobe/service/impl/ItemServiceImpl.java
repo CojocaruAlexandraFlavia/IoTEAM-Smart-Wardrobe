@@ -237,19 +237,18 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> sortItemsByLastWearingDate(){
         List<Item> items = findAllItems();
-        //sort ASC by lastWearing date
-        Collections.sort(items, new Item.SortByDate() );
+        items.sort(new Item.SortByDate());
         System.out.println(items);
 
         return items;
     }
 
-    public List<Item> updateWardrobe(User user){
-        List<Item> itemsToReturn = new ArrayList<Item>();;
-        for(int i = 0; i < user.getItems().toArray().length; i++){
-            // user.setHairColor(HairColor.valueOf((jsonArray.get(6).toString())));
-            if(!findAllItems().get(i).getSize().toString().equals(userService.calculateUserSize(user))) {
-                itemsToReturn.add(user.getItems().get(i));
+    public List<Item> updateWardrobe(String userId){
+        User user = userService.findUserById(Long.valueOf(userId));
+        List<Item> itemsToReturn = new ArrayList<>();
+        for(int i = 0; i < findAllItems().toArray().length; i++){
+            if(!findAllItems().get(i).getSize().toString().equals(userService.calculateUserSize(user).name())) {
+                itemsToReturn.add(findAllItems().get(i));
             }
         }
         return itemsToReturn;
