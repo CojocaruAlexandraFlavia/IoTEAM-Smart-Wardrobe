@@ -75,25 +75,8 @@ public class Config extends WebSecurityConfigurerAdapter implements WebMvcConfig
                 "PATCH");
     }
 
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//    }
-
-//    @Override
-//    @Bean
-//    public UserDetailsService userDetailsServiceBean() throws Exception {
-//        return new UserDetailsServiceImpl();
-//    }
-//
-//    @Autowired
-//    public void configureGlobalSecurity(AuthenticationManagerBuilder authentication) throws Exception {
-//        authentication.userDetailsService(userDetailsServiceBean());
-//        //authentication.authenticationProvider(authenticationProvider());
-//    }
-
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    public void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 

@@ -1,11 +1,6 @@
 package com.example.smartwardrobe.model.dto;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 public class HistoryDto {
-
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private String datetime;
 
@@ -27,7 +22,4 @@ public class HistoryDto {
         this.outfitId = outfitId;
     }
 
-    public LocalDate getLocalDateTime(){
-        return LocalDate.parse(datetime, dateTimeFormatter);
-    }
 }

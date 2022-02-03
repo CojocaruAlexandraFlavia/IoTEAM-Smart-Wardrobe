@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CoatServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.service.impl</a> &gt; <span class="el_source">CoatServiceImpl.java</span></div><h1>CoatServiceImpl.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.service.impl;
+
+import com.example.smartwardrobe.enums.*;
+import com.example.smartwardrobe.model.Coat;
+import com.example.smartwardrobe.repository.CoatRepository;
+import com.example.smartwardrobe.service.CoatService;
+import com.example.smartwardrobe.service.ItemService;
+import org.apache.commons.lang3.EnumUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+<span class="fc" id="L23">public class CoatServiceImpl implements CoatService {</span>
+
+    @Autowired
+    CoatRepository coatRepository;
+
+    @Autowired
+    ItemService itemService;
+
+    @Override
+    public Coat saveCoat(Coat coat){
+<span class="nc" id="L33">        return coatRepository.save(coat);</span>
+    }
+
+    @Override
+    public Coat findCoatById(Long id) {
+<span class="nc" id="L38">        return coatRepository.findById(id).orElseThrow();</span>
+    }
+
+    @Override
+    public List&lt;Coat&gt; findCoatByCategory(CoatCategory coatCategory) {
+<span class="nc" id="L43">        return coatRepository.findByCoatCategory(coatCategory);</span>
+    }
+
+    @Override
+    public void deleteCoatById(Long id) {
+<span class="nc" id="L48">        coatRepository.deleteById(id);</span>
+<span class="nc" id="L49">    }</span>
+
+    @Override
+    public List&lt;Coat&gt; findAllCoats() {
+<span class="nc" id="L53">        return coatRepository.findAll();</span>
+    }
+
+    @Override
+    public List&lt;Coat&gt; getCoatsByStyleName(String styleName) {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">        if (!EnumUtils.isValidEnum(Style.class, styleName.toUpperCase()) ){</span>
+<span class="nc" id="L59">            return new ArrayList&lt;&gt;();</span>
+        }
+<span class="nc" id="L61">        return coatRepository.findByStyle(Style.valueOf(styleName.toUpperCase()));</span>
+    }
+
+    @Override
+    public String washItem(String coatId) {
+<span class="nc" id="L66">        Coat coat = findCoatById(Long.valueOf(coatId));</span>
+<span class="nc" id="L67">        coat.setLastWashingDay(LocalDate.now());</span>
+<span class="nc" id="L68">        coat.setNrOfWearsSinceLastWash(0);</span>
+<span class="nc" id="L69">        coatRepository.save(coat);</span>
+<span class="nc" id="L70">        return &quot;The item is clean!&quot;;</span>
+    }
+
+    @Override
+    public void updateCoatAfterAddingOutfit(Long coatId) {
+<span class="nc" id="L75">        Coat coat = findCoatById(coatId);</span>
+<span class="nc" id="L76">        coat.setNrOfWearsSinceLastWash(coat.getNrOfWearsSinceLastWash() + 1);</span>
+<span class="nc" id="L77">        coat.setLastWearing(LocalDate.now());</span>
+<span class="nc" id="L78">        saveCoat(coat);</span>
+<span class="nc" id="L79">    }</span>
+
+    @Override
+    public void readAllCoatsFromStore(){
+<span class="nc" id="L83">        JSONParser jsonParser = new JSONParser();</span>
+<span class="nc" id="L84">        try (FileReader reader = new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/coatstore.json&quot;))</span>
+        {
+            //Read JSON file
+<span class="nc" id="L87">            JSONObject obj = (JSONObject) jsonParser.parse(reader);</span>
+<span class="nc" id="L88">            JSONArray coatList = (JSONArray) obj.get(&quot;items&quot;);</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">            for(int i = 0;i&lt;coatList.toArray().length;i++)</span>
+            {
+<span class="nc" id="L91">                JSONObject jsonItem = (JSONObject) coatList.get(i);</span>
+<span class="nc" id="L92">                Coat coat = (Coat)itemService.convertJsonObjectToItemOrCoat(jsonItem, 2);</span>
+<span class="nc" id="L93">                saveCoat(coat);</span>
+            }
+<span class="nc" id="L95">        } catch (IOException | ParseException e) {</span>
+<span class="nc" id="L96">            e.printStackTrace();</span>
+<span class="nc" id="L97">        }</span>
+<span class="nc" id="L98">    }</span>
+
+    @Override
+    public List&lt;Coat&gt; readAllCoatsByCategoryFromStore(CoatCategory coatCategory){
+<span class="nc" id="L102">        List&lt;Coat&gt; coats = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L103">        JSONParser jsonParser = new JSONParser();</span>
+<span class="nc" id="L104">        try (FileReader reader = new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/coatstore.json&quot;))</span>
+        {
+<span class="nc" id="L106">            JSONObject obj = (JSONObject) jsonParser.parse(reader);</span>
+<span class="nc" id="L107">            JSONArray coatList = (JSONArray) obj.get(&quot;items&quot;);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">            for(int i = 0;i&lt;coatList.toArray().length;i++)</span>
+            {
+<span class="nc" id="L110">                JSONObject jsonItem = (JSONObject) coatList.get(i);</span>
+<span class="nc" id="L111">                Coat coat = (Coat) itemService.convertJsonObjectToItemOrCoat(jsonItem, 2);</span>
+<span class="nc" id="L112">                saveCoat(coat);</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                if(coat.getCoatCategory() == coatCategory){</span>
+<span class="nc" id="L114">                    coats.add(coat);</span>
+                }
+            }
+<span class="nc" id="L117">        } catch (IOException | ParseException e) {</span>
+<span class="nc" id="L118">            e.printStackTrace();</span>
+<span class="nc" id="L119">        }</span>
+<span class="nc" id="L120">        return coats;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

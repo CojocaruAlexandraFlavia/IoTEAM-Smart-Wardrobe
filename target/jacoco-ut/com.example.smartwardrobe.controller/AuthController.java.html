@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.controller</a> &gt; <span class="el_source">AuthController.java</span></div><h1>AuthController.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.controller;
 
-import com.example.smartwardrobe.model.LoginRequest;
+import com.example.smartwardrobe.authentication.UsernameAndPasswordAuthenticationRequest;
 import com.example.smartwardrobe.model.User;
 import com.example.smartwardrobe.service.UserService;
 import org.jetbrains.annotations.NotNull;
@@ -36,60 +36,40 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @Autowired
-<span class="nc" id="L39">    public AuthController(UserService userService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {</span>
-<span class="nc" id="L40">        this.userService = userService;</span>
-<span class="nc" id="L41">        this.passwordEncoder = passwordEncoder;</span>
-<span class="nc" id="L42">        this.authenticationManager = authenticationManager;</span>
-<span class="nc" id="L43">    }</span>
+    MqttController mqttController;
+
+    @Autowired
+<span class="fc" id="L42">    public AuthController(UserService userService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {</span>
+<span class="fc" id="L43">        this.userService = userService;</span>
+<span class="fc" id="L44">        this.passwordEncoder = passwordEncoder;</span>
+<span class="fc" id="L45">        this.authenticationManager = authenticationManager;</span>
+<span class="fc" id="L46">    }</span>
 
     @PostMapping(&quot;/signIn&quot;)
-    public ResponseEntity&lt;String&gt; authenticateUser(@NotNull @RequestBody LoginRequest loginRequest){
+    public ResponseEntity&lt;String&gt; authenticateUser(@NotNull @RequestBody UsernameAndPasswordAuthenticationRequest loginRequest) throws Exception {
 
-<span class="nc" id="L48">        Object existingAuthenticated = SecurityContextHolder.getContext().getAuthentication().getPrincipal();</span>
+<span class="nc" id="L51">        Object existingAuthenticated = SecurityContextHolder.getContext().getAuthentication().getPrincipal();</span>
 
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        if(existingAuthenticated != &quot;anonymousUser&quot;){</span>
-<span class="nc" id="L51">            return ResponseEntity.badRequest().body(&quot;Already logged in&quot;);</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if(existingAuthenticated != &quot;anonymousUser&quot;){</span>
+<span class="nc" id="L54">            return ResponseEntity.badRequest().body(&quot;Already logged in&quot;);</span>
         }
 
-<span class="nc" id="L54">        Optional&lt;User&gt; user = userService.findUserByUsername(loginRequest.getUsername());</span>
+<span class="nc" id="L57">        Optional&lt;User&gt; user = userService.findUserByUsername(loginRequest.getUsername());</span>
 
-<span class="nc bnc" id="L56" title="All 4 branches missed.">        if(user.isEmpty() || !passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())){</span>
-<span class="nc" id="L57">            return ResponseEntity.badRequest().body(&quot;Username or password incorrect!&quot;);</span>
+<span class="nc bnc" id="L59" title="All 4 branches missed.">        if(user.isEmpty() || !passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())){</span>
+<span class="nc" id="L60">            return ResponseEntity.badRequest().body(&quot;Username or password incorrect!&quot;);</span>
         }
 
-<span class="nc" id="L60">        Authentication authentication = authenticationManager.authenticate(</span>
-<span class="nc" id="L61">                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),</span>
-<span class="nc" id="L62">                        loginRequest.getPassword()));</span>
+<span class="nc" id="L63">        Authentication authentication = authenticationManager.authenticate(</span>
+<span class="nc" id="L64">                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),</span>
+<span class="nc" id="L65">                        loginRequest.getPassword()));</span>
 
-<span class="nc" id="L64">        getContext().setAuthentication(authentication);</span>
-
-<span class="nc" id="L66">        return ResponseEntity.ok().body(&quot;Login successful for: \n &quot; + loginRequest.getUsername());</span>
+<span class="nc" id="L67">        getContext().setAuthentication(authentication);</span>
+<span class="nc" id="L68">        mqttController.publishAllDirtyClothes();</span>
+<span class="nc" id="L69">        mqttController.publishItems();</span>
+<span class="nc" id="L70">        return ResponseEntity.ok().body(&quot;Login successful for: \n &quot; + loginRequest.getUsername());</span>
 
     }
-
-    @GetMapping(&quot;/signOut&quot;)
-    public ResponseEntity&lt;String&gt; signOut(HttpServletRequest request, HttpServletResponse response) {
-<span class="nc" id="L72">        Authentication auth = getContext().getAuthentication();</span>
-
-<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (!auth.getPrincipal().equals(&quot;anonymousUser&quot;)) {</span>
-<span class="nc" id="L75">            HttpSession session = request.getSession(false);</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">            if (session != null) {</span>
-<span class="nc" id="L77">                session.invalidate();</span>
-            }
-
-<span class="nc" id="L80">            Cookie[] cookies = request.getCookies();</span>
-<span class="nc" id="L81">            Optional&lt;Cookie&gt; sessionId = Arrays.stream(cookies).filter(cookie -&gt; cookie.getName().equals(&quot;JSESSIONID&quot;)).findFirst();</span>
-<span class="nc" id="L82">            sessionId.ifPresent(cookie -&gt; cookie.setMaxAge(0));</span>
-<span class="nc" id="L83">            sessionId.ifPresent(response::addCookie);</span>
-
-<span class="nc" id="L85">            new SecurityContextLogoutHandler().logout(request, response, auth);</span>
-<span class="nc" id="L86">            getContext().setAuthentication(null);</span>
-
-<span class="nc" id="L88">            return ResponseEntity.ok(&quot;Logout ok&quot;);</span>
-        }
-<span class="nc" id="L90">        return ResponseEntity.badRequest().body(&quot;Unauthenticated&quot;);</span>
-    }
-
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

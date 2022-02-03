@@ -9,11 +9,7 @@ import java.util.List;
 
 public interface HistoryService {
 
-    History findHistoryById(Long id);
     History saveHistory(History history);
-    History findHistoryByDateTime(LocalDate localDate);
-    void deleteHistoryById(Long id);
-    List<History> findAllHistories();
     History convertDtoToEntity(HistoryDto historyDto);
 
 }

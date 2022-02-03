@@ -4,24 +4,53 @@ import com.example.smartwardrobe.weather.IpInformation;
 import com.example.smartwardrobe.weather.Weather;
 import com.example.smartwardrobe.weather.WeatherGrabber;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.UnknownHostException;
 
-<span class="nc" id="L14">public class WeatherController {</span>
+public class WeatherController {
+
+    private WeatherController(){}
+
     public static void getWeather() throws Exception {
-        InetAddress ip;
+<span class="nc" id="L21">        URL myIp = new URL(&quot;http://checkip.amazonaws.com&quot;);</span>
         String ipNo;
-<span class="nc" id="L18">        URL whatismyip = new URL(&quot;http://checkip.amazonaws.com&quot;);</span>
-<span class="nc" id="L19">        BufferedReader in = new BufferedReader(new InputStreamReader(whatismyip.openStream()));</span>
-<span class="nc" id="L20">        ipNo = in.readLine();</span>
-<span class="nc" id="L21">        System.out.println(ipNo);</span>
-<span class="nc" id="L22">        IpInformation ipInformation = WeatherGrabber.grabLocationFrom(ipNo);</span>
-<span class="nc" id="L23">        Weather weatherConditions = WeatherGrabber.grabWeatherFrom(ipInformation);</span>
-<span class="nc" id="L24">        System.out.println(weatherConditions.toString());</span>
-<span class="nc" id="L25">    }</span>
+<span class="nc" id="L23">        try (BufferedReader in = new BufferedReader(new InputStreamReader(myIp.openStream()))) {</span>
+<span class="nc" id="L24">            ipNo = in.readLine();</span>
+        }
+<span class="nc" id="L26">        IpInformation ipInformation = WeatherGrabber.grabLocationFrom(ipNo);</span>
+<span class="nc" id="L27">        WeatherGrabber.grabWeatherFrom(ipInformation);</span>
+<span class="nc" id="L28">    }</span>
+
+    //this is used for mqqt
+    public static String getWeatherConditions() throws Exception {
+        String ipNo;
+<span class="fc" id="L33">        URL myIp = new URL(&quot;http://checkip.amazonaws.com&quot;);</span>
+<span class="fc" id="L34">        try (BufferedReader in = new BufferedReader(new InputStreamReader(myIp.openStream()))) {</span>
+<span class="fc" id="L35">            ipNo = in.readLine();</span>
+        }
+<span class="fc" id="L37">        IpInformation ipInformation = WeatherGrabber.grabLocationFrom(ipNo);</span>
+<span class="nc" id="L38">        Weather weatherConditions = WeatherGrabber.grabWeatherFrom(ipInformation);</span>
+<span class="nc" id="L39">        return(weatherConditions.toString());</span>
+    }
+
+    public static Double getTemperature() throws Exception {
+        Double temperature;
+<span class="nc" id="L44">        getWeather();</span>
+<span class="nc" id="L45">        JSONParser parser = new JSONParser();</span>
+        try{
+<span class="nc" id="L47">            JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/weather2.json&quot;));</span>
+<span class="nc" id="L48">            temperature = (Double) jsonObject.get(&quot;feelslike_c&quot;);</span>
+<span class="nc" id="L49">        } catch (ParseException | IOException e) {</span>
+<span class="nc" id="L50">            e.printStackTrace();</span>
+<span class="nc" id="L51">            return null;</span>
+<span class="nc" id="L52">        }</span>
+<span class="nc" id="L53">        return temperature;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

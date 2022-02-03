@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.model.dto</a> &gt; <span class="el_source">ItemDto.java</span></div><h1>ItemDto.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.model.dto;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
-<span class="fc" id="L6">public class ItemDto {</span>
-
-<span class="fc" id="L8">    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;);</span>
+<span class="fc" id="L3">public class ItemDto {</span>
 
     private long id;
 
@@ -25,104 +20,96 @@ import java.time.format.DateTimeFormatter;
 
     private int nrOfWearsSinceLastWash;
 
-    private String washingZOneColor;
+    private String washingZoneColor;
 
     private String lastWashingDay;
 
     public String getMaterial() {
-<span class="fc" id="L33">        return material;</span>
+<span class="fc" id="L28">        return material;</span>
     }
 
     public void setMaterial(String material) {
-<span class="fc" id="L37">        this.material = material;</span>
-<span class="fc" id="L38">    }</span>
+<span class="fc" id="L32">        this.material = material;</span>
+<span class="fc" id="L33">    }</span>
 
     public String getSize() {
-<span class="fc" id="L41">        return size;</span>
+<span class="fc" id="L36">        return size;</span>
     }
 
     public void setSize(String size) {
-<span class="fc" id="L45">        this.size = size;</span>
-<span class="fc" id="L46">    }</span>
+<span class="fc" id="L40">        this.size = size;</span>
+<span class="fc" id="L41">    }</span>
 
     public String getCode() {
-<span class="fc" id="L49">        return code;</span>
+<span class="fc" id="L44">        return code;</span>
     }
 
     public void setCode(String code) {
-<span class="fc" id="L53">        this.code = code;</span>
-<span class="fc" id="L54">    }</span>
+<span class="fc" id="L48">        this.code = code;</span>
+<span class="fc" id="L49">    }</span>
 
     public String getItemColor() {
-<span class="fc" id="L57">        return itemColor;</span>
+<span class="fc" id="L52">        return itemColor;</span>
     }
 
     public void setItemColor(String itemColor) {
-<span class="fc" id="L61">        this.itemColor = itemColor;</span>
-<span class="fc" id="L62">    }</span>
+<span class="fc" id="L56">        this.itemColor = itemColor;</span>
+<span class="fc" id="L57">    }</span>
 
     public String getStyle() {
-<span class="fc" id="L65">        return style;</span>
+<span class="fc" id="L60">        return style;</span>
     }
 
     public void setStyle(String style) {
-<span class="fc" id="L69">        this.style = style;</span>
-<span class="fc" id="L70">    }</span>
+<span class="fc" id="L64">        this.style = style;</span>
+<span class="fc" id="L65">    }</span>
 
     public String getItemCategory() {
-<span class="fc" id="L73">        return itemCategory;</span>
+<span class="fc" id="L68">        return itemCategory;</span>
     }
 
     public void setItemCategory(String itemCategory) {
-<span class="fc" id="L77">        this.itemCategory = itemCategory;</span>
-<span class="fc" id="L78">    }</span>
+<span class="fc" id="L72">        this.itemCategory = itemCategory;</span>
+<span class="fc" id="L73">    }</span>
 
     public String getLastWearing() {
-<span class="fc" id="L81">        return lastWearing;</span>
+<span class="fc" id="L76">        return lastWearing;</span>
     }
 
     public void setLastWearing(String lastWearing) {
-<span class="fc" id="L85">        this.lastWearing = lastWearing;</span>
-<span class="fc" id="L86">    }</span>
+<span class="fc" id="L80">        this.lastWearing = lastWearing;</span>
+<span class="fc" id="L81">    }</span>
 
     public int getNrOfWearsSinceLastWash() {
-<span class="fc" id="L89">        return nrOfWearsSinceLastWash;</span>
+<span class="fc" id="L84">        return nrOfWearsSinceLastWash;</span>
     }
 
     public void setNrOfWearsSinceLastWash(int nrOfWearsSinceLastWash) {
-<span class="fc" id="L93">        this.nrOfWearsSinceLastWash = nrOfWearsSinceLastWash;</span>
-<span class="fc" id="L94">    }</span>
+<span class="fc" id="L88">        this.nrOfWearsSinceLastWash = nrOfWearsSinceLastWash;</span>
+<span class="fc" id="L89">    }</span>
 
-    public String getWashingZOneColor() {
-<span class="fc" id="L97">        return washingZOneColor;</span>
+    public String getWashingZoneColor() {
+<span class="fc" id="L92">        return washingZoneColor;</span>
     }
 
-    public void setWashingZOneColor(String washingZOneColor) {
-<span class="fc" id="L101">        this.washingZOneColor = washingZOneColor;</span>
-<span class="fc" id="L102">    }</span>
-
-    public LocalDate getLastWearingDate(){
-<span class="nc" id="L105">        return LocalDate.parse(lastWearing, dateTimeFormatter);</span>
-    }
-
-    public LocalDate getLastWashingDayDate(){
-<span class="nc" id="L109">        return LocalDate.parse(lastWashingDay, dateTimeFormatter);</span>
-    }
+    public void setWashingZoneColor(String washingZoneColor) {
+<span class="fc" id="L96">        this.washingZoneColor = washingZoneColor;</span>
+<span class="fc" id="L97">    }</span>
 
     public long getId() {
-<span class="fc" id="L113">        return id;</span>
+<span class="fc" id="L100">        return id;</span>
     }
 
     public void setId(long id) {
-<span class="fc" id="L117">        this.id = id;</span>
-<span class="fc" id="L118">    }</span>
+<span class="fc" id="L104">        this.id = id;</span>
+<span class="fc" id="L105">    }</span>
 
     public String getLastWashingDay() {
-<span class="fc" id="L121">        return lastWashingDay;</span>
+<span class="fc" id="L108">        return lastWashingDay;</span>
     }
 
     public void setLastWashingDay(String lastWashingDay) {
-<span class="fc" id="L125">        this.lastWashingDay = lastWashingDay;</span>
-<span class="fc" id="L126">    }</span>
+<span class="fc" id="L112">        this.lastWashingDay = lastWashingDay;</span>
+<span class="fc" id="L113">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

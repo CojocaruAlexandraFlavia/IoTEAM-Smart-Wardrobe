@@ -1,15 +1,16 @@
 package com.example.smartwardrobe.controller;
 
 
-import com.example.smartwardrobe.exceptions.ExceptionMessages;
 import com.example.smartwardrobe.exceptions.MqttException;
 import com.example.smartwardrobe.mqtt.Mqtt;
 import com.example.smartwardrobe.mqtt.MqttPublishModel;
 import com.example.smartwardrobe.mqtt.MqttSubscribeModel;
 import com.example.smartwardrobe.service.ItemService;
-import com.example.smartwardrobe.service.impl.ItemServiceImpl;
 import lombok.SneakyThrows;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -17,35 +18,38 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "/api/mqtt")
 public class MqttController {
+
+    static Logger logger = LoggerFactory.getLogger(MqttController.class);
+
     @Autowired
     private ItemService itemService;
 
     @PostMapping("/publish")
     public static void publishMessage(@RequestBody @Valid MqttPublishModel messagePublishModel,
-                               BindingResult bindingResult) throws org.eclipse.paho.client.mqttv3.MqttException, InterruptedException {
+                               BindingResult bindingResult) throws org.eclipse.paho.client.mqttv3.MqttException {
         if (bindingResult.hasErrors()) {
-            throw new MqttException(ExceptionMessages.SOME_PARAMETERS_INVALID);
+            throw new MqttException("SOME_PARAMETERS_INVALID");
         }
 
         MqttMessage mqttMessage = new MqttMessage(messagePublishModel.getMessage().getBytes());
         mqttMessage.setQos(messagePublishModel.getQos());
         mqttMessage.setRetained(messagePublishModel.getRetained());
         Mqtt.getInstance().publish(messagePublishModel.getTopic(), mqttMessage);
-        System.out.println("Message published");
+        logger.info("Message published");
     }
 
     @PostMapping("publish/Items")
     public void publishItems()
     {
-        int MINUTES = 1; // The delay in minutes
+        final long MINUTES = 1; // The delay in minutes
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @SneakyThrows
@@ -53,25 +57,28 @@ public class MqttController {
             public void run() {
                 String topic = "items";
                 String message = itemService.findAllItems().toString();
-                MqttPublishModel messagePublishModel = new MqttPublishModel();
-                messagePublishModel.setTopic(topic);
-                messagePublishModel.setQos(0);
-                messagePublishModel.setRetained(true);
-                MqttMessage mqttMessage = new MqttMessage(message.getBytes());
-                mqttMessage.setQos(messagePublishModel.getQos());
-                mqttMessage.setRetained(messagePublishModel.getRetained());
-                Mqtt.getInstance().publish(topic, mqttMessage);
-                System.out.println("All items published successfully!");
-
+                createMessagePublishModel(topic, message);
+                logger.info("All items published successfully!");
             }
 
-            }, 0, 1000*60*MINUTES);
+            }, 0, 1000 * 60 * MINUTES);
 
     }
 
+    public static void createMessagePublishModel(String topic, @NotNull String message) throws org.eclipse.paho.client.mqttv3.MqttException {
+        MqttPublishModel messagePublishModel = new MqttPublishModel();
+        messagePublishModel.setTopic(topic);
+        messagePublishModel.setQos(0);
+        messagePublishModel.setRetained(true);
+        MqttMessage mqttMessage = new MqttMessage(message.getBytes());
+        mqttMessage.setQos(messagePublishModel.getQos());
+        mqttMessage.setRetained(messagePublishModel.getRetained());
+        Mqtt.getInstance().publish(topic, mqttMessage);
+    }
+
     @PostMapping("/publish/AllDirtyClothes")
-    public void publishAllDirtyClothes() throws Exception {
-        int MINUTES = 1; // The delay in minutes
+    public void publishAllDirtyClothes() {
+        final long  MINUTES = 1; // The delay in minutes
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @SneakyThrows
@@ -79,23 +86,15 @@ public class MqttController {
             public void run() { // Function runs every MINUTES minutes.
                 String topic = "store";
                 String message = itemService.findItemIfDirty().toString();
-                MqttPublishModel messagePublishModel = new MqttPublishModel();
-                messagePublishModel.setTopic(topic);
-                messagePublishModel.setQos(0);
-                messagePublishModel.setRetained(true);
-                MqttMessage mqttMessage = new MqttMessage(message.getBytes());
-                mqttMessage.setQos(messagePublishModel.getQos());
-                mqttMessage.setRetained(messagePublishModel.getRetained());
-                Mqtt.getInstance().publish(topic, mqttMessage);
-                System.out.println("AllDirtyClothes published successfully!");
+                createMessagePublishModel(topic, message);
+                logger.info("AllDirtyClothes published successfully!");
             }
         }, 0, 1000*60*MINUTES);
-
-
     }
+
     @PostMapping("/publish/WeatherConditions")
-    public static void publishWeatherConditions() throws Exception {
-        int MINUTES = 2; // The delay in minutes
+    public static void publishWeatherConditions() {
+        final long MINUTES = 2; // The delay in minutes
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @SneakyThrows
@@ -103,15 +102,8 @@ public class MqttController {
             public void run() {
                 String topic = "weather";
                 String message = WeatherController.getWeatherConditions();
-                MqttPublishModel messagePublishModel = new MqttPublishModel();
-                messagePublishModel.setTopic(topic);
-                messagePublishModel.setQos(0);
-                messagePublishModel.setRetained(true);
-                MqttMessage mqttMessage = new MqttMessage(message.getBytes());
-                mqttMessage.setQos(messagePublishModel.getQos());
-                mqttMessage.setRetained(messagePublishModel.getRetained());
-                Mqtt.getInstance().publish(topic, mqttMessage);
-                System.out.println("Weather conditions published successfully!");
+                createMessagePublishModel(topic, message);
+                logger.info("Weather conditions published successfully!");
             }
         }, 0, 1000 * 60 * MINUTES);
     }

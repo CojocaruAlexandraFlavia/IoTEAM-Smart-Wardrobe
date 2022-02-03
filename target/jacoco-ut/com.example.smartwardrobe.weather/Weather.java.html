@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Weather.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.weather</a> &gt; <span class="el_source">Weather.java</span></div><h1>Weather.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.weather;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -9,32 +13,32 @@ import java.util.Date;
  */
 
 public class Weather implements Serializable {
-<span class="nc" id="L12">    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm&quot;);</span>
+<span class="fc" id="L16">    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm&quot;);</span>
     private int humidity;
-    private int is_day;
-    private float temp_c;
-    private Date last_updated;
+    private int isDay;
+    private float tempC;
+    private LocalDateTime lastUpdated;
 
     /**
      * Default constructor
      */
-<span class="nc" id="L21">    public Weather() {</span>
-<span class="nc" id="L22">    }</span>
+<span class="fc" id="L25">    public Weather() {</span>
+<span class="fc" id="L26">    }</span>
 
     /**
      * Initializes a new Weather
      *
      * @param humidity humidity
-     * @param is_day is_day
-     * @param temp_c temp_c
-     * @param last_updated last_updated
+     * @param isDay is_day
+     * @param tempC temp_c
+     * @param lastUpdated last_updated
      */
-<span class="nc" id="L32">    public Weather(int humidity, int is_day, float temp_c, String last_updated) throws Exception {</span>
-<span class="nc" id="L33">        this.humidity = humidity;</span>
-<span class="nc" id="L34">        this.is_day = is_day;</span>
-<span class="nc" id="L35">        this.temp_c = temp_c;</span>
-<span class="nc" id="L36">        this.last_updated = DATE_FORMAT.parse(last_updated);</span>
-<span class="nc" id="L37">    }</span>
+<span class="fc" id="L36">    public Weather(int humidity, int isDay, float tempC, String lastUpdated) {</span>
+<span class="fc" id="L37">        this.humidity = humidity;</span>
+<span class="fc" id="L38">        this.isDay = isDay;</span>
+<span class="fc" id="L39">        this.tempC = tempC;</span>
+<span class="fc" id="L40">        this.lastUpdated = LocalDateTime.parse(lastUpdated, DATE_FORMAT);</span>
+<span class="fc" id="L41">    }</span>
 
     /**
      * Returns the code of the weather
@@ -42,7 +46,7 @@ public class Weather implements Serializable {
      * @return
      */
     public int getHumidity() {
-<span class="nc" id="L45">        return this.humidity;</span>
+<span class="fc" id="L49">        return this.humidity;</span>
     }
 
     /**
@@ -51,7 +55,7 @@ public class Weather implements Serializable {
      * @return text
      */
     public int getDay() {
-<span class="nc" id="L54">        return this.is_day;</span>
+<span class="fc" id="L58">        return this.isDay;</span>
     }
 
     /**
@@ -60,7 +64,7 @@ public class Weather implements Serializable {
      * @return temp
      */
     public float getTemp() {
-<span class="nc" id="L63">        return this.temp_c;</span>
+<span class="fc" id="L67">        return this.tempC;</span>
     }
 
     /**
@@ -68,8 +72,8 @@ public class Weather implements Serializable {
      *
      * @return date
      */
-    public Date getDate() {
-<span class="nc" id="L72">        return this.last_updated;</span>
+    public LocalDateTime getDate() {
+<span class="fc" id="L76">        return this.lastUpdated;</span>
     }
 
     /**
@@ -80,16 +84,16 @@ public class Weather implements Serializable {
     @Override
     public String toString() {
         String timeOfDay;
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        if(this.is_day == 0){</span>
-<span class="nc" id="L84">            timeOfDay = &quot;night&quot;;</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if(this.isDay == 0){</span>
+<span class="fc" id="L88">            timeOfDay = &quot;night&quot;;</span>
         }else{
-<span class="nc" id="L86">            timeOfDay = &quot;day&quot;;</span>
+<span class="fc" id="L90">            timeOfDay = &quot;day&quot;;</span>
         }
-<span class="nc" id="L88">        return &quot;Weather{&quot; +</span>
+<span class="fc" id="L92">        return &quot;Weather{&quot; +</span>
                 &quot;humidity=&quot; + this.humidity +
                 &quot;, timeOfDay='&quot; + timeOfDay + '\'' +
-                &quot;, temp=&quot; + this.temp_c +
-<span class="nc" id="L92">                &quot;, date='&quot; + DATE_FORMAT.format(this.last_updated) + '\'' +</span>
+                &quot;, temp=&quot; + this.tempC +
+<span class="fc" id="L96">                &quot;, date='&quot; + DATE_FORMAT.format(this.lastUpdated) + '\'' +</span>
                 '}';
     }
 }

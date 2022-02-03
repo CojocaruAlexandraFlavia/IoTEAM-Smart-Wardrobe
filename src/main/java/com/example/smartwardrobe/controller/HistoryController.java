@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -18,25 +17,10 @@ public class HistoryController {
     @Autowired
     private HistoryService historyService;
 
-    @GetMapping
-    public List<History> getAllHistories() {
-        return historyService.findAllHistories();
-    }
-
-    @GetMapping("/{id}")
-    public History getHistoryById(@PathVariable("id") Long id){
-        return historyService.findHistoryById(id);
-    }
-
-    @GetMapping("/{date}")
-    public History getHistoryByDate(@PathVariable("date") String date){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-        return historyService.findHistoryByDateTime(LocalDate.parse(date, formatter));
-    }
-
     @PostMapping
     public History saveHistory(@RequestBody HistoryDto historyDto){
-        return historyService.saveHistory(historyService.convertDtoToEntity(historyDto));
+        History history = historyService.convertDtoToEntity(historyDto);
+        return historyService.saveHistory(history);
     }
 
 

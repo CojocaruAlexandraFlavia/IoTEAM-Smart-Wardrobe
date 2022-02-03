@@ -13,6 +13,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Coat {
     @Id
@@ -53,7 +55,6 @@ public class Coat {
     @OneToMany(mappedBy = "coat", cascade= CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Outfit> outfits;
-
 
     public Material getMaterial() {
         return material;
@@ -131,24 +132,6 @@ public class Coat {
         return washingZoneColor;
     }
 
-    public Coat() {
-    }
-
-    public Coat(Long id, Material material, Size size, String code, ItemColor itemColor, Style style, CoatCategory coatCategory, LocalDate lastWearing, LocalDate lastWashingDay, int nrOfWearsSinceLastWash, WashingZoneColor washingZoneColor, List<Outfit> outfits) {
-        this.id = id;
-        this.material = material;
-        this.size = size;
-        this.code = code;
-        this.itemColor = itemColor;
-        this.style = style;
-        this.coatCategory = coatCategory;
-        this.lastWearing = lastWearing;
-        this.lastWashingDay = lastWashingDay;
-        this.nrOfWearsSinceLastWash = nrOfWearsSinceLastWash;
-        this.washingZoneColor = washingZoneColor;
-        this.outfits = outfits;
-    }
-
     public void setWashingZoneColor(WashingZoneColor washingZoneColor) {
         this.washingZoneColor = washingZoneColor;
     }
@@ -173,16 +156,13 @@ public class Coat {
     public String toString() {
         return "{" +
                 "\"id\":" + id +
-                ", \"material\":\"" + material.toString()+"\"" +
-                ", \"size\":\"" + size + "\""+
-                ", \"code\":\"" + code + "\"" +
-                ", \"itemColor\":\"" + itemColor.toString() +"\""+
-                ", \"style\":\"" + style.toString() +"\""+
-                ", \"coatCategory\":\"" + coatCategory.toString() +"\""+
-//                ", \"lastWearing\":" + lastWearing +
-//                ", \"lastWashingDay\":" + lastWashingDay +
-//                ", \"nrOfWearsSinceLastWash\":" + nrOfWearsSinceLastWash +
-                ", \"washingZoneColor\":\"" + washingZoneColor.toString() +"\""+
+                ",\"material\":\"" + material.toString()+"\"" +
+                ",\"size\":\"" + size + "\""+
+                ",\"code\":\"" + code + "\"" +
+                ",\"itemColor\":\"" + itemColor.toString() +"\""+
+                ",\"style\":\"" + style.toString() +"\""+
+                ",\"coatCategory\":\"" + coatCategory.toString() +"\""+
+                ",\"washingZoneColor\":\"" + washingZoneColor.toString() +"\""+
                 '}';
     }
 }

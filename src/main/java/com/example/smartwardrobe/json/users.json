@@ -1,5 +1,4 @@
-
-  {
+{
     "id": 1,
     "eyeColor": "BLUE",
     "weight": 70,
@@ -7,8 +6,7 @@
     "gender": "FEMALE",
     "age": 21,
     "hairColor": "BLONDE",
-    "items": [],
     "username": "username1",
     "password": "092384928364"
-  }
+}
 

@@ -6,6 +6,7 @@ import com.example.smartwardrobe.model.Outfit;
 import com.example.smartwardrobe.model.User;
 import com.example.smartwardrobe.model.dto.UserDto;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +16,7 @@ public interface UserService{
     User saveUser(User user);
     User findUserById(Long id);
     Optional<User> findUserByUsername(String username);
-    void writeUserToFile(User user);
-    JSONArray getUsersFromFile();
+    JSONObject getUsersFromFile();
     JSONArray createJsonArrayOfItems(List<Item> items);
     Size calculateUserSize(User user);
     User saveUserFromFile();

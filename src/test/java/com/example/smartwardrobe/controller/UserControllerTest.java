@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 
+import org.json.simple.JSONObject;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,56 +36,29 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
-//    @Test
-//    void testGetUserById() throws Exception {
-//        User user = new User();
-//        user.setAge(1);
-//        user.setEyeColor(EyeColor.BLUE);
-//        user.setGender(Gender.MALE);
-//        user.setHairColor(HairColor.BROWN);
-//        user.setHeight(10.0);
-//        user.setId(123L);
-//        //user.setItems(new ArrayList<>());
-//        user.setPassword("iloveyou");
-//        user.setUsername("janedoe");
-//        user.setWeight(10.0);
-//        when(this.userService.findUserById(any())).thenReturn(user);
-//        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/{id}", 123L);
-//        MockMvcBuilders.standaloneSetup(this.userController)
-//                .build()
-//                .perform(requestBuilder)
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
-//                .andExpect(MockMvcResultMatchers.content()
-//                        .string(
-//                                "{\"id\":123,\"eyeColor\":\"BLUE\",\"weight\":10.0,\"height\":10.0,\"gender\":\"MALE\",\"age\":1," +
-//                                        "\"hairColor\":\"BROWN\",\"username\":\"janedoe\",\"password\":\"iloveyou\",\"enabled\":true," +
-//                                        "\"accountNonLocked\":true,\"authorities\":[{\"authority\":\"ROLE_ADMIN}]\"," +
-//                                        "\"credentialsNonExpired\":true,\"accountNonExpired\":true}"));
-//
-//    }
+    @Test
+    void testSaveUserFromFile() throws Exception {
+        when(this.userService.getUsersFromFile()).thenReturn(new JSONObject());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/getUserFromFile");
+        MockMvcBuilders.standaloneSetup(this.userController)
+                .build()
+                .perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("{}"));
+    }
 
     @Test
-    void testSaveUser() throws Exception {
-        User user = new User();
-        user.setAge(1);
-        user.setEyeColor(EyeColor.BLUE);
-        user.setGender(Gender.MALE);
-        user.setHairColor(HairColor.BROWN);
-        user.setHeight(10.0);
-        user.setId(123L);
-        //user.setItems(new ArrayList<>());
-        user.setPassword("iloveyou");
-        user.setUsername("janedoe");
-        user.setWeight(10.0);
-        String content = (new ObjectMapper()).writeValueAsString(user);
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content);
-        ResultActions actualPerformResult = MockMvcBuilders.standaloneSetup(this.userController)
+    void testSaveUserFromFile2() throws Exception {
+        when(this.userService.getUsersFromFile()).thenReturn(new JSONObject());
+        MockHttpServletRequestBuilder getResult = MockMvcRequestBuilders.get("/user/getUserFromFile");
+        getResult.characterEncoding("Encoding");
+        MockMvcBuilders.standaloneSetup(this.userController)
                 .build()
-                .perform(requestBuilder);
-        actualPerformResult.andExpect(MockMvcResultMatchers.status().is(405));
+                .perform(getResult)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType("application/json"))
+                .andExpect(MockMvcResultMatchers.content().string("{}"));
     }
 }
 

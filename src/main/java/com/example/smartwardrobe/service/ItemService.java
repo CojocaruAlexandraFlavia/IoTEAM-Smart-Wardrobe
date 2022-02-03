@@ -1,14 +1,11 @@
 package com.example.smartwardrobe.service;
 
 import com.example.smartwardrobe.enums.ItemCategory;
-import com.example.smartwardrobe.enums.Style;
 import com.example.smartwardrobe.model.Item;
 import com.example.smartwardrobe.model.dto.ItemDto;
-import com.example.smartwardrobe.model.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.data.util.Pair;
-import org.json.simple.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -34,4 +31,5 @@ public interface ItemService {
     List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory);
     List<Item> sortItemsByLastWearingDate();
     List<Item> updateWardrobe(String userId);
+    Object convertJsonObjectToItemOrCoat(JSONObject object, int option);
 }

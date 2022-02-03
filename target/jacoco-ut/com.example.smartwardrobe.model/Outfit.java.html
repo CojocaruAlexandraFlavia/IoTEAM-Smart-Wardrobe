@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Outfit.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.model</a> &gt; <span class="el_source">Outfit.java</span></div><h1>Outfit.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.model;
 
+import com.example.smartwardrobe.enums.CoatCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -8,8 +9,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-<span class="fc" id="L11">@AllArgsConstructor</span>
-<span class="fc" id="L12">@NoArgsConstructor</span>
+<span class="fc" id="L12">@AllArgsConstructor</span>
+<span class="fc" id="L13">@NoArgsConstructor</span>
 public class Outfit {
 
     @Id
@@ -41,68 +42,85 @@ public class Outfit {
     )
     private List&lt;Item&gt; items;
 
+
+<span class="nc" id="L46">    public Outfit(Long id, String description, Coat coat) {</span>
+<span class="nc" id="L47">        this.id = id;</span>
+<span class="nc" id="L48">        this.description = description;</span>
+<span class="nc" id="L49">        this.coat = coat;</span>
+<span class="nc" id="L50">    }</span>
+
     public String getDescription() {
-<span class="fc" id="L45">        return description;</span>
+<span class="fc" id="L53">        return description;</span>
     }
 
     public void setDescription(String description) {
-<span class="fc" id="L49">        this.description = description;</span>
-<span class="fc" id="L50">    }</span>
+<span class="fc" id="L57">        this.description = description;</span>
+<span class="fc" id="L58">    }</span>
 
     public Coat getCoat() {
-<span class="fc" id="L53">        return coat;</span>
+<span class="fc" id="L61">        return coat;</span>
     }
 
     public void setCoat(Coat coat) {
-<span class="fc" id="L57">        this.coat = coat;</span>
-<span class="fc" id="L58">    }</span>
+<span class="fc" id="L65">        this.coat = coat;</span>
+<span class="fc" id="L66">    }</span>
 
     public Long getId() {
-<span class="fc" id="L61">        return id;</span>
+<span class="fc" id="L69">        return id;</span>
     }
 
     public void setId(Long id) {
-<span class="fc" id="L65">        this.id = id;</span>
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L73">        this.id = id;</span>
+<span class="fc" id="L74">    }</span>
 
     public List&lt;History&gt; getHistories() {
-<span class="fc" id="L69">        return histories;</span>
+<span class="fc" id="L77">        return histories;</span>
     }
 
     public void setHistories(List&lt;History&gt; histories) {
-<span class="fc" id="L73">        this.histories = histories;</span>
-<span class="fc" id="L74">    }</span>
+<span class="fc" id="L81">        this.histories = histories;</span>
+<span class="fc" id="L82">    }</span>
 
     public List&lt;Item&gt; getItems() {
-<span class="fc" id="L77">        return items;</span>
+<span class="fc" id="L85">        return items;</span>
     }
 
     public void setItems(List&lt;Item&gt; items) {
-<span class="fc" id="L81">        this.items = items;</span>
-<span class="fc" id="L82">    }</span>
+<span class="fc" id="L89">        this.items = items;</span>
+<span class="fc" id="L90">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L94">        return &quot;{&quot; +</span>
+                &quot;\&quot;id\&quot;:&quot; + id +
+                &quot;, \&quot;description\&quot;:\&quot;&quot; + description + '\&quot;' +
+                &quot;, \&quot;coat\&quot;:&quot; + coat +
+                &quot;, \&quot;items\&quot;:&quot; + items +
+                '}';
+    }
 
     public int getNrOfStars() {
-<span class="fc" id="L85">        return nrOfStars;</span>
+<span class="fc" id="L103">        return nrOfStars;</span>
     }
 
     public void setNrOfStars(int nrOfStars) {
-<span class="fc" id="L89">        this.nrOfStars = nrOfStars;</span>
-<span class="fc" id="L90">    }</span>
+<span class="fc" id="L107">        this.nrOfStars = nrOfStars;</span>
+<span class="fc" id="L108">    }</span>
 
     public int getNrOfReviews() {
-<span class="fc" id="L93">        return nrOfReviews;</span>
+<span class="fc" id="L111">        return nrOfReviews;</span>
     }
 
     public void setNrOfReviews(int nrOfReviews) {
-<span class="fc" id="L97">        this.nrOfReviews = nrOfReviews;</span>
-<span class="fc" id="L98">    }</span>
+<span class="fc" id="L115">        this.nrOfReviews = nrOfReviews;</span>
+<span class="fc" id="L116">    }</span>
 
     public double getRating() {
-<span class="fc" id="L101">        return rating;</span>
+<span class="fc" id="L119">        return rating;</span>
     }
 
     public void setRating(double rating) {
-<span class="fc" id="L105">        this.rating = rating;</span>
-<span class="fc" id="L106">    }</span>
+<span class="fc" id="L123">        this.rating = rating;</span>
+<span class="fc" id="L124">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -34,6 +34,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
+
     @Autowired
     MqttController mqttController;
 
@@ -69,29 +70,5 @@ public class AuthController {
         return ResponseEntity.ok().body("Login successful for: \n " + loginRequest.getUsername());
 
     }
-
-    @GetMapping("/signOut")
-    public ResponseEntity<String> signOut(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = getContext().getAuthentication();
-
-        if (!auth.getPrincipal().equals("anonymousUser")) {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.invalidate();
-            }
-
-            Cookie[] cookies = request.getCookies();
-            Optional<Cookie> sessionId = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("JSESSIONID")).findFirst();
-            sessionId.ifPresent(cookie -> cookie.setMaxAge(0));
-            sessionId.ifPresent(response::addCookie);
-
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-            getContext().setAuthentication(null);
-
-            return ResponseEntity.ok("Logout ok");
-        }
-        return ResponseEntity.badRequest().body("Unauthenticated");
-    }
-
 
 }

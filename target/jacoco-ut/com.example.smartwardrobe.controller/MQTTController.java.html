@@ -1,44 +1,133 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MQTTController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.controller</a> &gt; <span class="el_source">MQTTController.java</span></div><h1>MQTTController.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.controller;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MqttController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.controller</a> &gt; <span class="el_source">MqttController.java</span></div><h1>MqttController.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.controller;
+
+
+import com.example.smartwardrobe.exceptions.MqttException;
+import com.example.smartwardrobe.mqtt.Mqtt;
+import com.example.smartwardrobe.mqtt.MqttPublishModel;
+import com.example.smartwardrobe.mqtt.MqttSubscribeModel;
+import com.example.smartwardrobe.service.ItemService;
+import lombok.SneakyThrows;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
-<span class="nc" id="L8">public class MQTTController {</span>
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
-    public static void main(String[] args) {
+@RestController
+@RequestMapping(value = &quot;/api/mqtt&quot;)
+<span class="fc" id="L28">public class MqttController {</span>
 
-<span class="nc" id="L12">        String topic        = &quot;MQTT Examples&quot;;</span>
-<span class="nc" id="L13">        String content      = &quot;Message from MqttPublishSample&quot;;</span>
-<span class="nc" id="L14">        int qos             = 2;</span>
-<span class="nc" id="L15">        String broker       = &quot;tcp://localhost:1883&quot;;</span>
-<span class="nc" id="L16">        String clientId     = &quot;SmartWardrobeApplication&quot;;</span>
-<span class="nc" id="L17">        MemoryPersistence persistence = new MemoryPersistence();</span>
+<span class="fc" id="L30">    static Logger logger = LoggerFactory.getLogger(MqttController.class);</span>
 
-        try {
-<span class="nc" id="L20">            MqttClient sampleClient = new MqttClient(broker, clientId, persistence);</span>
-<span class="nc" id="L21">            MqttConnectOptions connOpts = new MqttConnectOptions();</span>
-<span class="nc" id="L22">            connOpts.setCleanSession(true);</span>
-<span class="nc" id="L23">            System.out.println(&quot;Connecting to broker: &quot;+ broker);</span>
-<span class="nc" id="L24">            sampleClient.connect(connOpts);</span>
-<span class="nc" id="L25">            System.out.println(&quot;Connected&quot;);</span>
-<span class="nc" id="L26">            System.out.println(&quot;Publishing message: &quot;+content);</span>
-<span class="nc" id="L27">            MqttMessage message = new MqttMessage(content.getBytes());</span>
-<span class="nc" id="L28">            message.setQos(qos);</span>
-<span class="nc" id="L29">            sampleClient.publish(topic, message);</span>
-<span class="nc" id="L30">            System.out.println(&quot;Message published&quot;);</span>
-<span class="nc" id="L31">            sampleClient.disconnect();</span>
-<span class="nc" id="L32">            System.out.println(&quot;Disconnected&quot;);</span>
-<span class="nc" id="L33">            System.exit(0);</span>
-<span class="nc" id="L34">        } catch(MqttException me) {</span>
-<span class="nc" id="L35">            System.out.println(&quot;reason &quot;+me.getReasonCode());</span>
-<span class="nc" id="L36">            System.out.println(&quot;msg &quot;+me.getMessage());</span>
-<span class="nc" id="L37">            System.out.println(&quot;loc &quot;+me.getLocalizedMessage());</span>
-<span class="nc" id="L38">            System.out.println(&quot;cause &quot;+me.getCause());</span>
-<span class="nc" id="L39">            System.out.println(&quot;excep &quot;+me);</span>
-<span class="nc" id="L40">            me.printStackTrace();</span>
-<span class="nc" id="L41">        }</span>
-<span class="nc" id="L42">    }</span>
+    @Autowired
+    private ItemService itemService;
+
+    @PostMapping(&quot;/publish&quot;)
+    public static void publishMessage(@RequestBody @Valid MqttPublishModel messagePublishModel,
+                               BindingResult bindingResult) throws org.eclipse.paho.client.mqttv3.MqttException {
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (bindingResult.hasErrors()) {</span>
+<span class="fc" id="L39">            throw new MqttException(&quot;SOME_PARAMETERS_INVALID&quot;);</span>
+        }
+
+<span class="nc" id="L42">        MqttMessage mqttMessage = new MqttMessage(messagePublishModel.getMessage().getBytes());</span>
+<span class="nc" id="L43">        mqttMessage.setQos(messagePublishModel.getQos());</span>
+<span class="nc" id="L44">        mqttMessage.setRetained(messagePublishModel.getRetained());</span>
+<span class="nc" id="L45">        Mqtt.getInstance().publish(messagePublishModel.getTopic(), mqttMessage);</span>
+<span class="nc" id="L46">        logger.info(&quot;Message published&quot;);</span>
+<span class="nc" id="L47">    }</span>
+
+    @PostMapping(&quot;publish/Items&quot;)
+    public void publishItems()
+    {
+<span class="fc" id="L52">        final long MINUTES = 1; // The delay in minutes</span>
+<span class="fc" id="L53">        Timer timer = new Timer();</span>
+<span class="fc" id="L54">        timer.schedule(new TimerTask() {</span>
+<span class="fc" id="L55">            @SneakyThrows</span>
+            @Override
+            public void run() {
+<span class="fc" id="L58">                String topic = &quot;items&quot;;</span>
+<span class="fc" id="L59">                String message = itemService.findAllItems().toString();</span>
+<span class="fc" id="L60">                createMessagePublishModel(topic, message);</span>
+<span class="fc" id="L61">                logger.info(&quot;All items published successfully!&quot;);</span>
+<span class="fc" id="L62">            }</span>
+
+            }, 0, 1000 * 60 * MINUTES);
+
+<span class="fc" id="L66">    }</span>
+
+    public static void createMessagePublishModel(String topic, @NotNull String message) throws org.eclipse.paho.client.mqttv3.MqttException {
+<span class="fc" id="L69">        MqttPublishModel messagePublishModel = new MqttPublishModel();</span>
+<span class="fc" id="L70">        messagePublishModel.setTopic(topic);</span>
+<span class="fc" id="L71">        messagePublishModel.setQos(0);</span>
+<span class="fc" id="L72">        messagePublishModel.setRetained(true);</span>
+<span class="fc" id="L73">        MqttMessage mqttMessage = new MqttMessage(message.getBytes());</span>
+<span class="fc" id="L74">        mqttMessage.setQos(messagePublishModel.getQos());</span>
+<span class="fc" id="L75">        mqttMessage.setRetained(messagePublishModel.getRetained());</span>
+<span class="fc" id="L76">        Mqtt.getInstance().publish(topic, mqttMessage);</span>
+<span class="fc" id="L77">    }</span>
+
+    @PostMapping(&quot;/publish/AllDirtyClothes&quot;)
+    public void publishAllDirtyClothes() {
+<span class="fc" id="L81">        final long  MINUTES = 1; // The delay in minutes</span>
+<span class="fc" id="L82">        Timer timer = new Timer();</span>
+<span class="fc" id="L83">        timer.schedule(new TimerTask() {</span>
+<span class="fc" id="L84">            @SneakyThrows</span>
+            @Override
+            public void run() { // Function runs every MINUTES minutes.
+<span class="fc" id="L87">                String topic = &quot;store&quot;;</span>
+<span class="fc" id="L88">                String message = itemService.findItemIfDirty().toString();</span>
+<span class="fc" id="L89">                createMessagePublishModel(topic, message);</span>
+<span class="fc" id="L90">                logger.info(&quot;AllDirtyClothes published successfully!&quot;);</span>
+<span class="fc" id="L91">            }</span>
+        }, 0, 1000*60*MINUTES);
+<span class="fc" id="L93">    }</span>
+
+    @PostMapping(&quot;/publish/WeatherConditions&quot;)
+    public static void publishWeatherConditions() {
+<span class="fc" id="L97">        final long MINUTES = 2; // The delay in minutes</span>
+<span class="fc" id="L98">        Timer timer = new Timer();</span>
+<span class="fc" id="L99">        timer.schedule(new TimerTask() {</span>
+<span class="pc" id="L100">            @SneakyThrows</span>
+            @Override
+            public void run() {
+<span class="fc" id="L103">                String topic = &quot;weather&quot;;</span>
+<span class="nc" id="L104">                String message = WeatherController.getWeatherConditions();</span>
+<span class="nc" id="L105">                createMessagePublishModel(topic, message);</span>
+<span class="nc" id="L106">                logger.info(&quot;Weather conditions published successfully!&quot;);</span>
+<span class="nc" id="L107">            }</span>
+        }, 0, 1000 * 60 * MINUTES);
+<span class="fc" id="L109">    }</span>
+
+    @GetMapping(&quot;subscribe&quot;)
+    public List&lt;MqttSubscribeModel&gt; subscribeChannel(@RequestParam(value = &quot;topic&quot;) String topic,
+                                                     @RequestParam(value = &quot;wait_millis&quot;) Integer waitMillis)
+            throws InterruptedException, org.eclipse.paho.client.mqttv3.MqttException {
+<span class="nc" id="L115">        List&lt;MqttSubscribeModel&gt; messages = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L116">        CountDownLatch countDownLatch = new CountDownLatch(10);</span>
+<span class="nc" id="L117">        Mqtt.getInstance().subscribeWithResponse(topic, (s, mqttMessage) -&gt; {</span>
+<span class="nc" id="L118">            MqttSubscribeModel mqttSubscribeModel = new MqttSubscribeModel();</span>
+<span class="nc" id="L119">            mqttSubscribeModel.setId(mqttMessage.getId());</span>
+<span class="nc" id="L120">            mqttSubscribeModel.setMessage(new String(mqttMessage.getPayload()));</span>
+<span class="nc" id="L121">            mqttSubscribeModel.setQos(mqttMessage.getQos());</span>
+<span class="nc" id="L122">            messages.add(mqttSubscribeModel);</span>
+<span class="nc" id="L123">            countDownLatch.countDown();</span>
+<span class="nc" id="L124">        });</span>
+
+<span class="nc" id="L126">        countDownLatch.await(waitMillis, TimeUnit.MILLISECONDS);</span>
+
+<span class="nc" id="L128">        return messages;</span>
+    }
+
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

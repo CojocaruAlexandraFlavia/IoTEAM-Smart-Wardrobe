@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OutfitServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.service.impl</a> &gt; <span class="el_source">OutfitServiceImpl.java</span></div><h1>OutfitServiceImpl.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.service.impl;
 
+import com.example.smartwardrobe.colorpalette.ColorGenerator;
+import com.example.smartwardrobe.controller.WeatherController;
 import com.example.smartwardrobe.enums.CoatCategory;
-import com.example.smartwardrobe.model.Coat;
-import com.example.smartwardrobe.model.History;
-import com.example.smartwardrobe.model.Item;
-import com.example.smartwardrobe.model.Outfit;
+import com.example.smartwardrobe.enums.ItemCategory;
+import com.example.smartwardrobe.enums.ItemColor;
+import com.example.smartwardrobe.enums.Size;
+import com.example.smartwardrobe.exceptions.ItemException;
+import com.example.smartwardrobe.model.*;
 import com.example.smartwardrobe.model.dto.CoatDto;
+import com.example.smartwardrobe.model.dto.ItemDto;
 import com.example.smartwardrobe.model.dto.OutfitDto;
 import com.example.smartwardrobe.repository.OutfitRepository;
-import com.example.smartwardrobe.service.HistoryService;
-import com.example.smartwardrobe.service.ItemService;
-import com.example.smartwardrobe.service.OutfitService;
+import com.example.smartwardrobe.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
@@ -26,11 +28,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
-<span class="fc" id="L33">public class OutfitServiceImpl implements OutfitService {</span>
+<span class="fc" id="L37">public class OutfitServiceImpl implements OutfitService {</span>
 
     @Autowired
     private OutfitRepository outfitRepository;
@@ -41,123 +45,1398 @@ import java.util.stream.Collectors;
     @Autowired
     private HistoryService historyService;
 
+    @Autowired
+    private CoatService coatService;
+
+    @Autowired
+    private UserService userService;
+
     @Override
     public Outfit saveOutfit(Outfit outfit) {
-<span class="nc" id="L46">        List&lt;Item&gt; outfitItems = outfit.getItems();</span>
-<span class="nc bnc" id="L47" title="All 2 branches missed.">        for(Item item: outfitItems){</span>
-<span class="nc" id="L48">            itemService.updateItemAfterAddingOutfit(item.getId());</span>
-<span class="nc" id="L49">        }</span>
+<span class="nc" id="L56">        List&lt;Item&gt; outfitItems = outfit.getItems();</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        for (Item item : outfitItems) {</span>
+<span class="nc" id="L58">            itemService.updateItemAfterAddingOutfit(item.getId());</span>
+<span class="nc" id="L59">        }</span>
 
-<span class="nc" id="L51">        Outfit savedOutfit = outfitRepository.save(outfit);</span>
+<span class="nc" id="L61">        Outfit savedOutfit = outfitRepository.save(outfit);</span>
 
-<span class="nc" id="L53">        History history = new History();</span>
-<span class="nc" id="L54">        history.setDateTime(LocalDate.now());</span>
-<span class="nc" id="L55">        history.setOutfit(savedOutfit);</span>
-<span class="nc" id="L56">        historyService.saveHistory(history);</span>
+<span class="nc" id="L63">        History history = new History();</span>
+<span class="nc" id="L64">        history.setDateTime(LocalDate.now());</span>
+<span class="nc" id="L65">        history.setOutfit(savedOutfit);</span>
+<span class="nc" id="L66">        historyService.saveHistory(history);</span>
 
-<span class="nc" id="L58">        writeOutfitToFile(savedOutfit);</span>
+<span class="nc" id="L68">        writeOutfitToFile(savedOutfit);</span>
 
-<span class="nc" id="L60">        return savedOutfit;</span>
+<span class="nc" id="L70">        return savedOutfit;</span>
     }
 
     @Override
     public void deleteOutfitById(Long id) {
-<span class="fc" id="L65">        outfitRepository.deleteById(id);</span>
-<span class="fc" id="L66">    }</span>
+<span class="fc" id="L75">        outfitRepository.deleteById(id);</span>
+<span class="fc" id="L76">    }</span>
 
     @Override
     public Outfit findOutfitById(Long id) {
-<span class="fc" id="L70">        return outfitRepository.findById(id).orElseThrow();</span>
+<span class="fc" id="L80">        return outfitRepository.findById(id).orElseThrow();</span>
     }
 
     @Override
     public List&lt;Outfit&gt; findAllOutfits() {
-<span class="fc" id="L75">        return outfitRepository.findAll();</span>
+<span class="fc" id="L85">        return outfitRepository.findAll();</span>
     }
+
+    private static final String FILE_NAME_OUTFITS = &quot;src/main/java/com/example/smartwardrobe/json/outfits.json&quot;;
 
     @Override
     public void writeOutfitToFile(Outfit outfit) {
-<span class="fc" id="L80">        JSONArray jsonArray = getOutfitsFromFile();</span>
-<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if(jsonArray.size() == 7){</span>
-<span class="fc" id="L82">            jsonArray.remove(0);</span>
-<span class="fc bfc" id="L83" title="All 2 branches covered.">            for(int i = 0; i &lt; jsonArray.size() - 1; i++){</span>
-<span class="fc" id="L84">                jsonArray.set(i, jsonArray.get(i + 1));</span>
+<span class="nc" id="L92">        JSONArray jsonArray = getOutfitsFromFile();</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        if (jsonArray.size() == 7) {</span>
+<span class="nc" id="L94">            jsonArray.remove(0);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            for (int i = 0; i &lt; jsonArray.size() - 1; i++) {</span>
+<span class="nc" id="L96">                jsonArray.set(i, jsonArray.get(i + 1));</span>
             }
         }
-<span class="fc" id="L87">        JSONObject jsonObject = transformOutfitToJsonObject(outfit);</span>
-<span class="fc" id="L88">        jsonArray.add(jsonObject);</span>
+
+<span class="nc" id="L100">        JSONObject jsonObject = new JSONObject();</span>
+<span class="nc" id="L101">        jsonObject.put(&quot;id&quot;, outfit.getId().toString());</span>
+<span class="nc" id="L102">        jsonObject.put(&quot;description&quot;, outfit.getDescription());</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if (outfit.getCoat() != null) {</span>
+<span class="nc" id="L104">            jsonObject.put(&quot;coat&quot;, outfit.getCoat().getCoatCategory().toString());</span>
+        } else {
+<span class="nc" id="L106">            jsonObject.put(&quot;coat&quot;, null);</span>
+        }
+
+<span class="nc" id="L109">        jsonObject.put(&quot;items&quot;, itemService.createJsonArrayOfItems(outfit.getItems()));</span>
+<span class="nc" id="L110">        jsonArray.add(jsonObject);</span>
         try {
-<span class="fc" id="L90">            try (FileWriter file = new FileWriter(&quot;src/main/java/com/example/smartwardrobe/json/outfits.json&quot;)) {</span>
-<span class="fc" id="L91">                file.write(jsonArray.toJSONString());</span>
+<span class="nc" id="L112">            try (FileWriter file = new FileWriter(FILE_NAME_OUTFITS)) {</span>
+<span class="nc" id="L113">                file.write(jsonArray.toJSONString());</span>
             }
-<span class="nc" id="L93">        } catch (IOException e) {</span>
-<span class="nc" id="L94">            e.printStackTrace();</span>
-<span class="fc" id="L95">        }</span>
-<span class="fc" id="L96">    }</span>
+<span class="nc" id="L115">        } catch (IOException e) {</span>
+<span class="nc" id="L116">            e.printStackTrace();</span>
+<span class="nc" id="L117">        }</span>
+
+<span class="nc" id="L119">    }</span>
 
     @Override
     public JSONArray getOutfitsFromFile() {
-<span class="fc" id="L100">        JSONParser parser = new JSONParser();</span>
-        try{
-<span class="fc" id="L102">            return (JSONArray) parser.parse(new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/outfits.json&quot;));</span>
-<span class="nc" id="L103">        } catch (ParseException | IOException e) {</span>
-<span class="nc" id="L104">            e.printStackTrace();</span>
+<span class="fc" id="L123">        JSONParser parser = new JSONParser();</span>
+        try {
+<span class="fc" id="L125">            return (JSONArray) parser.parse(new FileReader(FILE_NAME_OUTFITS));</span>
+<span class="nc" id="L126">        } catch (ParseException | IOException e) {</span>
+<span class="nc" id="L127">            e.printStackTrace();</span>
         }
-<span class="nc" id="L106">        return new JSONArray();</span>
+<span class="nc" id="L129">        return new JSONArray();</span>
     }
 
     @Override
     public JSONObject transformOutfitToJsonObject(@NotNull Outfit outfit) {
-<span class="fc" id="L111">        JSONParser jsonParser = new JSONParser();</span>
-<span class="fc" id="L112">        ObjectMapper objectMapper = new ObjectMapper();</span>
+<span class="nc" id="L134">        JSONParser jsonParser = new JSONParser();</span>
+<span class="nc" id="L135">        ObjectMapper objectMapper = new ObjectMapper();</span>
         try {
-<span class="fc" id="L114">            return (JSONObject) jsonParser.parse(objectMapper.writeValueAsString(outfit));</span>
-<span class="nc" id="L115">        } catch (ParseException | JsonProcessingException e) {</span>
-<span class="nc" id="L116">            e.printStackTrace();</span>
+<span class="nc" id="L137">            return (JSONObject) jsonParser.parse(objectMapper.writeValueAsString(outfit));</span>
+<span class="nc" id="L138">        } catch (ParseException | JsonProcessingException e) {</span>
+<span class="nc" id="L139">            e.printStackTrace();</span>
         }
-<span class="nc" id="L118">        return new JSONObject();</span>
+<span class="nc" id="L141">        return new JSONObject();</span>
     }
-
     @Override
     public JSONObject transformCoatToJsonObject(Coat coat) {
-<span class="nc" id="L123">        JSONObject jsonObject = new JSONObject();</span>
-<span class="nc" id="L124">        jsonObject.put(&quot;id&quot;, coat.getId());</span>
-<span class="nc" id="L125">        jsonObject.put(&quot;coatCategory&quot;, coat.getCoatCategory());</span>
-<span class="nc" id="L126">        return jsonObject;</span>
+<span class="nc" id="L145">        JSONObject jsonObject = new JSONObject();</span>
+<span class="nc" id="L146">        jsonObject.put(&quot;id&quot;, coat.getId());</span>
+<span class="nc" id="L147">        jsonObject.put(&quot;coatCategory&quot;, coat.getCoatCategory());</span>
+<span class="nc" id="L148">        return jsonObject;</span>
     }
-
     @Override
     public Outfit giveStarsToOutfit(String outfitId, int nrOfStars) {
-<span class="nc" id="L131">        Outfit outfit = findOutfitById(Long.valueOf(outfitId));</span>
-<span class="nc" id="L132">        outfit.setNrOfStars(outfit.getNrOfStars() + nrOfStars);</span>
-<span class="nc" id="L133">        outfit.setNrOfReviews(outfit.getNrOfReviews() + 1);</span>
-<span class="nc" id="L134">        outfit.setRating((double) outfit.getNrOfStars() / (double) outfit.getNrOfReviews());</span>
-<span class="nc" id="L135">        saveOutfit(outfit);</span>
-<span class="nc" id="L136">        return outfit;</span>
+<span class="nc" id="L152">        Outfit outfit = findOutfitById(Long.valueOf(outfitId));</span>
+<span class="nc" id="L153">        outfit.setNrOfStars(outfit.getNrOfStars() + nrOfStars);</span>
+<span class="nc" id="L154">        outfit.setNrOfReviews(outfit.getNrOfReviews() + 1);</span>
+<span class="nc" id="L155">        outfit.setRating((double) outfit.getNrOfStars() / (double) outfit.getNrOfReviews());</span>
+<span class="nc" id="L156">        saveOutfit(outfit);</span>
+<span class="nc" id="L157">        return outfit;</span>
     }
-
     @Override
     public List&lt;Outfit&gt; findOutfitsWithBestRating(double minimRating) {
-<span class="nc" id="L141">        return outfitRepository.findByRatingGreaterThanEqual(minimRating, Sort.by(Sort.Direction.DESC, &quot;rating&quot;));</span>
+<span class="nc" id="L161">        return outfitRepository.findByRatingGreaterThanEqual(minimRating, Sort.by(Sort.Direction.DESC, &quot;rating&quot;));</span>
     }
-
     @Override
     public Outfit convertDtoToEntity(OutfitDto outfitDto) {
-<span class="nc" id="L146">        Outfit outfit = new Outfit();</span>
-<span class="nc" id="L147">        outfit.setCoat(convertCoatDtoToEntity(outfitDto.getCoat()));</span>
-<span class="nc" id="L148">        outfit.setItems(outfitDto.getItems().stream().map(itemDto -&gt; itemService.convertDtoToEntity(itemDto)).collect(Collectors.toList()));</span>
-<span class="nc" id="L149">        outfit.setDescription(outfitDto.getDescription());</span>
-<span class="nc" id="L150">        return outfit;</span>
+<span class="nc" id="L165">        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L166">        outfit.setCoat(convertCoatDtoToEntity(outfitDto.getCoat()));</span>
+<span class="nc" id="L167">        List&lt;Item&gt; items = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">        for(ItemDto itemDto: outfitDto.getItems()){</span>
+<span class="nc" id="L169">            items.add(itemService.convertDtoToEntity(itemDto));</span>
+<span class="nc" id="L170">        }</span>
+<span class="nc" id="L171">        outfit.setRating(outfitDto.getRating());</span>
+<span class="nc" id="L172">        outfit.setNrOfReviews(outfitDto.getNrOfReviews());</span>
+<span class="nc" id="L173">        outfit.setNrOfStars(outfitDto.getNrOfStars());</span>
+<span class="nc" id="L174">        outfit.setItems(items);</span>
+<span class="nc" id="L175">        outfit.setDescription(outfitDto.getDescription());</span>
+<span class="nc" id="L176">        return outfit;</span>
+    }
+    @Override
+    public Coat convertCoatDtoToEntity(CoatDto coatDto) {
+<span class="nc" id="L180">        Coat coat = new Coat();</span>
+<span class="nc" id="L181">        coat.setCoatCategory(CoatCategory.valueOf(coatDto.getCoatCategory()));</span>
+<span class="nc" id="L182">        coat.setId(Long.valueOf(coatDto.getId()));</span>
+<span class="nc" id="L183">        return coat;</span>
     }
 
     @Override
-    public Coat convertCoatDtoToEntity(CoatDto coatDto) {
-<span class="nc" id="L155">        Coat coat = new Coat();</span>
-<span class="nc" id="L156">        coat.setCoatCategory(CoatCategory.valueOf(coatDto.getCoatCategory()));</span>
-<span class="nc" id="L157">        coat.setId(Long.valueOf(coatDto.getId()));</span>
-<span class="nc" id="L158">        return coat;</span>
-    }
+    public List&lt;Outfit&gt; recommendMonochromaticOutfit() throws Exception {
+        int outfitID;
+<span class="nc" id="L189">        JSONParser parser = new JSONParser();</span>
+        try{
+<span class="nc" id="L191">            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(FILE_NAME_OUTFITS));</span>
+<span class="nc" id="L192">            outfitID = jsonArray.size();</span>
+<span class="nc" id="L193">        } catch (ParseException | IOException e) {</span>
+<span class="nc" id="L194">            e.printStackTrace();</span>
+<span class="nc" id="L195">            outfitID = 1;</span>
+<span class="nc" id="L196">        }</span>
 
+<span class="nc" id="L198">        Double temperature = WeatherController.getTemperature();</span>
+
+<span class="nc" id="L200">        User user = userService.findUserById(1L);</span>
+<span class="nc" id="L201">        Size userSize = userService.calculateUserSize(user);</span>
+
+<span class="nc" id="L203">        ColorGenerator colorGenerator = new ColorGenerator();</span>
+
+<span class="nc" id="L205">        List&lt;Outfit&gt; outfitList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L206">        List&lt;Outfit&gt; incompleteList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L207">        Set&lt;String&gt; missingPieces = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L208">        List&lt;Coat&gt; coats = coatService.findAllCoats();</span>
+<span class="nc" id="L209">        List&lt;Item&gt; blouses = itemService.findItemsByCategory(ItemCategory.BLOUSE);</span>
+<span class="nc" id="L210">        List&lt;Item&gt; shirts = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;SHIRT&quot;));</span>
+<span class="nc" id="L211">        List&lt;Item&gt; tshirts = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;TSHIRT&quot;));</span>
+<span class="nc" id="L212">        List&lt;Item&gt; jeans = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;JEANS&quot;));</span>
+<span class="nc" id="L213">        List&lt;Item&gt; pants = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;PANTS&quot;));</span>
+<span class="nc" id="L214">        List&lt;Item&gt; skirts = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;SKIRT&quot;));</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">        for(int i = 0; i &lt; blouses.toArray().length; i++){</span>
+<span class="nc" id="L216">            Item top = blouses.get(i);</span>
+<span class="nc" id="L217">            ItemColor topColor = top.getItemColor();</span>
+<span class="nc" id="L218">            ItemColor[] colors = colorGenerator.monoChromatic(topColor);</span>
+<span class="nc" id="L219">            ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L220">            ItemColor secondColor = colors[1];</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">            for(int j = 0; j &lt; jeans.toArray().length; j++){</span>
+<span class="nc" id="L222">                Item bottom = jeans.get(j);</span>
+<span class="nc bnc" id="L223" title="All 6 branches missed.">                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L224" title="All 6 branches missed.">                    if(bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L225">                        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L226">                        outfit.setId((long) outfitID);</span>
+<span class="nc" id="L227">                        outfit.setDescription(&quot;OUTFIT&quot;+outfitID);</span>
+<span class="nc" id="L228">                        outfitID += 1;</span>
+<span class="nc" id="L229">                        List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L230">                        outfitItems.add(top);</span>
+<span class="nc" id="L231">                        outfitItems.add(bottom);</span>
+<span class="nc" id="L232">                        outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">                        if(temperature &lt; 18.0){</span>
+<span class="nc" id="L234">                            Coat coat = new Coat();</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">                            for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L236">                                coat = coats.get(k);</span>
+<span class="nc bnc" id="L237" title="All 8 branches missed.">                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L238" title="All 6 branches missed.">                                    if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L239">                                        outfit.setCoat(coat);</span>
+                                    }
+                            }
+<span class="nc bnc" id="L242" title="All 2 branches missed.">                            if(outfit.getCoat() == null){</span>
+<span class="nc" id="L243">                                incompleteList.add(outfit);</span>
+<span class="nc" id="L244">                                missingPieces.add(&quot;COATS&quot;);</span>
+                            }
+                        }
+<span class="nc bnc" id="L247" title="All 4 branches missed.">                        if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L248">                            incompleteList.add(outfit);</span>
+                        }else{
+<span class="nc" id="L250">                            outfitList.add(outfit);</span>
+                        }
+
+                    }
+            }
+<span class="nc bnc" id="L255" title="All 2 branches missed.">            for(int j = 0; j &lt; pants.toArray().length; j++){</span>
+<span class="nc" id="L256">                Item bottom = pants.get(j);</span>
+<span class="nc bnc" id="L257" title="All 6 branches missed.">                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L258" title="All 6 branches missed.">                    if(bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L259">                        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L260">                        outfit.setId((long) outfitID);</span>
+<span class="nc" id="L261">                        outfit.setDescription(&quot;OUTFIT&quot;+outfitID);</span>
+<span class="nc" id="L262">                        outfitID += 1;</span>
+<span class="nc" id="L263">                        List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L264">                        outfitItems.add(top);</span>
+<span class="nc" id="L265">                        outfitItems.add(bottom);</span>
+<span class="nc" id="L266">                        outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">                        if(temperature &lt; 18.0){</span>
+<span class="nc" id="L268">                            Coat coat = new Coat();</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">                            for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L270">                                coat = coats.get(k);</span>
+<span class="nc bnc" id="L271" title="All 8 branches missed.">                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L272" title="All 6 branches missed.">                                    if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L273">                                        outfit.setCoat(coat);</span>
+                                    }
+                            }
+<span class="nc bnc" id="L276" title="All 2 branches missed.">                            if(outfit.getCoat() == null){</span>
+<span class="nc" id="L277">                                incompleteList.add(outfit);</span>
+<span class="nc" id="L278">                                missingPieces.add(&quot;COATS&quot;);</span>
+                            }
+                        }
+<span class="nc bnc" id="L281" title="All 4 branches missed.">                        if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L282">                            incompleteList.add(outfit);</span>
+                        }else{
+<span class="nc" id="L284">                            outfitList.add(outfit);</span>
+                        }
+
+                    }
+            }
+<span class="nc bnc" id="L289" title="All 2 branches missed.">            if(temperature &gt; 5.0){</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">                for(int j = 0; j &lt; skirts.toArray().length; j++){</span>
+<span class="nc" id="L291">                    Item bottom = skirts.get(j);</span>
+<span class="nc bnc" id="L292" title="All 6 branches missed.">                    if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L293" title="All 6 branches missed.">                        if(bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L294">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L295">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L296">                            outfit.setDescription(&quot;OUTFIT&quot;+outfitID);</span>
+<span class="nc" id="L297">                            outfitID += 1;</span>
+<span class="nc" id="L298">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L299">                            outfitItems.add(top);</span>
+<span class="nc" id="L300">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L301">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">                            if(temperature &lt; 18.0){</span>
+<span class="nc" id="L303">                                Coat coat = new Coat();</span>
+<span class="nc bnc" id="L304" title="All 2 branches missed.">                                for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L305">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L306" title="All 8 branches missed.">                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L307" title="All 6 branches missed.">                                        if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L308">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L311" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L312">                                    incompleteList.add(outfit);</span>
+<span class="nc" id="L313">                                    missingPieces.add(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc bnc" id="L316" title="All 4 branches missed.">                            if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L317">                                incompleteList.add(outfit);</span>
+                            }else{
+<span class="nc" id="L319">                                outfitList.add(outfit);</span>
+<span class="nc" id="L320">                                System.out.println(outfit);</span>
+                            }
+
+                        }
+                }
+            }
+        }
+<span class="nc bnc" id="L327" title="All 2 branches missed.">        for(int i = 0; i &lt; shirts.toArray().length; i++) {</span>
+<span class="nc" id="L328">            Item top = shirts.get(i);</span>
+<span class="nc" id="L329">            ItemColor topColor = top.getItemColor();</span>
+<span class="nc" id="L330">            ItemColor[] colors = colorGenerator.monoChromatic(topColor);</span>
+<span class="nc" id="L331">            ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L332">            ItemColor secondColor = colors[1];</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">            for (int j = 0; j &lt; jeans.toArray().length; j++) {</span>
+<span class="nc" id="L334">                Item bottom = jeans.get(j);</span>
+<span class="nc bnc" id="L335" title="All 6 branches missed.">                if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L336" title="All 6 branches missed.">                    if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L337">                        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L338">                        outfit.setId((long) outfitID);</span>
+<span class="nc" id="L339">                        outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L340">                        outfitID += 1;</span>
+<span class="nc" id="L341">                        List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L342">                        outfitItems.add(top);</span>
+<span class="nc" id="L343">                        outfitItems.add(bottom);</span>
+<span class="nc" id="L344">                        outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L345" title="All 2 branches missed.">                        if(temperature &lt; 18.0){</span>
+<span class="nc" id="L346">                            Coat coat = new Coat();</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">                            for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L348">                                coat = coats.get(k);</span>
+<span class="nc bnc" id="L349" title="All 8 branches missed.">                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L350" title="All 6 branches missed.">                                    if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L351">                                        outfit.setCoat(coat);</span>
+                                    }
+                            }
+<span class="nc bnc" id="L354" title="All 2 branches missed.">                            if(outfit.getCoat() == null){</span>
+<span class="nc" id="L355">                                incompleteList.add(outfit);</span>
+<span class="nc" id="L356">                                missingPieces.add(&quot;COATS&quot;);</span>
+                            }
+                        }
+<span class="nc bnc" id="L359" title="All 4 branches missed.">                        if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L360">                            incompleteList.add(outfit);</span>
+                        }else{
+<span class="nc" id="L362">                            outfitList.add(outfit);</span>
+                        }
+                    }
+            }
+<span class="nc bnc" id="L366" title="All 2 branches missed.">            for (int j = 0; j &lt; pants.toArray().length; j++) {</span>
+<span class="nc" id="L367">                Item bottom = pants.get(j);</span>
+<span class="nc bnc" id="L368" title="All 6 branches missed.">                if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L369" title="All 6 branches missed.">                    if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L370">                        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L371">                        outfit.setId((long) outfitID);</span>
+<span class="nc" id="L372">                        outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L373">                        outfitID += 1;</span>
+<span class="nc" id="L374">                        List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L375">                        outfitItems.add(top);</span>
+<span class="nc" id="L376">                        outfitItems.add(bottom);</span>
+<span class="nc" id="L377">                        outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L378" title="All 2 branches missed.">                        if(temperature &lt; 18.0){</span>
+                            Coat coat;
+<span class="nc bnc" id="L380" title="All 2 branches missed.">                            for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L381">                                coat = coats.get(k);</span>
+<span class="nc bnc" id="L382" title="All 8 branches missed.">                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L383" title="All 6 branches missed.">                                    if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L384">                                        outfit.setCoat(coat);</span>
+                                    }
+                            }
+<span class="nc bnc" id="L387" title="All 2 branches missed.">                            if(outfit.getCoat() == null){</span>
+<span class="nc" id="L388">                                incompleteList.add(outfit);</span>
+<span class="nc" id="L389">                                missingPieces.add(&quot;COATS&quot;);</span>
+                            }
+                        }
+<span class="nc bnc" id="L392" title="All 4 branches missed.">                        if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L393">                            incompleteList.add(outfit);</span>
+                        }else{
+<span class="nc" id="L395">                            outfitList.add(outfit);</span>
+                        }
+//                    writeOutfitToFile(outfit);
+                    }
+            }
+<span class="nc bnc" id="L400" title="All 2 branches missed.">            if (temperature &gt; 5.0) {</span>
+<span class="nc bnc" id="L401" title="All 2 branches missed.">                for (int j = 0; j &lt; skirts.toArray().length; j++) {</span>
+<span class="nc" id="L402">                    Item bottom = skirts.get(j);</span>
+<span class="nc bnc" id="L403" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L404" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L405">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L406">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L407">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L408">                            outfitID += 1;</span>
+<span class="nc" id="L409">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L410">                            outfitItems.add(top);</span>
+<span class="nc" id="L411">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L412">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L413" title="All 2 branches missed.">                            if(temperature &lt; 18.0){</span>
+                                Coat coat;
+<span class="nc bnc" id="L415" title="All 2 branches missed.">                                for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L416">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L417" title="All 8 branches missed.">                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L418" title="All 6 branches missed.">                                        if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L419">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L422" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L423">                                    incompleteList.add(outfit);</span>
+<span class="nc" id="L424">                                    missingPieces.add(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc bnc" id="L427" title="All 4 branches missed.">                            if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L428">                                incompleteList.add(outfit);</span>
+                            }else{
+<span class="nc" id="L430">                                outfitList.add(outfit);</span>
+                            }
+                        }
+                }
+
+            }
+        }
+<span class="nc bnc" id="L437" title="All 2 branches missed.">        if(temperature &gt; 5.0) {</span>
+<span class="nc bnc" id="L438" title="All 2 branches missed.">            for (int i = 0; i &lt; tshirts.toArray().length; i++) {</span>
+<span class="nc" id="L439">                Item top = tshirts.get(i);</span>
+<span class="nc" id="L440">                ItemColor topColor = top.getItemColor();</span>
+<span class="nc" id="L441">                ItemColor[] colors = colorGenerator.monoChromatic(topColor);</span>
+<span class="nc" id="L442">                ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L443">                ItemColor secondColor = colors[1];</span>
+<span class="nc bnc" id="L444" title="All 2 branches missed.">                for (int j = 0; j &lt; jeans.toArray().length; j++) {</span>
+<span class="nc" id="L445">                    Item bottom = jeans.get(j);</span>
+<span class="nc bnc" id="L446" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L447" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L448">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L449">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L450">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L451">                            outfitID += 1;</span>
+<span class="nc" id="L452">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L453">                            outfitItems.add(top);</span>
+<span class="nc" id="L454">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L455">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L456" title="All 2 branches missed.">                            if(temperature &lt; 18.0){</span>
+                                Coat coat;
+<span class="nc bnc" id="L458" title="All 2 branches missed.">                                for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L459">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L460" title="All 8 branches missed.">                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L461" title="All 6 branches missed.">                                        if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L462">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L465" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L466">                                    incompleteList.add(outfit);</span>
+<span class="nc" id="L467">                                    missingPieces.add(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc bnc" id="L470" title="All 4 branches missed.">                            if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L471">                                incompleteList.add(outfit);</span>
+                            }else{
+<span class="nc" id="L473">                                outfitList.add(outfit);</span>
+                            }
+//                    writeOutfitToFile(outfit);
+                        }
+                }
+<span class="nc bnc" id="L478" title="All 2 branches missed.">                for (int j = 0; j &lt; pants.toArray().length; j++) {</span>
+<span class="nc" id="L479">                    Item bottom = pants.get(j);</span>
+<span class="nc bnc" id="L480" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L481" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L482">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L483">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L484">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L485">                            outfitID += 1;</span>
+<span class="nc" id="L486">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L487">                            outfitItems.add(top);</span>
+<span class="nc" id="L488">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L489">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L490" title="All 2 branches missed.">                            if(temperature &lt; 18.0){</span>
+                                Coat coat;
+<span class="nc bnc" id="L492" title="All 2 branches missed.">                                for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L493">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L494" title="All 8 branches missed.">                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L495" title="All 6 branches missed.">                                        if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L496">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L499" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L500">                                    incompleteList.add(outfit);</span>
+<span class="nc" id="L501">                                    missingPieces.add(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc bnc" id="L504" title="All 4 branches missed.">                            if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L505">                                incompleteList.add(outfit);</span>
+                            }else{
+<span class="nc" id="L507">                                outfitList.add(outfit);</span>
+                            }
+                        }
+                }
+<span class="nc bnc" id="L511" title="All 2 branches missed.">                for (int j = 0; j &lt; skirts.toArray().length; j++) {</span>
+<span class="nc" id="L512">                    Item bottom = skirts.get(j);</span>
+<span class="nc bnc" id="L513" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L514" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L515">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L516">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L517">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L518">                            outfitID += 1;</span>
+<span class="nc" id="L519">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L520">                            outfitItems.add(top);</span>
+<span class="nc" id="L521">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L522">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L523" title="All 2 branches missed.">                            if(temperature &lt; 18.0){</span>
+                                Coat coat;
+<span class="nc bnc" id="L525" title="All 2 branches missed.">                                for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L526">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L527" title="All 8 branches missed.">                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L528" title="All 6 branches missed.">                                        if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L529">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L532" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L533">                                    incompleteList.add(outfit);</span>
+<span class="nc" id="L534">                                    missingPieces.add(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc bnc" id="L537" title="All 4 branches missed.">                            if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L538">                                incompleteList.add(outfit);</span>
+                            }else{
+<span class="nc" id="L540">                                outfitList.add(outfit);</span>
+                            }
+                        }
+                }
+
+            }
+        }
+<span class="nc bnc" id="L547" title="All 2 branches missed.">        if(temperature &gt; 5.0) {</span>
+<span class="nc" id="L548">            List&lt;Item&gt; dresses = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;DRESS&quot;));</span>
+<span class="nc bnc" id="L549" title="All 2 branches missed.">            for (int i = 0; i &lt; dresses.toArray().length; i++) {</span>
+<span class="nc" id="L550">                Item dress = dresses.get(i);</span>
+<span class="nc bnc" id="L551" title="All 2 branches missed.">                if(dress.getSize() == userSize) {</span>
+<span class="nc" id="L552">                    ItemColor topColor = dress.getItemColor();</span>
+<span class="nc" id="L553">                    ItemColor[] colors = colorGenerator.monoChromatic(topColor);</span>
+<span class="nc" id="L554">                    ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L555">                    ItemColor secondColor = colors[1];</span>
+<span class="nc" id="L556">                    Outfit outfit = new Outfit();</span>
+<span class="nc" id="L557">                    outfit.setId((long) outfitID);</span>
+<span class="nc" id="L558">                    outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L559">                    outfitID += 1;</span>
+<span class="nc" id="L560">                    List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L561">                    outfitItems.add(dress);</span>
+<span class="nc" id="L562">                    outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L563" title="All 2 branches missed.">                    if (temperature &lt; 18.0) {</span>
+                        Coat coat;
+<span class="nc bnc" id="L565" title="All 2 branches missed.">                        for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L566">                            coat = coats.get(k);</span>
+<span class="nc bnc" id="L567" title="All 8 branches missed.">                            if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK)</span>
+<span class="nc bnc" id="L568" title="All 6 branches missed.">                                if (coat.getStyle() == dress.getStyle() &amp;&amp; dress.getSize() == coat.getSize() &amp;&amp; dress.getSize() == userSize) {</span>
+<span class="nc" id="L569">                                    outfit.setCoat(coat);</span>
+                                }
+                        }
+<span class="nc bnc" id="L572" title="All 2 branches missed.">                        if (outfit.getCoat() == null) {</span>
+<span class="nc" id="L573">                            incompleteList.add(outfit);</span>
+<span class="nc" id="L574">                            missingPieces.add(&quot;COATS&quot;);</span>
+                        }
+                    }
+<span class="nc bnc" id="L577" title="All 4 branches missed.">                    if (temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null) {</span>
+<span class="nc" id="L578">                        incompleteList.add(outfit);</span>
+                    } else {
+<span class="nc" id="L580">                        outfitList.add(outfit);</span>
+                    }
+                }
+            }
+        }
+<span class="nc bnc" id="L585" title="All 2 branches missed.">        if (incompleteList.size() &gt; outfitList.size()){</span>
+<span class="nc" id="L586">            String shop = &quot;&quot;;</span>
+<span class="nc bnc" id="L587" title="All 2 branches missed.">            for(String item: missingPieces){</span>
+<span class="nc" id="L588">                shop = shop.concat(item);</span>
+<span class="nc" id="L589">                shop = shop.concat(&quot; &quot;);</span>
+<span class="nc" id="L590">            }</span>
+<span class="nc" id="L591">            throw new ItemException(shop);</span>
+        }
+<span class="nc bnc" id="L593" title="All 2 branches missed.">        if(outfitList.isEmpty()){</span>
+<span class="nc" id="L594">            throw new ItemException(&quot;TOPS AND BOTTOMS&quot;);</span>
+        }
+<span class="nc" id="L596">        try (FileWriter file = new FileWriter(&quot;src/main/java/com/example/smartwardrobe/json/generatedoutfits.json&quot;)) {</span>
+<span class="nc" id="L597">            String jsonStr = JSONArray.toJSONString(outfitList);</span>
+<span class="nc" id="L598">            file.write(jsonStr);</span>
+        }
+<span class="nc" id="L600">        return outfitList;</span>
+    }
+    @Override
+    public List&lt;Outfit&gt; recommendAnalogousOutfit() throws Exception {
+        int outfitID;
+<span class="nc" id="L605">        JSONParser parser = new JSONParser();</span>
+        try{
+<span class="nc" id="L607">            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/outfits.json&quot;)); ;</span>
+<span class="nc" id="L608">            outfitID = jsonArray.size();</span>
+<span class="nc" id="L609">        } catch (ParseException | IOException e) {</span>
+<span class="nc" id="L610">            e.printStackTrace();</span>
+<span class="nc" id="L611">            outfitID = 1;</span>
+<span class="nc" id="L612">        }</span>
+<span class="nc" id="L613">        User user = userService.findUserById(1L);</span>
+<span class="nc" id="L614">        Size userSize = userService.calculateUserSize(user);</span>
+
+<span class="nc" id="L616">        Double temperature = WeatherController.getTemperature();</span>
+
+<span class="nc" id="L618">        ColorGenerator colorGenerator = new ColorGenerator();</span>
+<span class="nc" id="L619">        List&lt;Outfit&gt; outfitList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L620">        List&lt;Outfit&gt; incompleteList = new ArrayList&lt;Outfit&gt;();</span>
+<span class="nc" id="L621">        Set&lt;String&gt; missingPieces = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L622">        List&lt;Coat&gt; coats = coatService.findAllCoats();</span>
+<span class="nc" id="L623">        List&lt;Item&gt; blouses = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;BLOUSE&quot;));</span>
+<span class="nc" id="L624">        System.out.println(blouses);</span>
+<span class="nc" id="L625">        List&lt;Item&gt; shirts = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;SHIRT&quot;));</span>
+<span class="nc" id="L626">        System.out.println(shirts);</span>
+<span class="nc" id="L627">        List&lt;Item&gt; tshirts = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;TSHIRT&quot;));</span>
+<span class="nc" id="L628">        System.out.println(tshirts);</span>
+<span class="nc" id="L629">        List&lt;Item&gt; jeans = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;JEANS&quot;));</span>
+<span class="nc" id="L630">        System.out.println(jeans);</span>
+<span class="nc" id="L631">        List&lt;Item&gt; pants = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;PANTS&quot;));</span>
+<span class="nc" id="L632">        System.out.println(pants);</span>
+<span class="nc" id="L633">        List&lt;Item&gt; skirts = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;SKIRT&quot;));</span>
+<span class="nc" id="L634">        System.out.println(skirts);</span>
+<span class="nc bnc" id="L635" title="All 2 branches missed.">        for(int i = 0; i &lt; blouses.toArray().length; i++) {</span>
+<span class="nc" id="L636">            Item top = blouses.get(i);</span>
+<span class="nc" id="L637">            ItemColor topColor = top.getItemColor();</span>
+<span class="nc" id="L638">            ItemColor[] colors = colorGenerator.analogous(topColor);</span>
+<span class="nc bnc" id="L639" title="All 2 branches missed.">            if (colors != null) {</span>
+<span class="nc" id="L640">                ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L641">                ItemColor secondColor = colors[1];</span>
+<span class="nc bnc" id="L642" title="All 2 branches missed.">                for (int j = 0; j &lt; jeans.toArray().length; j++) {</span>
+<span class="nc" id="L643">                    Item bottom = jeans.get(j);</span>
+<span class="nc bnc" id="L644" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L645" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L646">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L647">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L648">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L649">                            outfitID += 1;</span>
+<span class="nc" id="L650">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L651">                            outfitItems.add(top);</span>
+<span class="nc" id="L652">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L653">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L654" title="All 2 branches missed.">                            if (temperature &lt; 18.0) {</span>
+<span class="nc" id="L655">                                Coat coat = new Coat();</span>
+<span class="nc bnc" id="L656" title="All 2 branches missed.">                                for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L657">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L658" title="All 8 branches missed.">                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L659" title="All 6 branches missed.">                                        if (coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L660">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L663" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L664">                                    incompleteList.add(outfit);</span>
+<span class="nc" id="L665">                                    missingPieces.add(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc bnc" id="L668" title="All 4 branches missed.">                            if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L669">                                incompleteList.add(outfit);</span>
+                            }else{
+<span class="nc" id="L671">                                outfitList.add(outfit);</span>
+<span class="nc" id="L672">                                System.out.println(outfit);</span>
+                            }
+                        }
+                }
+<span class="nc bnc" id="L676" title="All 2 branches missed.">                for (int j = 0; j &lt; pants.toArray().length; j++) {</span>
+<span class="nc" id="L677">                    Item bottom = pants.get(j);</span>
+<span class="nc bnc" id="L678" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L679" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L680">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L681">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L682">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L683">                            outfitID += 1;</span>
+<span class="nc" id="L684">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L685">                            outfitItems.add(top);</span>
+<span class="nc" id="L686">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L687">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L688" title="All 2 branches missed.">                            if (temperature &lt; 18.0) {</span>
+<span class="nc" id="L689">                                Coat coat = new Coat();</span>
+<span class="nc bnc" id="L690" title="All 2 branches missed.">                                for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L691">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L692" title="All 8 branches missed.">                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L693" title="All 6 branches missed.">                                        if (coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L694">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L697" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L698">                                    incompleteList.add(outfit);</span>
+<span class="nc" id="L699">                                    missingPieces.add(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc bnc" id="L702" title="All 4 branches missed.">                            if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L703">                                incompleteList.add(outfit);</span>
+                            }else{
+<span class="nc" id="L705">                                outfitList.add(outfit);</span>
+<span class="nc" id="L706">                                System.out.println(outfit);</span>
+                            }
+
+                        }
+                }
+<span class="nc bnc" id="L711" title="All 2 branches missed.">                if (temperature &gt; 5.0) {</span>
+<span class="nc bnc" id="L712" title="All 2 branches missed.">                    for (int j = 0; j &lt; skirts.toArray().length; j++) {</span>
+<span class="nc" id="L713">                        Item bottom = skirts.get(j);</span>
+<span class="nc bnc" id="L714" title="All 6 branches missed.">                        if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L715" title="All 6 branches missed.">                            if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L716">                                Outfit outfit = new Outfit();</span>
+<span class="nc" id="L717">                                outfit.setId((long) outfitID);</span>
+<span class="nc" id="L718">                                outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L719">                                outfitID += 1;</span>
+<span class="nc" id="L720">                                List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L721">                                outfitItems.add(top);</span>
+<span class="nc" id="L722">                                outfitItems.add(bottom);</span>
+<span class="nc" id="L723">                                outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L724" title="All 2 branches missed.">                                if (temperature &lt; 18.0) {</span>
+<span class="nc" id="L725">                                    Coat coat = new Coat();</span>
+<span class="nc bnc" id="L726" title="All 2 branches missed.">                                    for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L727">                                        coat = coats.get(k);</span>
+<span class="nc bnc" id="L728" title="All 8 branches missed.">                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L729" title="All 6 branches missed.">                                            if (coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L730">                                                outfit.setCoat(coat);</span>
+                                            }
+                                    }
+<span class="nc bnc" id="L733" title="All 2 branches missed.">                                    if(outfit.getCoat() == null){</span>
+<span class="nc" id="L734">                                        incompleteList.add(outfit);</span>
+<span class="nc" id="L735">                                        missingPieces.add(&quot;COATS&quot;);</span>
+                                    }
+                                }
+<span class="nc bnc" id="L738" title="All 4 branches missed.">                                if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L739">                                    incompleteList.add(outfit);</span>
+                                }else{
+<span class="nc" id="L741">                                    outfitList.add(outfit);</span>
+<span class="nc" id="L742">                                    System.out.println(outfit);</span>
+                                }
+
+                            }
+                    }
+                }
+            }
+        }
+<span class="nc bnc" id="L750" title="All 2 branches missed.">        for(int i = 0; i &lt; shirts.toArray().length; i++){</span>
+<span class="nc" id="L751">            Item top = shirts.get(i);</span>
+<span class="nc" id="L752">            ItemColor topColor = top.getItemColor();</span>
+<span class="nc" id="L753">            ItemColor[] colors = colorGenerator.analogous(topColor);</span>
+<span class="nc bnc" id="L754" title="All 2 branches missed.">            if(colors != null) {</span>
+<span class="nc" id="L755">                ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L756">                ItemColor secondColor = colors[1];</span>
+<span class="nc bnc" id="L757" title="All 2 branches missed.">                for (int j = 0; j &lt; jeans.toArray().length; j++) {</span>
+<span class="nc" id="L758">                    Item bottom = jeans.get(j);</span>
+<span class="nc bnc" id="L759" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L760" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L761">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L762">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L763">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L764">                            outfitID += 1;</span>
+<span class="nc" id="L765">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L766">                            outfitItems.add(top);</span>
+<span class="nc" id="L767">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L768">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L769" title="All 2 branches missed.">                            if (temperature &lt; 18.0) {</span>
+<span class="nc" id="L770">                                Coat coat = new Coat();</span>
+<span class="nc bnc" id="L771" title="All 2 branches missed.">                                for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L772">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L773" title="All 8 branches missed.">                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L774" title="All 6 branches missed.">                                        if (coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L775">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L778" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L779">                                    incompleteList.add(outfit);</span>
+<span class="nc" id="L780">                                    missingPieces.add(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc bnc" id="L783" title="All 4 branches missed.">                            if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L784">                                incompleteList.add(outfit);</span>
+                            }else{
+<span class="nc" id="L786">                                outfitList.add(outfit);</span>
+<span class="nc" id="L787">                                System.out.println(outfit);</span>
+                            }
+//                    writeOutfitToFile(outfit);
+                        }
+                }
+<span class="nc bnc" id="L792" title="All 2 branches missed.">                for (int j = 0; j &lt; pants.toArray().length; j++) {</span>
+<span class="nc" id="L793">                    Item bottom = pants.get(j);</span>
+<span class="nc bnc" id="L794" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L795" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L796">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L797">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L798">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L799">                            outfitID += 1;</span>
+<span class="nc" id="L800">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L801">                            outfitItems.add(top);</span>
+<span class="nc" id="L802">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L803">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L804" title="All 2 branches missed.">                            if (temperature &lt; 18.0) {</span>
+<span class="nc" id="L805">                                Coat coat = new Coat();</span>
+<span class="nc bnc" id="L806" title="All 2 branches missed.">                                for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L807">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L808" title="All 8 branches missed.">                                    if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L809" title="All 6 branches missed.">                                        if (coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L810">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L813" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L814">                                    incompleteList.add(outfit);</span>
+<span class="nc" id="L815">                                    missingPieces.add(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc bnc" id="L818" title="All 4 branches missed.">                            if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L819">                                incompleteList.add(outfit);</span>
+                            }else{
+<span class="nc" id="L821">                                outfitList.add(outfit);</span>
+<span class="nc" id="L822">                                System.out.println(outfit);</span>
+                            }
+//                    writeOutfitToFile(outfit);
+                        }
+                }
+<span class="nc bnc" id="L827" title="All 2 branches missed.">                if(temperature &gt; 5.0) {</span>
+<span class="nc bnc" id="L828" title="All 2 branches missed.">                    for (int j = 0; j &lt; skirts.toArray().length; j++) {</span>
+<span class="nc" id="L829">                        Item bottom = skirts.get(j);</span>
+<span class="nc bnc" id="L830" title="All 6 branches missed.">                        if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L831" title="All 6 branches missed.">                            if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L832">                                Outfit outfit = new Outfit();</span>
+<span class="nc" id="L833">                                outfit.setId((long) outfitID);</span>
+<span class="nc" id="L834">                                outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L835">                                outfitID += 1;</span>
+<span class="nc" id="L836">                                List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L837">                                outfitItems.add(top);</span>
+<span class="nc" id="L838">                                outfitItems.add(bottom);</span>
+<span class="nc" id="L839">                                outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L840" title="All 2 branches missed.">                                if (temperature &lt; 18.0) {</span>
+<span class="nc" id="L841">                                    Coat coat = new Coat();</span>
+<span class="nc bnc" id="L842" title="All 2 branches missed.">                                    for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L843">                                        coat = coats.get(k);</span>
+<span class="nc bnc" id="L844" title="All 8 branches missed.">                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L845" title="All 6 branches missed.">                                            if (coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L846">                                                outfit.setCoat(coat);</span>
+                                            }
+                                    }
+<span class="nc bnc" id="L849" title="All 2 branches missed.">                                    if(outfit.getCoat() == null){</span>
+<span class="nc" id="L850">                                        incompleteList.add(outfit);</span>
+<span class="nc" id="L851">                                        missingPieces.add(&quot;COATS&quot;);</span>
+                                    }
+                                }
+<span class="nc bnc" id="L854" title="All 4 branches missed.">                                if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L855">                                    incompleteList.add(outfit);</span>
+                                }else{
+<span class="nc" id="L857">                                    outfitList.add(outfit);</span>
+<span class="nc" id="L858">                                    System.out.println(outfit);</span>
+                                }
+                            }
+                    }
+                }
+            }
+        }
+
+<span class="nc bnc" id="L866" title="All 2 branches missed.">        if(temperature &gt; 5.0) {</span>
+<span class="nc bnc" id="L867" title="All 2 branches missed.">            for (int i = 0; i &lt; tshirts.toArray().length; i++) {</span>
+<span class="nc" id="L868">                Item top = tshirts.get(i);</span>
+<span class="nc" id="L869">                ItemColor topColor = top.getItemColor();</span>
+<span class="nc" id="L870">                ItemColor[] colors = colorGenerator.analogous(topColor);</span>
+<span class="nc bnc" id="L871" title="All 2 branches missed.">                if (colors != null) {</span>
+<span class="nc" id="L872">                    ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L873">                    ItemColor secondColor = colors[1];</span>
+<span class="nc bnc" id="L874" title="All 2 branches missed.">                    for (int j = 0; j &lt; jeans.toArray().length; j++) {</span>
+<span class="nc" id="L875">                        Item bottom = jeans.get(j);</span>
+<span class="nc bnc" id="L876" title="All 6 branches missed.">                        if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L877" title="All 6 branches missed.">                            if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L878">                                Outfit outfit = new Outfit();</span>
+<span class="nc" id="L879">                                outfit.setId((long) outfitID);</span>
+<span class="nc" id="L880">                                outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L881">                                outfitID += 1;</span>
+<span class="nc" id="L882">                                List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L883">                                outfitItems.add(top);</span>
+<span class="nc" id="L884">                                outfitItems.add(bottom);</span>
+<span class="nc" id="L885">                                outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L886" title="All 2 branches missed.">                                if (temperature &lt; 18.0) {</span>
+<span class="nc" id="L887">                                    Coat coat = new Coat();</span>
+<span class="nc bnc" id="L888" title="All 2 branches missed.">                                    for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L889">                                        coat = coats.get(k);</span>
+<span class="nc bnc" id="L890" title="All 8 branches missed.">                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L891" title="All 6 branches missed.">                                            if (coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L892">                                                outfit.setCoat(coat);</span>
+                                            }
+                                    }
+<span class="nc bnc" id="L895" title="All 2 branches missed.">                                    if(outfit.getCoat() == null){</span>
+<span class="nc" id="L896">                                        incompleteList.add(outfit);</span>
+<span class="nc" id="L897">                                        missingPieces.add(&quot;COATS&quot;);</span>
+                                    }
+                                }
+<span class="nc bnc" id="L900" title="All 4 branches missed.">                                if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L901">                                    incompleteList.add(outfit);</span>
+                                }else{
+<span class="nc" id="L903">                                    outfitList.add(outfit);</span>
+<span class="nc" id="L904">                                    System.out.println(outfit);</span>
+                                }
+                            }
+                    }
+<span class="nc bnc" id="L908" title="All 2 branches missed.">                    for (int j = 0; j &lt; pants.toArray().length; j++) {</span>
+<span class="nc" id="L909">                        Item bottom = pants.get(j);</span>
+<span class="nc bnc" id="L910" title="All 6 branches missed.">                        if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L911" title="All 6 branches missed.">                            if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L912">                                Outfit outfit = new Outfit();</span>
+<span class="nc" id="L913">                                outfit.setId((long) outfitID);</span>
+<span class="nc" id="L914">                                outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L915">                                outfitID += 1;</span>
+<span class="nc" id="L916">                                List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L917">                                outfitItems.add(top);</span>
+<span class="nc" id="L918">                                outfitItems.add(bottom);</span>
+<span class="nc" id="L919">                                outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L920" title="All 2 branches missed.">                                if (temperature &lt; 18.0) {</span>
+<span class="nc" id="L921">                                    Coat coat = new Coat();</span>
+<span class="nc bnc" id="L922" title="All 2 branches missed.">                                    for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L923">                                        coat = coats.get(k);</span>
+<span class="nc bnc" id="L924" title="All 8 branches missed.">                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L925" title="All 6 branches missed.">                                            if (coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L926">                                                outfit.setCoat(coat);</span>
+                                            }
+                                    }
+<span class="nc bnc" id="L929" title="All 2 branches missed.">                                    if(outfit.getCoat() == null){</span>
+<span class="nc" id="L930">                                        incompleteList.add(outfit);</span>
+<span class="nc" id="L931">                                        missingPieces.add(&quot;COATS&quot;);</span>
+                                    }
+                                }
+<span class="nc bnc" id="L934" title="All 4 branches missed.">                                if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L935">                                    incompleteList.add(outfit);</span>
+                                }else{
+<span class="nc" id="L937">                                    outfitList.add(outfit);</span>
+<span class="nc" id="L938">                                    System.out.println(outfit);</span>
+                                }
+                            }
+                    }
+<span class="nc bnc" id="L942" title="All 2 branches missed.">                    for (int j = 0; j &lt; skirts.toArray().length; j++) {</span>
+<span class="nc" id="L943">                        Item bottom = skirts.get(j);</span>
+<span class="nc bnc" id="L944" title="All 6 branches missed.">                        if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L945" title="All 6 branches missed.">                            if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L946">                                Outfit outfit = new Outfit();</span>
+<span class="nc" id="L947">                                outfit.setId((long) outfitID);</span>
+<span class="nc" id="L948">                                outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L949">                                outfitID += 1;</span>
+<span class="nc" id="L950">                                List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L951">                                outfitItems.add(top);</span>
+<span class="nc" id="L952">                                outfitItems.add(bottom);</span>
+<span class="nc" id="L953">                                outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L954" title="All 2 branches missed.">                                if (temperature &lt; 18.0) {</span>
+<span class="nc" id="L955">                                    Coat coat = new Coat();</span>
+<span class="nc bnc" id="L956" title="All 2 branches missed.">                                    for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L957">                                        coat = coats.get(k);</span>
+<span class="nc bnc" id="L958" title="All 8 branches missed.">                                        if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )</span>
+<span class="nc bnc" id="L959" title="All 6 branches missed.">                                            if (coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L960">                                                outfit.setCoat(coat);</span>
+                                            }
+                                    }
+<span class="nc bnc" id="L963" title="All 2 branches missed.">                                    if(outfit.getCoat() == null){</span>
+<span class="nc" id="L964">                                        incompleteList.add(outfit);</span>
+<span class="nc" id="L965">                                        missingPieces.add(&quot;COATS&quot;);</span>
+                                    }
+                                }
+<span class="nc bnc" id="L968" title="All 4 branches missed.">                                if(temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null){</span>
+<span class="nc" id="L969">                                    incompleteList.add(outfit);</span>
+                                }else{
+<span class="nc" id="L971">                                    outfitList.add(outfit);</span>
+<span class="nc" id="L972">                                    System.out.println(outfit);</span>
+                                }
+                            }
+
+                    }
+                }
+            }
+        }
+
+
+
+<span class="nc bnc" id="L983" title="All 2 branches missed.">        if(temperature &gt; 5.0) {</span>
+<span class="nc" id="L984">            List&lt;Item&gt; dresses = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;DRESS&quot;));</span>
+<span class="nc bnc" id="L985" title="All 2 branches missed.">            for (int i = 0; i &lt; dresses.toArray().length; i++) {</span>
+<span class="nc" id="L986">                Item dress = dresses.get(i);</span>
+<span class="nc bnc" id="L987" title="All 2 branches missed.">                if(dress.getSize() == userSize) {</span>
+<span class="nc" id="L988">                    ItemColor topColor = dress.getItemColor();</span>
+<span class="nc" id="L989">                    ItemColor[] colors = colorGenerator.analogous(topColor);</span>
+<span class="nc bnc" id="L990" title="All 2 branches missed.">                    if (colors != null) {</span>
+<span class="nc" id="L991">                        ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L992">                        ItemColor secondColor = colors[1];</span>
+<span class="nc" id="L993">                        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L994">                        outfit.setId((long) outfitID);</span>
+<span class="nc" id="L995">                        outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L996">                        outfitID += 1;</span>
+<span class="nc" id="L997">                        List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L998">                        outfitItems.add(dress);</span>
+<span class="nc" id="L999">                        outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1000" title="All 2 branches missed.">                        if (temperature &lt; 18.0) {</span>
+<span class="nc" id="L1001">                            Coat coat = new Coat();</span>
+<span class="nc bnc" id="L1002" title="All 2 branches missed.">                            for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L1003">                                coat = coats.get(k);</span>
+<span class="nc bnc" id="L1004" title="All 8 branches missed.">                                if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK)</span>
+<span class="nc bnc" id="L1005" title="All 6 branches missed.">                                    if (coat.getStyle() == dress.getStyle() &amp;&amp; dress.getSize() == coat.getSize() &amp;&amp; dress.getSize() == userSize) {</span>
+<span class="nc" id="L1006">                                        outfit.setCoat(coat);</span>
+                                    }
+                            }
+<span class="nc bnc" id="L1009" title="All 2 branches missed.">                            if (outfit.getCoat() == null) {</span>
+<span class="nc" id="L1010">                                incompleteList.add(outfit);</span>
+<span class="nc" id="L1011">                                missingPieces.add(&quot;COATS&quot;);</span>
+                            }
+                        }
+<span class="nc bnc" id="L1014" title="All 4 branches missed.">                        if (temperature &lt; 18.0 &amp;&amp; outfit.getCoat() == null) {</span>
+<span class="nc" id="L1015">                            incompleteList.add(outfit);</span>
+                        } else {
+<span class="nc" id="L1017">                            outfitList.add(outfit);</span>
+<span class="nc" id="L1018">                            System.out.println(outfit);</span>
+                        }
+                    }
+                }
+            }
+        }
+<span class="nc bnc" id="L1024" title="All 2 branches missed.">        if (incompleteList.size() &gt; outfitList.size()){</span>
+<span class="nc" id="L1025">            String shop = new String();</span>
+<span class="nc" id="L1026">            System.out.println(missingPieces);</span>
+<span class="nc bnc" id="L1027" title="All 2 branches missed.">            for(String item: missingPieces){</span>
+<span class="nc" id="L1028">                shop = shop.concat(item);</span>
+<span class="nc" id="L1029">                shop = shop.concat(&quot; &quot;);</span>
+<span class="nc" id="L1030">            }</span>
+<span class="nc" id="L1031">            throw new ItemException(shop);</span>
+        }
+<span class="nc bnc" id="L1033" title="All 2 branches missed.">        if(outfitList.size() == 0){</span>
+<span class="nc" id="L1034">            throw new ItemException(&quot;TOPS AND BOTTOMS&quot;);</span>
+        }
+
+<span class="nc" id="L1037">        try (FileWriter file = new FileWriter(&quot;src/main/java/com/example/smartwardrobe/json/generatedoutfits.json&quot;)) {</span>
+<span class="nc" id="L1038">            String jsonStr = JSONArray.toJSONString(outfitList);</span>
+<span class="nc" id="L1039">            file.write(jsonStr);</span>
+        }
+<span class="nc" id="L1041">        return outfitList;</span>
+    }
+    @Override
+    public List&lt;Outfit&gt; recommendPastelOutfit() throws Exception {
+        int outfitID;
+<span class="nc" id="L1046">        JSONParser parser = new JSONParser();</span>
+        try{
+<span class="nc" id="L1048">            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/outfits.json&quot;)); ;</span>
+<span class="nc" id="L1049">            outfitID = jsonArray.size();</span>
+<span class="nc" id="L1050">        } catch (ParseException | IOException e) {</span>
+<span class="nc" id="L1051">            e.printStackTrace();</span>
+<span class="nc" id="L1052">            outfitID = 1;</span>
+<span class="nc" id="L1053">        }</span>
+<span class="nc" id="L1054">        Double temperature = WeatherController.getTemperature();</span>
+
+<span class="nc" id="L1056">        User user = userService.findUserById(1L);</span>
+<span class="nc" id="L1057">        Size userSize = userService.calculateUserSize(user);</span>
+
+<span class="nc" id="L1059">        ColorGenerator colorGenerator = new ColorGenerator();</span>
+<span class="nc" id="L1060">        List&lt;Outfit&gt; outfitList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L1061">        List&lt;Coat&gt; coats = coatService.findAllCoats();</span>
+<span class="nc" id="L1062">        List&lt;Item&gt; blouses = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;BLOUSE&quot;));</span>
+<span class="nc" id="L1063">        List&lt;Item&gt; shirts = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;SHIRT&quot;));</span>
+<span class="nc" id="L1064">        List&lt;Item&gt; tshirts = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;TSHIRT&quot;));</span>
+<span class="nc" id="L1065">        List&lt;Item&gt; jeans = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;JEANS&quot;));</span>
+<span class="nc" id="L1066">        List&lt;Item&gt; pants = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;PANTS&quot;));</span>
+<span class="nc" id="L1067">        List&lt;Item&gt; skirts = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;SKIRT&quot;));</span>
+<span class="nc bnc" id="L1068" title="All 2 branches missed.">        for(int i = 0; i &lt; blouses.toArray().length; i++){</span>
+<span class="nc" id="L1069">            Item top = blouses.get(i);</span>
+<span class="nc" id="L1070">            ItemColor topColor = top.getItemColor();</span>
+<span class="nc" id="L1071">            ItemColor[] colors = colorGenerator.pastel(topColor);</span>
+<span class="nc" id="L1072">            ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L1073">            ItemColor secondColor = colors[1];</span>
+<span class="nc bnc" id="L1074" title="All 2 branches missed.">            for(int j = 0; j &lt; jeans.toArray().length; j++){</span>
+<span class="nc" id="L1075">                Item bottom = jeans.get(j);</span>
+<span class="nc bnc" id="L1076" title="All 6 branches missed.">                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1077" title="All 6 branches missed.">                    if(bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1078">                        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1079">                        outfit.setId((long) outfitID);</span>
+<span class="nc" id="L1080">                        outfit.setDescription(&quot;OUTFIT&quot;+outfitID);</span>
+<span class="nc" id="L1081">                        outfitID += 1;</span>
+<span class="nc" id="L1082">                        List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L1083">                        outfitItems.add(top);</span>
+<span class="nc" id="L1084">                        outfitItems.add(bottom);</span>
+<span class="nc" id="L1085">                        outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1086" title="All 2 branches missed.">                        if(temperature &lt; 18.0){</span>
+                            Coat coat;
+<span class="nc bnc" id="L1088" title="All 2 branches missed.">                            for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L1089">                                coat = coats.get(k);</span>
+<span class="nc bnc" id="L1090" title="All 6 branches missed.">                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1091" title="All 6 branches missed.">                                    if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1092">                                        outfit.setCoat(coat);</span>
+                                    }
+                            }
+<span class="nc bnc" id="L1095" title="All 2 branches missed.">                            if(outfit.getCoat() == null){</span>
+<span class="nc" id="L1096">                                throw new ItemException(&quot;COATS&quot;);</span>
+                            }
+                        }
+<span class="nc" id="L1099">                        outfitList.add(outfit);</span>
+                    }
+            }
+<span class="nc bnc" id="L1102" title="All 2 branches missed.">            for(int j = 0; j &lt; pants.toArray().length; j++){</span>
+<span class="nc" id="L1103">                Item bottom = pants.get(j);</span>
+<span class="nc bnc" id="L1104" title="All 6 branches missed.">                if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1105" title="All 6 branches missed.">                    if(bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1106">                        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1107">                        outfit.setId((long) outfitID);</span>
+<span class="nc" id="L1108">                        outfit.setDescription(&quot;OUTFIT&quot;+outfitID);</span>
+<span class="nc" id="L1109">                        outfitID += 1;</span>
+<span class="nc" id="L1110">                        List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L1111">                        outfitItems.add(top);</span>
+<span class="nc" id="L1112">                        outfitItems.add(bottom);</span>
+<span class="nc" id="L1113">                        outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1114" title="All 2 branches missed.">                        if(temperature &lt; 18.0){</span>
+                            Coat coat;
+<span class="nc bnc" id="L1116" title="All 2 branches missed.">                            for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L1117">                                coat = coats.get(k);</span>
+<span class="nc bnc" id="L1118" title="All 6 branches missed.">                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1119" title="All 6 branches missed.">                                    if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1120">                                        outfit.setCoat(coat);</span>
+                                    }
+                            }
+<span class="nc bnc" id="L1123" title="All 2 branches missed.">                            if(outfit.getCoat() == null){</span>
+<span class="nc" id="L1124">                                throw new ItemException(&quot;COATS&quot;);</span>
+                            }
+                        }
+<span class="nc" id="L1127">                        outfitList.add(outfit);</span>
+                    }
+            }
+<span class="nc bnc" id="L1130" title="All 2 branches missed.">            if(temperature &gt; 5.0){</span>
+<span class="nc bnc" id="L1131" title="All 2 branches missed.">                for(int j = 0; j &lt; skirts.toArray().length; j++){</span>
+<span class="nc" id="L1132">                    Item bottom = skirts.get(j);</span>
+<span class="nc bnc" id="L1133" title="All 6 branches missed.">                    if(bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1134" title="All 6 branches missed.">                        if(bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1135">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1136">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L1137">                            outfit.setDescription(&quot;OUTFIT&quot;+outfitID);</span>
+<span class="nc" id="L1138">                            outfitID += 1;</span>
+<span class="nc" id="L1139">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L1140">                            outfitItems.add(top);</span>
+<span class="nc" id="L1141">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L1142">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1143" title="All 2 branches missed.">                            if(temperature &lt; 18.0){</span>
+                                Coat coat;
+<span class="nc bnc" id="L1145" title="All 2 branches missed.">                                for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L1146">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L1147" title="All 6 branches missed.">                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1148" title="All 6 branches missed.">                                        if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1149">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L1152" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L1153">                                    throw new ItemException(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc" id="L1156">                            outfitList.add(outfit);</span>
+
+                        }
+                }
+            }
+        }
+<span class="nc bnc" id="L1162" title="All 2 branches missed.">        for(int i = 0; i &lt; shirts.toArray().length; i++) {</span>
+<span class="nc" id="L1163">            Item top = shirts.get(i);</span>
+<span class="nc" id="L1164">            ItemColor topColor = top.getItemColor();</span>
+<span class="nc" id="L1165">            ItemColor[] colors = colorGenerator.pastel(topColor);</span>
+<span class="nc" id="L1166">            ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L1167">            ItemColor secondColor = colors[1];</span>
+<span class="nc bnc" id="L1168" title="All 2 branches missed.">            for (int j = 0; j &lt; jeans.toArray().length; j++) {</span>
+<span class="nc" id="L1169">                Item bottom = jeans.get(j);</span>
+<span class="nc bnc" id="L1170" title="All 6 branches missed.">                if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1171" title="All 6 branches missed.">                    if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L1172">                        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1173">                        outfit.setId((long) outfitID);</span>
+<span class="nc" id="L1174">                        outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L1175">                        outfitID += 1;</span>
+<span class="nc" id="L1176">                        List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L1177">                        outfitItems.add(top);</span>
+<span class="nc" id="L1178">                        outfitItems.add(bottom);</span>
+<span class="nc" id="L1179">                        outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1180" title="All 2 branches missed.">                        if(temperature &lt; 18.0){</span>
+                            Coat coat;
+<span class="nc bnc" id="L1182" title="All 2 branches missed.">                            for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L1183">                                coat = coats.get(k);</span>
+<span class="nc bnc" id="L1184" title="All 6 branches missed.">                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1185" title="All 6 branches missed.">                                    if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1186">                                        outfit.setCoat(coat);</span>
+                                    }
+                            }
+<span class="nc bnc" id="L1189" title="All 2 branches missed.">                            if(outfit.getCoat() == null){</span>
+<span class="nc" id="L1190">                                throw new ItemException(&quot;COATS&quot;);</span>
+                            }
+                        }
+<span class="nc" id="L1193">                        outfitList.add(outfit);</span>
+//                    writeOutfitToFile(outfit);
+                    }
+            }
+<span class="nc bnc" id="L1197" title="All 2 branches missed.">            for (int j = 0; j &lt; pants.toArray().length; j++) {</span>
+<span class="nc" id="L1198">                Item bottom = pants.get(j);</span>
+<span class="nc bnc" id="L1199" title="All 6 branches missed.">                if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1200" title="All 6 branches missed.">                    if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L1201">                        Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1202">                        outfit.setId((long) outfitID);</span>
+<span class="nc" id="L1203">                        outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L1204">                        outfitID += 1;</span>
+<span class="nc" id="L1205">                        List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L1206">                        outfitItems.add(top);</span>
+<span class="nc" id="L1207">                        outfitItems.add(bottom);</span>
+<span class="nc" id="L1208">                        outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1209" title="All 2 branches missed.">                        if(temperature &lt; 18.0){</span>
+                            Coat coat;
+<span class="nc bnc" id="L1211" title="All 2 branches missed.">                            for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L1212">                                coat = coats.get(k);</span>
+<span class="nc bnc" id="L1213" title="All 6 branches missed.">                                if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1214" title="All 6 branches missed.">                                    if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1215">                                        outfit.setCoat(coat);</span>
+                                    }
+                            }
+<span class="nc bnc" id="L1218" title="All 2 branches missed.">                            if(outfit.getCoat() == null){</span>
+<span class="nc" id="L1219">                                throw new ItemException(&quot;COATS&quot;);</span>
+                            }
+                        }
+<span class="nc" id="L1222">                        outfitList.add(outfit);</span>
+//                    writeOutfitToFile(outfit);
+                    }
+            }
+<span class="nc bnc" id="L1226" title="All 2 branches missed.">            if (temperature &gt; 5.0) {</span>
+<span class="nc bnc" id="L1227" title="All 2 branches missed.">                for (int j = 0; j &lt; skirts.toArray().length; j++) {</span>
+<span class="nc" id="L1228">                    Item bottom = skirts.get(j);</span>
+<span class="nc bnc" id="L1229" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1230" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L1231">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1232">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L1233">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L1234">                            outfitID += 1;</span>
+<span class="nc" id="L1235">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;Item&gt;();</span>
+<span class="nc" id="L1236">                            outfitItems.add(top);</span>
+<span class="nc" id="L1237">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L1238">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1239" title="All 2 branches missed.">                            if(temperature &lt; 18.0){</span>
+                                Coat coat;
+<span class="nc bnc" id="L1241" title="All 2 branches missed.">                                for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L1242">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L1243" title="All 6 branches missed.">                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1244" title="All 6 branches missed.">                                        if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1245">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L1248" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L1249">                                    throw new ItemException(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc" id="L1252">                            outfitList.add(outfit);</span>
+//                    writeOutfitToFile(outfit);
+                        }
+                }
+
+            }
+        }
+<span class="nc bnc" id="L1259" title="All 2 branches missed.">        if(temperature &gt; 5.0) {</span>
+<span class="nc bnc" id="L1260" title="All 2 branches missed.">            for (int i = 0; i &lt; tshirts.toArray().length; i++) {</span>
+<span class="nc" id="L1261">                Item top = tshirts.get(i);</span>
+<span class="nc" id="L1262">                ItemColor topColor = top.getItemColor();</span>
+<span class="nc" id="L1263">                ItemColor[] colors = colorGenerator.pastel(topColor);</span>
+<span class="nc" id="L1264">                ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L1265">                ItemColor secondColor = colors[1];</span>
+<span class="nc bnc" id="L1266" title="All 2 branches missed.">                for (int j = 0; j &lt; jeans.toArray().length; j++) {</span>
+<span class="nc" id="L1267">                    Item bottom = jeans.get(j);</span>
+<span class="nc bnc" id="L1268" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1269" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L1270">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1271">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L1272">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L1273">                            outfitID += 1;</span>
+<span class="nc" id="L1274">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L1275">                            outfitItems.add(top);</span>
+<span class="nc" id="L1276">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L1277">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1278" title="All 2 branches missed.">                            if(temperature &lt; 18.0){</span>
+                                Coat coat;
+<span class="nc bnc" id="L1280" title="All 2 branches missed.">                                for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L1281">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L1282" title="All 6 branches missed.">                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1283" title="All 6 branches missed.">                                        if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1284">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L1287" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L1288">                                    throw new ItemException(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc" id="L1291">                            outfitList.add(outfit);</span>
+//                    writeOutfitToFile(outfit);
+                        }
+                }
+<span class="nc bnc" id="L1295" title="All 2 branches missed.">                for (int j = 0; j &lt; pants.toArray().length; j++) {</span>
+<span class="nc" id="L1296">                    Item bottom = pants.get(j);</span>
+<span class="nc bnc" id="L1297" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1298" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L1299">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1300">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L1301">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L1302">                            outfitID += 1;</span>
+<span class="nc" id="L1303">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L1304">                            outfitItems.add(top);</span>
+<span class="nc" id="L1305">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L1306">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1307" title="All 2 branches missed.">                            if(temperature &lt; 18.0){</span>
+                                Coat coat;
+<span class="nc bnc" id="L1309" title="All 2 branches missed.">                                for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L1310">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L1311" title="All 6 branches missed.">                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1312" title="All 6 branches missed.">                                        if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1313">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L1316" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L1317">                                    throw new ItemException(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc" id="L1320">                            outfitList.add(outfit);</span>
+//                    writeOutfitToFile(outfit);
+                        }
+                }
+<span class="nc bnc" id="L1324" title="All 2 branches missed.">                for (int j = 0; j &lt; skirts.toArray().length; j++) {</span>
+<span class="nc" id="L1325">                    Item bottom = skirts.get(j);</span>
+<span class="nc bnc" id="L1326" title="All 6 branches missed.">                    if (bottom.getItemColor() == firstColor || bottom.getItemColor() == secondColor || bottom.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1327" title="All 6 branches missed.">                        if (bottom.getStyle() == top.getStyle() &amp;&amp; top.getSize() == bottom.getSize() &amp;&amp; top.getSize() == userSize) {</span>
+<span class="nc" id="L1328">                            Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1329">                            outfit.setId((long) outfitID);</span>
+<span class="nc" id="L1330">                            outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L1331">                            outfitID += 1;</span>
+<span class="nc" id="L1332">                            List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L1333">                            outfitItems.add(top);</span>
+<span class="nc" id="L1334">                            outfitItems.add(bottom);</span>
+<span class="nc" id="L1335">                            outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1336" title="All 2 branches missed.">                            if(temperature &lt; 18.0){</span>
+                                Coat coat;
+<span class="nc bnc" id="L1338" title="All 2 branches missed.">                                for(int k = 0; k &lt; coats.toArray().length; k++){</span>
+<span class="nc" id="L1339">                                    coat = coats.get(k);</span>
+<span class="nc bnc" id="L1340" title="All 6 branches missed.">                                    if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1341" title="All 6 branches missed.">                                        if(coat.getStyle() == top.getStyle() &amp;&amp; top.getSize() == coat.getSize() &amp;&amp; top.getSize() == userSize){</span>
+<span class="nc" id="L1342">                                            outfit.setCoat(coat);</span>
+                                        }
+                                }
+<span class="nc bnc" id="L1345" title="All 2 branches missed.">                                if(outfit.getCoat() == null){</span>
+<span class="nc" id="L1346">                                    throw new ItemException(&quot;COATS&quot;);</span>
+                                }
+                            }
+<span class="nc" id="L1349">                            outfitList.add(outfit);</span>
+//                    writeOutfitToFile(outfit);
+                        }
+                }
+
+            }
+        }
+<span class="nc bnc" id="L1356" title="All 2 branches missed.">        if(temperature &gt; 5.0) {</span>
+<span class="nc" id="L1357">            List&lt;Item&gt; dresses = itemService.findItemsByCategory(ItemCategory.valueOf(&quot;DRESS&quot;));</span>
+<span class="nc bnc" id="L1358" title="All 2 branches missed.">            for (int i = 0; i &lt; dresses.toArray().length; i++) {</span>
+<span class="nc" id="L1359">                Item dress = dresses.get(i);</span>
+<span class="nc bnc" id="L1360" title="All 2 branches missed.">                if(dress.getSize() == userSize) {</span>
+<span class="nc" id="L1361">                    ItemColor topColor = dress.getItemColor();</span>
+<span class="nc" id="L1362">                    ItemColor[] colors = colorGenerator.pastel(topColor);</span>
+<span class="nc" id="L1363">                    ItemColor firstColor = colors[0];</span>
+<span class="nc" id="L1364">                    ItemColor secondColor = colors[1];</span>
+<span class="nc" id="L1365">                    Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1366">                    outfit.setId((long) outfitID);</span>
+<span class="nc" id="L1367">                    outfit.setDescription(&quot;OUTFIT&quot; + outfitID);</span>
+<span class="nc" id="L1368">                    outfitID += 1;</span>
+<span class="nc" id="L1369">                    List&lt;Item&gt; outfitItems = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L1370">                    outfitItems.add(dress);</span>
+<span class="nc" id="L1371">                    outfit.setItems(outfitItems);</span>
+<span class="nc bnc" id="L1372" title="All 2 branches missed.">                    if (temperature &lt; 18.0) {</span>
+                        Coat coat;
+<span class="nc bnc" id="L1374" title="All 2 branches missed.">                        for (int k = 0; k &lt; coats.toArray().length; k++) {</span>
+<span class="nc" id="L1375">                            coat = coats.get(k);</span>
+<span class="nc bnc" id="L1376" title="All 6 branches missed.">                            if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)</span>
+<span class="nc bnc" id="L1377" title="All 6 branches missed.">                                if (coat.getStyle() == dress.getStyle() &amp;&amp; dress.getSize() == coat.getSize() &amp;&amp; dress.getSize() == userSize) {</span>
+<span class="nc" id="L1378">                                    outfit.setCoat(coat);</span>
+                                }
+                        }
+<span class="nc bnc" id="L1381" title="All 2 branches missed.">                        if (outfit.getCoat() == null) {</span>
+<span class="nc" id="L1382">                            throw new ItemException(&quot;COATS&quot;);</span>
+                        }
+                    }
+<span class="nc" id="L1385">                    outfitList.add(outfit);</span>
+                }
+            }
+        }
+<span class="nc bnc" id="L1389" title="All 2 branches missed.">        if(outfitList.isEmpty()){</span>
+<span class="nc" id="L1390">            throw new ItemException(&quot;TOPS AND BOTTOMS&quot;);</span>
+        }
+<span class="nc" id="L1392">        try (FileWriter file = new FileWriter(&quot;src/main/java/com/example/smartwardrobe/json/generatedoutfits.json&quot;)) {</span>
+<span class="nc" id="L1393">            String jsonStr = JSONArray.toJSONString(outfitList);</span>
+<span class="nc" id="L1394">            file.write(jsonStr);</span>
+        }
+<span class="nc" id="L1396">        return outfitList;</span>
+
+    }
+    @Override
+    public void selectRecommendedOutfit(Integer id){
+<span class="nc" id="L1401">        JSONParser jsonParser = new JSONParser();</span>
+<span class="nc" id="L1402">        try (FileReader reader = new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/generatedoutfits.json&quot;))</span>
+        {
+<span class="nc" id="L1404">            JSONArray obj = (JSONArray) jsonParser.parse(reader);</span>
+<span class="nc bnc" id="L1405" title="All 2 branches missed.">            for(int i = 0;i&lt;obj.toArray().length;i++)</span>
+            {
+<span class="nc" id="L1407">                JSONObject jsonItem = (JSONObject) obj.get(i);</span>
+<span class="nc bnc" id="L1408" title="All 2 branches missed.">                if(id.equals(Integer.valueOf(jsonItem.get(&quot;id&quot;).toString()))){</span>
+<span class="nc" id="L1409">                    Outfit outfit = new Outfit();</span>
+<span class="nc" id="L1410">                    JSONObject coatObj = (JSONObject) jsonItem.get(&quot;coat&quot;);</span>
+<span class="nc bnc" id="L1411" title="All 2 branches missed.">                    if(coatObj!=null){</span>
+<span class="nc" id="L1412">                        Coat coat = coatService.findCoatById((Long) coatObj.get(&quot;id&quot;));</span>
+<span class="nc" id="L1413">                        outfit.setCoat(coat);</span>
+                    }
+
+
+<span class="nc" id="L1417">                    JSONArray itemArray = (JSONArray) jsonItem.get(&quot;items&quot;);</span>
+<span class="nc" id="L1418">                    List&lt;Item&gt; itemList = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L1419" title="All 2 branches missed.">                    for(int j = 0;j&lt;itemArray.toArray().length;j++)</span>
+                    {
+<span class="nc" id="L1421">                        JSONObject itemObj = (JSONObject) itemArray.get(j);</span>
+<span class="nc" id="L1422">                        Item item = itemService.findItemById((Long) itemObj.get(&quot;id&quot;));</span>
+<span class="nc" id="L1423">                        itemList.add(item);</span>
+                    }
+<span class="nc" id="L1425">                    outfit.setId(Long.valueOf(id));</span>
+<span class="nc" id="L1426">                    outfit.setDescription((String) jsonItem.get(&quot;description&quot;));</span>
+
+<span class="nc" id="L1428">                    outfit.setItems(itemList);</span>
+<span class="nc" id="L1429">                    saveOutfit(outfit);</span>
+                }
+
+            }
+
+
+<span class="nc" id="L1435">        } catch (IOException | ParseException e) {</span>
+<span class="nc" id="L1436">            e.printStackTrace();</span>
+<span class="nc" id="L1437">        }</span>
+<span class="nc" id="L1438">    }</span>
 
 }
+
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

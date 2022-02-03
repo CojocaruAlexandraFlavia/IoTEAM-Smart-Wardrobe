@@ -19,6 +19,7 @@ class ItemDtoTest {
         actualItemDto.setSize("Size");
         actualItemDto.setStyle("Style");
         actualItemDto.setWashingZoneColor("Washing ZOne Color");
+
         assertEquals("Code", actualItemDto.getCode());
         assertEquals(123L, actualItemDto.getId());
         assertEquals("Item Category", actualItemDto.getItemCategory());

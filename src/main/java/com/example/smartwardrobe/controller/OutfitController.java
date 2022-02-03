@@ -18,6 +18,8 @@ public class OutfitController {
     @Autowired
     private OutfitService outfitService;
 
+    private static final String NEED_TO_BUY_MORE = "You need to buy more ";
+
     @GetMapping
     public List<Outfit> getAllOutfits(){
         return outfitService.findAllOutfits();
@@ -39,11 +41,11 @@ public class OutfitController {
     }
 
     @PostMapping("/recommendMonochromaticOutfit")
-    public ResponseEntity<?> recommendMonochromaticOutfit() {
+    public ResponseEntity<Object> recommendMonochromaticOutfit() {
         try {
             return ResponseEntity.ok(outfitService.recommendMonochromaticOutfit());
         } catch (ItemException itemException) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You need to buy more " + itemException.getCode());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NEED_TO_BUY_MORE + itemException.getCode());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,12 +63,12 @@ public class OutfitController {
     }
 
     @PostMapping("/recommendAnalogousOutfit")
-    public ResponseEntity<?>  recommendAnalogousOutfit(){
+    public ResponseEntity<Object>  recommendAnalogousOutfit(){
         try {
             return ResponseEntity.ok(outfitService.recommendAnalogousOutfit());
         }
         catch (ItemException itemException){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You need to buy more " + itemException.getCode());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NEED_TO_BUY_MORE + itemException.getCode());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -74,13 +76,14 @@ public class OutfitController {
         }
         return null;
     }
+
     @PostMapping("/recommendPastelOutfit")
-    public ResponseEntity<?> recommendPastelOutfit(){
+    public ResponseEntity<Object> recommendPastelOutfit(){
         try {
             return ResponseEntity.ok(outfitService.recommendPastelOutfit());
         }
         catch (ItemException itemException){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("You need to buy more " + itemException.getCode());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(NEED_TO_BUY_MORE + itemException.getCode());
         }
         catch (Exception e) {
             e.printStackTrace();

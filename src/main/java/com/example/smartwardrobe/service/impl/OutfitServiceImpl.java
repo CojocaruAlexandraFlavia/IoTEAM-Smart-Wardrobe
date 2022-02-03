@@ -1,27 +1,20 @@
 package com.example.smartwardrobe.service.impl;
 
+import com.example.smartwardrobe.colorpalette.ColorGenerator;
+import com.example.smartwardrobe.controller.WeatherController;
 import com.example.smartwardrobe.enums.CoatCategory;
-import com.example.smartwardrobe.model.Coat;
-import com.example.smartwardrobe.model.History;
-import com.example.smartwardrobe.model.Item;
-import com.example.smartwardrobe.model.Outfit;
+import com.example.smartwardrobe.enums.ItemCategory;
+import com.example.smartwardrobe.enums.ItemColor;
+import com.example.smartwardrobe.enums.Size;
+import com.example.smartwardrobe.exceptions.ItemException;
+import com.example.smartwardrobe.model.*;
 import com.example.smartwardrobe.model.dto.CoatDto;
 import com.example.smartwardrobe.model.dto.ItemDto;
 import com.example.smartwardrobe.model.dto.OutfitDto;
-import com.example.smartwardrobe.colorpalette.ColorGenerator;
-import com.example.smartwardrobe.controller.WeatherController;
-import com.example.smartwardrobe.enums.*;
-import com.example.smartwardrobe.exceptions.ItemException;
-import com.example.smartwardrobe.model.*;
-import com.example.smartwardrobe.repository.ItemRepository;
 import com.example.smartwardrobe.repository.OutfitRepository;
-import com.example.smartwardrobe.service.HistoryService;
-import com.example.smartwardrobe.service.ItemService;
-import com.example.smartwardrobe.service.OutfitService;
+import com.example.smartwardrobe.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jetbrains.annotations.NotNull;
-import com.example.smartwardrobe.service.*;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -35,14 +28,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
-
-
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 public class OutfitServiceImpl implements OutfitService {
@@ -96,6 +85,8 @@ public class OutfitServiceImpl implements OutfitService {
         return outfitRepository.findAll();
     }
 
+    private static final String FILE_NAME_OUTFITS = "src/main/java/com/example/smartwardrobe/json/outfits.json";
+
     @Override
     public void writeOutfitToFile(Outfit outfit) {
         JSONArray jsonArray = getOutfitsFromFile();
@@ -118,7 +109,7 @@ public class OutfitServiceImpl implements OutfitService {
         jsonObject.put("items", itemService.createJsonArrayOfItems(outfit.getItems()));
         jsonArray.add(jsonObject);
         try {
-            try (FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/outfits.json")) {
+            try (FileWriter file = new FileWriter(FILE_NAME_OUTFITS)) {
                 file.write(jsonArray.toJSONString());
             }
         } catch (IOException e) {
@@ -131,7 +122,7 @@ public class OutfitServiceImpl implements OutfitService {
     public JSONArray getOutfitsFromFile() {
         JSONParser parser = new JSONParser();
         try {
-            return (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json"));
+            return (JSONArray) parser.parse(new FileReader(FILE_NAME_OUTFITS));
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
@@ -184,6 +175,7 @@ public class OutfitServiceImpl implements OutfitService {
         outfit.setDescription(outfitDto.getDescription());
         return outfit;
     }
+
     @Override
     public Coat convertCoatDtoToEntity(CoatDto coatDto) {
         Coat coat = new Coat();
@@ -197,7 +189,7 @@ public class OutfitServiceImpl implements OutfitService {
         int outfitID;
         JSONParser parser = new JSONParser();
         try{
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/outfits.json")); ;
+            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader(FILE_NAME_OUTFITS));
             outfitID = jsonArray.size();
         } catch (ParseException | IOException e) {
             e.printStackTrace();
@@ -211,22 +203,16 @@ public class OutfitServiceImpl implements OutfitService {
 
         ColorGenerator colorGenerator = new ColorGenerator();
 
-        List<Outfit> outfitList = new ArrayList<Outfit>();
-        List<Outfit> incompleteList = new ArrayList<Outfit>();
+        List<Outfit> outfitList = new ArrayList<>();
+        List<Outfit> incompleteList = new ArrayList<>();
         Set<String> missingPieces = new HashSet<>();
         List<Coat> coats = coatService.findAllCoats();
         List<Item> blouses = itemService.findItemsByCategory(ItemCategory.BLOUSE);
-        System.out.println(blouses);
         List<Item> shirts = itemService.findItemsByCategory(ItemCategory.valueOf("SHIRT"));
-        System.out.println(shirts);
         List<Item> tshirts = itemService.findItemsByCategory(ItemCategory.valueOf("TSHIRT"));
-        System.out.println(tshirts);
         List<Item> jeans = itemService.findItemsByCategory(ItemCategory.valueOf("JEANS"));
-        System.out.println(jeans);
         List<Item> pants = itemService.findItemsByCategory(ItemCategory.valueOf("PANTS"));
-        System.out.println(pants);
         List<Item> skirts = itemService.findItemsByCategory(ItemCategory.valueOf("SKIRT"));
-        System.out.println(skirts);
         for(int i = 0; i < blouses.toArray().length; i++){
             Item top = blouses.get(i);
             ItemColor topColor = top.getItemColor();
@@ -241,7 +227,7 @@ public class OutfitServiceImpl implements OutfitService {
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT"+outfitID);
                         outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
+                        List<Item> outfitItems = new ArrayList<>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
                         outfit.setItems(outfitItems);
@@ -263,7 +249,6 @@ public class OutfitServiceImpl implements OutfitService {
                             incompleteList.add(outfit);
                         }else{
                             outfitList.add(outfit);
-                            System.out.println(outfit);
                         }
 
                     }
@@ -276,7 +261,7 @@ public class OutfitServiceImpl implements OutfitService {
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT"+outfitID);
                         outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
+                        List<Item> outfitItems = new ArrayList<>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
                         outfit.setItems(outfitItems);
@@ -298,7 +283,6 @@ public class OutfitServiceImpl implements OutfitService {
                             incompleteList.add(outfit);
                         }else{
                             outfitList.add(outfit);
-                            System.out.println(outfit);
                         }
 
                     }
@@ -312,7 +296,7 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT"+outfitID);
                             outfitID += 1;
-                            List<Item> outfitItems = new ArrayList<Item>();
+                            List<Item> outfitItems = new ArrayList<>();
                             outfitItems.add(top);
                             outfitItems.add(bottom);
                             outfit.setItems(outfitItems);
@@ -377,7 +361,6 @@ public class OutfitServiceImpl implements OutfitService {
                             incompleteList.add(outfit);
                         }else{
                             outfitList.add(outfit);
-                            System.out.println(outfit);
                         }
                     }
             }
@@ -389,12 +372,12 @@ public class OutfitServiceImpl implements OutfitService {
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT" + outfitID);
                         outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
+                        List<Item> outfitItems = new ArrayList<>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
                         outfit.setItems(outfitItems);
                         if(temperature < 18.0){
-                            Coat coat = new Coat();
+                            Coat coat;
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
@@ -411,7 +394,6 @@ public class OutfitServiceImpl implements OutfitService {
                             incompleteList.add(outfit);
                         }else{
                             outfitList.add(outfit);
-                            System.out.println(outfit);
                         }
 //                    writeOutfitToFile(outfit);
                     }
@@ -425,12 +407,12 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
                             outfitID += 1;
-                            List<Item> outfitItems = new ArrayList<Item>();
+                            List<Item> outfitItems = new ArrayList<>();
                             outfitItems.add(top);
                             outfitItems.add(bottom);
                             outfit.setItems(outfitItems);
                             if(temperature < 18.0){
-                                Coat coat = new Coat();
+                                Coat coat;
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
@@ -447,7 +429,6 @@ public class OutfitServiceImpl implements OutfitService {
                                 incompleteList.add(outfit);
                             }else{
                                 outfitList.add(outfit);
-                                System.out.println(outfit);
                             }
                         }
                 }
@@ -469,12 +450,12 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
                             outfitID += 1;
-                            List<Item> outfitItems = new ArrayList<Item>();
+                            List<Item> outfitItems = new ArrayList<>();
                             outfitItems.add(top);
                             outfitItems.add(bottom);
                             outfit.setItems(outfitItems);
                             if(temperature < 18.0){
-                                Coat coat = new Coat();
+                                Coat coat;
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
@@ -491,7 +472,6 @@ public class OutfitServiceImpl implements OutfitService {
                                 incompleteList.add(outfit);
                             }else{
                                 outfitList.add(outfit);
-                                System.out.println(outfit);
                             }
 //                    writeOutfitToFile(outfit);
                         }
@@ -504,12 +484,12 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
                             outfitID += 1;
-                            List<Item> outfitItems = new ArrayList<Item>();
+                            List<Item> outfitItems = new ArrayList<>();
                             outfitItems.add(top);
                             outfitItems.add(bottom);
                             outfit.setItems(outfitItems);
                             if(temperature < 18.0){
-                                Coat coat = new Coat();
+                                Coat coat;
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
@@ -526,7 +506,6 @@ public class OutfitServiceImpl implements OutfitService {
                                 incompleteList.add(outfit);
                             }else{
                                 outfitList.add(outfit);
-                                System.out.println(outfit);
                             }
                         }
                 }
@@ -538,12 +517,12 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
                             outfitID += 1;
-                            List<Item> outfitItems = new ArrayList<Item>();
+                            List<Item> outfitItems = new ArrayList<>();
                             outfitItems.add(top);
                             outfitItems.add(bottom);
                             outfit.setItems(outfitItems);
                             if(temperature < 18.0){
-                                Coat coat = new Coat();
+                                Coat coat;
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK )
@@ -560,7 +539,6 @@ public class OutfitServiceImpl implements OutfitService {
                                 incompleteList.add(outfit);
                             }else{
                                 outfitList.add(outfit);
-                                System.out.println(outfit);
                             }
                         }
                 }
@@ -584,7 +562,7 @@ public class OutfitServiceImpl implements OutfitService {
                     outfitItems.add(dress);
                     outfit.setItems(outfitItems);
                     if (temperature < 18.0) {
-                        Coat coat = new Coat();
+                        Coat coat;
                         for (int k = 0; k < coats.toArray().length; k++) {
                             coat = coats.get(k);
                             if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor || coat.getItemColor() == ItemColor.BLACK)
@@ -601,27 +579,25 @@ public class OutfitServiceImpl implements OutfitService {
                         incompleteList.add(outfit);
                     } else {
                         outfitList.add(outfit);
-                        System.out.println(outfit);
                     }
                 }
             }
         }
         if (incompleteList.size() > outfitList.size()){
-            String shop = new String();
-            System.out.println(missingPieces);
+            String shop = "";
             for(String item: missingPieces){
                 shop = shop.concat(item);
                 shop = shop.concat(" ");
             }
             throw new ItemException(shop);
         }
-        if(outfitList.size() == 0){
+        if(outfitList.isEmpty()){
             throw new ItemException("TOPS AND BOTTOMS");
         }
-        FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json");
-        String jsonStr = JSONArray.toJSONString(outfitList);
-        file.write(jsonStr);
-        file.close();
+        try (FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json")) {
+            String jsonStr = JSONArray.toJSONString(outfitList);
+            file.write(jsonStr);
+        }
         return outfitList;
     }
     @Override
@@ -1059,10 +1035,10 @@ public class OutfitServiceImpl implements OutfitService {
             throw new ItemException("TOPS AND BOTTOMS");
         }
 
-        FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json");
-        String jsonStr = JSONArray.toJSONString(outfitList);
-        file.write(jsonStr);
-        file.close();
+        try (FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json")) {
+            String jsonStr = JSONArray.toJSONString(outfitList);
+            file.write(jsonStr);
+        }
         return outfitList;
     }
     @Override
@@ -1082,20 +1058,14 @@ public class OutfitServiceImpl implements OutfitService {
         Size userSize = userService.calculateUserSize(user);
 
         ColorGenerator colorGenerator = new ColorGenerator();
-        List<Outfit> outfitList = new ArrayList<Outfit>();
+        List<Outfit> outfitList = new ArrayList<>();
         List<Coat> coats = coatService.findAllCoats();
         List<Item> blouses = itemService.findItemsByCategory(ItemCategory.valueOf("BLOUSE"));
-        System.out.println(blouses);
         List<Item> shirts = itemService.findItemsByCategory(ItemCategory.valueOf("SHIRT"));
-        System.out.println(shirts);
         List<Item> tshirts = itemService.findItemsByCategory(ItemCategory.valueOf("TSHIRT"));
-        System.out.println(tshirts);
         List<Item> jeans = itemService.findItemsByCategory(ItemCategory.valueOf("JEANS"));
-        System.out.println(jeans);
         List<Item> pants = itemService.findItemsByCategory(ItemCategory.valueOf("PANTS"));
-        System.out.println(pants);
         List<Item> skirts = itemService.findItemsByCategory(ItemCategory.valueOf("SKIRT"));
-        System.out.println(skirts);
         for(int i = 0; i < blouses.toArray().length; i++){
             Item top = blouses.get(i);
             ItemColor topColor = top.getItemColor();
@@ -1110,12 +1080,12 @@ public class OutfitServiceImpl implements OutfitService {
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT"+outfitID);
                         outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
+                        List<Item> outfitItems = new ArrayList<>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
                         outfit.setItems(outfitItems);
                         if(temperature < 18.0){
-                            Coat coat = new Coat();
+                            Coat coat;
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
@@ -1128,7 +1098,6 @@ public class OutfitServiceImpl implements OutfitService {
                             }
                         }
                         outfitList.add(outfit);
-                        System.out.println(outfit);
                     }
             }
             for(int j = 0; j < pants.toArray().length; j++){
@@ -1139,12 +1108,12 @@ public class OutfitServiceImpl implements OutfitService {
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT"+outfitID);
                         outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
+                        List<Item> outfitItems = new ArrayList<>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
                         outfit.setItems(outfitItems);
                         if(temperature < 18.0){
-                            Coat coat = new Coat();
+                            Coat coat;
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
@@ -1157,8 +1126,6 @@ public class OutfitServiceImpl implements OutfitService {
                             }
                         }
                         outfitList.add(outfit);
-                        System.out.println(outfit);
-
                     }
             }
             if(temperature > 5.0){
@@ -1170,12 +1137,12 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT"+outfitID);
                             outfitID += 1;
-                            List<Item> outfitItems = new ArrayList<Item>();
+                            List<Item> outfitItems = new ArrayList<>();
                             outfitItems.add(top);
                             outfitItems.add(bottom);
                             outfit.setItems(outfitItems);
                             if(temperature < 18.0){
-                                Coat coat = new Coat();
+                                Coat coat;
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
@@ -1188,7 +1155,6 @@ public class OutfitServiceImpl implements OutfitService {
                                 }
                             }
                             outfitList.add(outfit);
-                            System.out.println(outfit);
 
                         }
                 }
@@ -1208,12 +1174,12 @@ public class OutfitServiceImpl implements OutfitService {
                         outfit.setId((long) outfitID);
                         outfit.setDescription("OUTFIT" + outfitID);
                         outfitID += 1;
-                        List<Item> outfitItems = new ArrayList<Item>();
+                        List<Item> outfitItems = new ArrayList<>();
                         outfitItems.add(top);
                         outfitItems.add(bottom);
                         outfit.setItems(outfitItems);
                         if(temperature < 18.0){
-                            Coat coat = new Coat();
+                            Coat coat;
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
@@ -1226,7 +1192,6 @@ public class OutfitServiceImpl implements OutfitService {
                             }
                         }
                         outfitList.add(outfit);
-                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                     }
             }
@@ -1243,7 +1208,7 @@ public class OutfitServiceImpl implements OutfitService {
                         outfitItems.add(bottom);
                         outfit.setItems(outfitItems);
                         if(temperature < 18.0){
-                            Coat coat = new Coat();
+                            Coat coat;
                             for(int k = 0; k < coats.toArray().length; k++){
                                 coat = coats.get(k);
                                 if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
@@ -1256,7 +1221,6 @@ public class OutfitServiceImpl implements OutfitService {
                             }
                         }
                         outfitList.add(outfit);
-                        System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                     }
             }
@@ -1274,7 +1238,7 @@ public class OutfitServiceImpl implements OutfitService {
                             outfitItems.add(bottom);
                             outfit.setItems(outfitItems);
                             if(temperature < 18.0){
-                                Coat coat = new Coat();
+                                Coat coat;
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
@@ -1287,7 +1251,6 @@ public class OutfitServiceImpl implements OutfitService {
                                 }
                             }
                             outfitList.add(outfit);
-                            System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                         }
                 }
@@ -1309,12 +1272,12 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
                             outfitID += 1;
-                            List<Item> outfitItems = new ArrayList<Item>();
+                            List<Item> outfitItems = new ArrayList<>();
                             outfitItems.add(top);
                             outfitItems.add(bottom);
                             outfit.setItems(outfitItems);
                             if(temperature < 18.0){
-                                Coat coat = new Coat();
+                                Coat coat;
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
@@ -1327,7 +1290,6 @@ public class OutfitServiceImpl implements OutfitService {
                                 }
                             }
                             outfitList.add(outfit);
-                            System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                         }
                 }
@@ -1339,12 +1301,12 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
                             outfitID += 1;
-                            List<Item> outfitItems = new ArrayList<Item>();
+                            List<Item> outfitItems = new ArrayList<>();
                             outfitItems.add(top);
                             outfitItems.add(bottom);
                             outfit.setItems(outfitItems);
                             if(temperature < 18.0){
-                                Coat coat = new Coat();
+                                Coat coat;
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
@@ -1357,7 +1319,6 @@ public class OutfitServiceImpl implements OutfitService {
                                 }
                             }
                             outfitList.add(outfit);
-                            System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                         }
                 }
@@ -1369,12 +1330,12 @@ public class OutfitServiceImpl implements OutfitService {
                             outfit.setId((long) outfitID);
                             outfit.setDescription("OUTFIT" + outfitID);
                             outfitID += 1;
-                            List<Item> outfitItems = new ArrayList<Item>();
+                            List<Item> outfitItems = new ArrayList<>();
                             outfitItems.add(top);
                             outfitItems.add(bottom);
                             outfit.setItems(outfitItems);
                             if(temperature < 18.0){
-                                Coat coat = new Coat();
+                                Coat coat;
                                 for(int k = 0; k < coats.toArray().length; k++){
                                     coat = coats.get(k);
                                     if(coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
@@ -1387,7 +1348,6 @@ public class OutfitServiceImpl implements OutfitService {
                                 }
                             }
                             outfitList.add(outfit);
-                            System.out.println(outfit);
 //                    writeOutfitToFile(outfit);
                         }
                 }
@@ -1407,11 +1367,11 @@ public class OutfitServiceImpl implements OutfitService {
                     outfit.setId((long) outfitID);
                     outfit.setDescription("OUTFIT" + outfitID);
                     outfitID += 1;
-                    List<Item> outfitItems = new ArrayList<Item>();
+                    List<Item> outfitItems = new ArrayList<>();
                     outfitItems.add(dress);
                     outfit.setItems(outfitItems);
                     if (temperature < 18.0) {
-                        Coat coat = new Coat();
+                        Coat coat;
                         for (int k = 0; k < coats.toArray().length; k++) {
                             coat = coats.get(k);
                             if (coat.getItemColor() == firstColor || coat.getItemColor() == secondColor || coat.getItemColor() == topColor)
@@ -1427,13 +1387,13 @@ public class OutfitServiceImpl implements OutfitService {
                 }
             }
         }
-        if(outfitList.size() == 0){
+        if(outfitList.isEmpty()){
             throw new ItemException("TOPS AND BOTTOMS");
         }
-        FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json");
-        String jsonStr = JSONArray.toJSONString(outfitList);
-        file.write(jsonStr);
-        file.close();
+        try (FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json")) {
+            String jsonStr = JSONArray.toJSONString(outfitList);
+            file.write(jsonStr);
+        }
         return outfitList;
 
     }
@@ -1442,33 +1402,15 @@ public class OutfitServiceImpl implements OutfitService {
         JSONParser jsonParser = new JSONParser();
         try (FileReader reader = new FileReader("src/main/java/com/example/smartwardrobe/json/generatedoutfits.json"))
         {
-            //Read JSON file
             JSONArray obj = (JSONArray) jsonParser.parse(reader);
-            System.out.println("citit json");
             for(int i = 0;i<obj.toArray().length;i++)
             {
                 JSONObject jsonItem = (JSONObject) obj.get(i);
-//                System.out.println(obj.get(i));
-//                System.out.println();
                 if(id.equals(Integer.valueOf(jsonItem.get("id").toString()))){
-                    System.out.println("ok");
                     Outfit outfit = new Outfit();
                     JSONObject coatObj = (JSONObject) jsonItem.get("coat");
                     if(coatObj!=null){
-                        Coat coat = new Coat();
-//                        coat.setId((Long) coatObj.get("id"));
-                        coat = coatService.findCoatById((Long) coatObj.get("id"));
-//                        coat.setCode((String)coatObj.get("code"));
-//                        coat.setMaterial(Material.valueOf((String) jsonItem.get("material")));
-//                        coat.setSize(Size.valueOf((String) jsonItem.get("size")));
-//                        coat.setCode((String) jsonItem.get("code"));
-//                        coat.setItemColor(ItemColor.valueOf((String) jsonItem.get("itemColor")));
-//                        coat.setStyle(Style.valueOf((String)  jsonItem.get("style")));
-//                        coat.setCoatCategory(CoatCategory.valueOf((String)  jsonItem.get("itemCategory")));
-//                        coat.setLastWashingDay(LocalDate.parse((String) coatObj.get("lastWashingDay")));
-//                        coat.setLastWearing(LocalDate.parse((String) coatObj.get("lastWearing")));
-//                        coat.setNrOfWearsSinceLastWash(Integer.parseInt((String) coatObj.get("nrOfWearsSinceLastWash")));
-//                        coat.setWashingZoneColor(WashingZoneColor.valueOf((String) jsonItem.get("washingZoneColor")));
+                        Coat coat = coatService.findCoatById((Long) coatObj.get("id"));
                         outfit.setCoat(coat);
                     }
 
@@ -1478,19 +1420,7 @@ public class OutfitServiceImpl implements OutfitService {
                     for(int j = 0;j<itemArray.toArray().length;j++)
                     {
                         JSONObject itemObj = (JSONObject) itemArray.get(j);
-                        Item item = new Item();
-                        item = itemService.findItemById((Long) itemObj.get("id"));
-//                        item.setId((Long) itemObj.get("id"));
-//                        item.setMaterial(Material.valueOf((String) itemObj.get("material")));
-//                        item.setSize(Size.valueOf((String) itemObj.get("size")));
-//                        item.setCode((String) itemObj.get("code"));
-//                        item.setItemColor(ItemColor.valueOf((String) itemObj.get("itemColor")));
-//                        item.setStyle(Style.valueOf((String)  itemObj.get("style")));
-//                        item.setItemCategory(ItemCategory.valueOf((String)  itemObj.get("itemCategory")));
-//                        item.setLastWashingDay(LocalDate.parse((String) itemObj.get("lastWashingDay")));
-//                        item.setLastWearing(LocalDate.parse((String) itemObj.get("lastWearing")));
-//                        item.setNrOfWearsSinceLastWash(Integer.parseInt((String) itemObj.get("nrOfWearsSinceLastWash")));
-//                        item.setWashingZoneColor(WashingZoneColor.valueOf((String) itemObj.get("washingZoneColor")));
+                        Item item = itemService.findItemById((Long) itemObj.get("id"));
                         itemList.add(item);
                     }
                     outfit.setId(Long.valueOf(id));
@@ -1498,8 +1428,6 @@ public class OutfitServiceImpl implements OutfitService {
 
                     outfit.setItems(itemList);
                     saveOutfit(outfit);
-                    System.out.println("outfitul este");
-                    System.out.println(outfit);
                 }
 
             }

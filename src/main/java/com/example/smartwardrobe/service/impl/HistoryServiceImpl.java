@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,34 +21,14 @@ public class HistoryServiceImpl implements HistoryService {
     OutfitService outfitService;
 
     @Override
-    public History findHistoryById(Long id) {
-        return historyRepository.findById(id).orElseThrow();
-    }
-
-    @Override
     public History saveHistory(History history) {
         return historyRepository.save(history);
     }
 
     @Override
-    public History findHistoryByDateTime(LocalDate localDate) {
-        return historyRepository.findByDateTime(localDate).orElseThrow();
-    }
-
-    @Override
-    public void deleteHistoryById(Long id) {
-        historyRepository.deleteById(id);
-    }
-
-    @Override
-    public List<History> findAllHistories() {
-        return historyRepository.findAll();
-    }
-
-    @Override
     public History convertDtoToEntity(HistoryDto historyDto) {
         History history = new History();
-        history.setDateTime(historyDto.getLocalDateTime());
+        history.setDateTime(LocalDate.parse(historyDto.getDatetime()));
         history.setOutfit(outfitService.findOutfitById(historyDto.getOutfitId()));
         return history;
     }

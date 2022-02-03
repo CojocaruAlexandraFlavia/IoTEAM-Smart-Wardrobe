@@ -9,7 +9,7 @@ class HistoryDtoTest {
     void testGetLocalDateTime() {
         HistoryDto historyDto = new HistoryDto();
         historyDto.setDatetime("2020-03-01");
-        assertEquals("2020-03-01", historyDto.getLocalDateTime().toString());
+        assertEquals("2020-03-01", historyDto.getDatetime());
     }
 
     @Test

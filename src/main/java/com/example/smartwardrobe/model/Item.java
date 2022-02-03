@@ -165,17 +165,17 @@ public class Item {
     @Override
     public String toString() {
         return "{" +
-                " \"id\":" + id +
-                ", \"material\":\"" + material.toString() +"\""+
-                ", \"size\":\"" + size + "\""+
-                ", \"code\":\"" + code + "\"" +
-                ", \"itemColor\":\"" + itemColor.toString() +"\""+
-                ", \"style\":\"" + style.toString() +"\""+
-                ", \"itemCategory\":\"" + itemCategory.toString()+"\""+
+                "\"id\":" + id +
+                ",\"material\":\"" + material.toString() +"\""+
+                ",\"size\":\"" + size + "\""+
+                ",\"code\":\"" + code + "\"" +
+                ",\"itemColor\":\"" + itemColor.toString() +"\""+
+                ",\"style\":\"" + style.toString() +"\""+
+                ",\"itemCategory\":\"" + itemCategory.toString()+"\""+
 //                ", \"lastWearing\":" + lastWearing +
 //                ", \"lastWashingDay\":" + lastWashingDay +
 //                ", \"nrOfWearsSinceLastWash\":" + nrOfWearsSinceLastWash +
-                ", \"washingZoneColor\":\"" + washingZoneColor.toString() +"\""+
+                ",\"washingZoneColor\":\"" + washingZoneColor.toString() +"\""+
                 '}';
     }
 }
