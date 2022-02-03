@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.controller</a> &gt; <span class="el_source">ItemController.java</span></div><h1>ItemController.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.controller;
+
+import com.example.smartwardrobe.enums.ItemCategory;
+import com.example.smartwardrobe.model.Item;
+import com.example.smartwardrobe.model.dto.ItemDto;
+import com.example.smartwardrobe.service.ItemService;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Set;
+
+@RestController
+@RequestMapping(&quot;/item&quot;)
+<span class="fc" id="L20">public class ItemController {</span>
+
+    @Autowired
+    private ItemService itemService;
+
+    @GetMapping
+    public List&lt;Item&gt; getAllItems(){
+<span class="fc" id="L27">        return itemService.findAllItems();</span>
+    }
+
+    @GetMapping(&quot;/findDirty&quot;)
+    public List&lt;Item&gt; getDirtyItems(){
+<span class="fc" id="L32">        return itemService.findItemIfDirty();</span>
+    }
+
+    @GetMapping(&quot;/findDirtyByColor/{color}&quot;)
+    public ResponseEntity&lt;Object&gt; getDirtyItemsByColor(@PathVariable(&quot;color&quot;) String color) throws FileNotFoundException {
+<span class="nc" id="L37">        Pair&lt;List&lt;Item&gt;, Set&lt;JSONObject&gt;&gt; item = itemService.getDirtyItemsByColor(color);</span>
+<span class="nc bnc" id="L38" title="All 4 branches missed.">        if(color.equalsIgnoreCase(&quot;WHITE&quot;) || color.equalsIgnoreCase(&quot;BLACK&quot;) ||</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">                color.equalsIgnoreCase(&quot;COLOR&quot;)){</span>
+<span class="nc" id="L40">            return ResponseEntity.ok(item);</span>
+        }else{
+<span class="nc" id="L42">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;WASH COLOR DOESN'T EXIST!&quot;);</span>
+        }
+
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public Item getItemById(@PathVariable(&quot;id&quot;) Long id){
+<span class="fc" id="L49">        return itemService.findItemById(id);</span>
+    }
+
+    @PostMapping
+    public Item saveItem(@RequestBody ItemDto itemDto){
+<span class="nc" id="L54">        return itemService.saveItem(itemService.convertDtoToEntity(itemDto));</span>
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    public void deleteItemById(@PathVariable(&quot;id&quot;) Long id){
+<span class="fc" id="L59">        itemService.deleteItemById(id);</span>
+<span class="fc" id="L60">    }</span>
+
+    @GetMapping(&quot;/getByStyle/{styleName}&quot;)
+    public ResponseEntity&lt;Object&gt; getItemByStyle(@PathVariable(&quot;styleName&quot;) String styleName){
+<span class="fc" id="L64">        List&lt;Item&gt; item = itemService.getItemsByStyleName(styleName);</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if(!item.isEmpty()){</span>
+<span class="fc" id="L66">            return ResponseEntity.ok(item);</span>
+        }else{
+<span class="fc" id="L68">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Style or items not found!&quot;);</span>
+        }
+    }
+
+    @PatchMapping (&quot;/washing/{itemId}&quot;)
+    public Item washItem(@PathVariable(&quot;itemId&quot;) String itemId){
+<span class="fc" id="L74">        return itemService.washItem(itemId);</span>
+    }
+
+    @GetMapping(&quot;/getAllStore&quot;)
+    public void readAllItemsFromStore(){
+<span class="fc" id="L79">         itemService.readAllItemsFromStore();</span>
+<span class="fc" id="L80">    }</span>
+
+    @GetMapping(&quot;/getAllItemsByCategory/{category}&quot;)
+    public ResponseEntity&lt;Object&gt;  readAllItemsByCategoryFromStore(@PathVariable(&quot;category&quot;) String itemCategory){
+<span class="fc" id="L84">        List&lt;Item&gt; items = itemService.readAllItemsByCategoryFromStore(ItemCategory.valueOf(itemCategory));</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if(!items.isEmpty()){</span>
+<span class="fc" id="L86">            return ResponseEntity.ok(items);</span>
+        }else{
+<span class="fc" id="L88">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;No items in this category!&quot;);</span>
+        }
+    }
+
+    @GetMapping(&quot;/sortByLastWearingDate&quot;)
+    public ResponseEntity&lt;Object&gt; sortItemsByLastWearingDate(){
+<span class="fc" id="L94">        List&lt;Item&gt; items = itemService.sortItemsByLastWearingDate();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        if(!items.isEmpty()){</span>
+<span class="fc" id="L96">            return ResponseEntity.ok(items);</span>
+        }else{
+<span class="fc" id="L98">            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(&quot;Items not found for sorting!&quot;);</span>
+        }
+    }
+
+    @PostMapping(&quot;/updateWardrobe/{userId}&quot;)
+    public List&lt;Item&gt; updateUserDetails(@PathVariable(&quot;userId&quot;) String userId){
+<span class="fc" id="L104">        return itemService.updateWardrobe(userId);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

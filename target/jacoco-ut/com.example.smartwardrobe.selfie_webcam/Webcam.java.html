@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Webcam.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.selfie_webcam</a> &gt; <span class="el_source">Webcam.java</span></div><h1>Webcam.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.selfie_webcam;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+
+<span class="nc" id="L7">public class Webcam {</span>
+
+    public void takeAndSaveWebcamPicture() throws IOException {
+<span class="nc" id="L10">        com.github.sarxos.webcam.Webcam webcam = com.github.sarxos.webcam.Webcam.getDefault();</span>
+<span class="nc" id="L11">        webcam.open();</span>
+<span class="nc" id="L12">        ImageIO.write(webcam.getImage(), &quot;JPG&quot;, new File(&quot;firstcapture.jpg&quot;));</span>
+<span class="nc" id="L13">        webcam.close();</span>
+<span class="nc" id="L14">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

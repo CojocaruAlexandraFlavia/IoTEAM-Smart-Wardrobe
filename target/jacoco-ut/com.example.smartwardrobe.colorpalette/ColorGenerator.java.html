@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ColorGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.colorpalette</a> &gt; <span class="el_source">ColorGenerator.java</span></div><h1>ColorGenerator.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.colorpalette;
+
+import com.example.smartwardrobe.enums.ItemColor;
+
+import java.util.Random;
+
+import static com.example.smartwardrobe.enums.ItemColor.*;
+
+<span class="fc" id="L9">public class ColorGenerator {</span>
+    /*
+    the color arrays are written from the darkest color of the spectrum to the lightest one
+    the colors array is composed of the color arrays in the color wheel order
+     */
+<span class="fc" id="L14">    ItemColor[] reds = {MOHOGAMY, WINE, BERRY, RUBY, CRIMSON, RED, ROSE, BLUSH};</span>
+<span class="fc" id="L15">    ItemColor[] oranges = {RUST, BRONZE, FIRE, ORANGE, APRICOT, HONEY, MERIGOLD, CANTALOUPE};</span>
+<span class="fc" id="L16">    ItemColor[] yellows = {GOLDENROD, YELLOW_JASMINE, CITRINE, GOLD, YELLOW, BRIGHT_YELLOW, BUTTER, PALE_YELLOW};</span>
+<span class="fc" id="L17">    ItemColor[] greens = {JUNIPER, CROCODILE, EMERALD, GREEN, PEAR, FERN, SEAFOAM, MINT};</span>
+<span class="fc" id="L18">    ItemColor[] blues = {DENIM, NAVY, ADMIRAL, BLUE, CERULEAN, TEAL, SKY, ARCTIC};</span>
+<span class="fc" id="L19">    ItemColor[] purples = {INDIGO, GRAPE, VIOLET, MARDIGRAS, MAGENTA, ELECTRIC_PURPLE, ORCHID, LAVANDER};</span>
+<span class="fc" id="L20">    ItemColor[] pinks = {DARK_PINK, BRIGHT_PINK, FUCSIA, WATERMELON, TAFFY, PINK, SALMON, CREPE};</span>
+<span class="fc" id="L21">    ItemColor[][] colors = {reds, oranges, yellows, greens, blues, purples, pinks};</span>
+<span class="fc" id="L22">    ItemColor[] nonColors = {BLACK, GREY, WHITE};</span>
+
+    public Integer[] colorNumber(ItemColor color){
+<span class="fc bfc" id="L25" title="All 2 branches covered.">        for(int i = 0; i &lt; colors.length; i++){</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">            for( int j = 0; j &lt; colors[i].length; j++){</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">                if(colors[i][j]==color){</span>
+<span class="fc" id="L28">                    return new Integer[]{i, j};</span>
+                }
+            }
+        }
+<span class="fc" id="L32">        return new Integer[0];</span>
+    }
+    public ItemColor colorKind(int i, int j){
+<span class="fc" id="L35">        return colors[i][j];</span>
+    }
+
+    public ItemColor[] monoChromatic(ItemColor color){
+<span class="fc bfc" id="L39" title="All 6 branches covered.">        if(color == GREY || color == WHITE || color == BLACK){</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">            if(color == GREY)</span>
+<span class="fc" id="L41">                return new ItemColor[]{BLACK, WHITE};</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">            if(color == BLACK)</span>
+<span class="fc" id="L43">                return new ItemColor[]{GREY, WHITE};</span>
+<span class="fc" id="L44">            return new ItemColor[]{BLACK, GREY};</span>
+        }
+        int i;
+        int max;
+<span class="fc" id="L48">        i = colorNumber(color)[0];</span>
+<span class="fc" id="L49">        max = colors[i].length;</span>
+<span class="fc" id="L50">        Random rand = new Random();</span>
+<span class="fc" id="L51">        ItemColor color2 = colors[i][rand.nextInt(max)];</span>
+<span class="fc" id="L52">        ItemColor color3 = colors[i][rand.nextInt(max)];</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        while(color == color2){</span>
+<span class="fc" id="L54">            color2 = colors[i][rand.nextInt(max)];</span>
+        }
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        while(color == color3){</span>
+<span class="fc" id="L57">            color3 = colors[i][rand.nextInt(max)];</span>
+        }
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        while(color2 == color3){</span>
+<span class="fc" id="L60">            color3 = colors[i][rand.nextInt(max)];</span>
+        }
+<span class="fc" id="L62">        return new ItemColor[] {color2, color3};</span>
+
+    }
+    public ItemColor getPastel(ItemColor color){
+<span class="fc bfc" id="L66" title="All 6 branches covered.">        if(color == GREY || color == WHITE || color == BLACK)</span>
+<span class="fc" id="L67">            return GREY;</span>
+        int i;
+        int j;
+<span class="fc" id="L70">        i = colorNumber(color)[0];</span>
+<span class="fc" id="L71">        j = colors[i].length - 1;</span>
+<span class="fc" id="L72">        return colorKind(i,j);</span>
+
+    }
+    public ItemColor[] pastel(ItemColor color){
+        /*
+        pastel palette gets the pastel color of the color family of the parameter
+        and returns 2 random pastel colors from the spectrum
+         */
+        int j;
+        int max;
+<span class="fc" id="L82">        color = getPastel(color);</span>
+<span class="fc" id="L83">        j = 7;</span>
+<span class="fc" id="L84">        max = colors.length;</span>
+<span class="fc" id="L85">        Random rand = new Random();</span>
+<span class="fc" id="L86">        ItemColor color2 = colors[rand.nextInt(max)][j];</span>
+<span class="fc" id="L87">        ItemColor color3 = colors[rand.nextInt(max)][j];</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        while(color == color2){</span>
+<span class="fc" id="L89">            color2 = colors[rand.nextInt(max)][j];</span>
+        }
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        while(color == color3){</span>
+<span class="fc" id="L92">            color3 = colors[rand.nextInt(max)][j];</span>
+        }
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        while(color2 == color3){</span>
+<span class="fc" id="L95">            color3 = colors[rand.nextInt(max)][j];</span>
+        }
+<span class="fc" id="L97">        return new ItemColor[] {color2, color3};</span>
+    }
+    public ItemColor[] analogous(ItemColor color) {
+        /*
+        according to color theory, analogous
+        comprises colors that are right next to each other on the color wheel
+         */
+<span class="fc bfc" id="L104" title="All 6 branches covered.">        if(color == GREY || color == WHITE || color == BLACK){</span>
+<span class="fc" id="L105">            return new ItemColor[0];</span>
+        }
+        int i;
+        int j;
+        int max;
+<span class="fc" id="L110">        i = colorNumber(color)[0];</span>
+<span class="fc" id="L111">        j = colorNumber(color)[1];</span>
+<span class="fc" id="L112">        max = colors.length - 1;</span>
+        ItemColor color2;
+        ItemColor color3;
+<span class="pc bpc" id="L115" title="1 of 4 branches missed.">        if(i &gt; 0 &amp;&amp; i &lt; max) {</span>
+<span class="fc" id="L116">            color2 = colors[i - 1][j];</span>
+<span class="fc" id="L117">            color3 = colors[i + 1][j];</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">        } else if (i == 0){</span>
+<span class="fc" id="L119">            color2 = colors[max][j];</span>
+<span class="fc" id="L120">            color3 = colors[i + 1][j];</span>
+        } else {
+<span class="nc" id="L122">            color2 = colors[i - 1][j];</span>
+<span class="nc" id="L123">            color3 = colors[0][j];</span>
+        }
+<span class="fc" id="L125">        return new ItemColor[] {color2, color3};</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

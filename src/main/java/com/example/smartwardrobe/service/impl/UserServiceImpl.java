@@ -3,12 +3,14 @@ package com.example.smartwardrobe.service.impl;
 import com.example.smartwardrobe.enums.EyeColor;
 import com.example.smartwardrobe.enums.Gender;
 import com.example.smartwardrobe.enums.HairColor;
+import com.example.smartwardrobe.enums.Size;
 import com.example.smartwardrobe.model.Item;
-import com.example.smartwardrobe.model.Outfit;
 import com.example.smartwardrobe.model.User;
+import com.example.smartwardrobe.model.dto.UserDto;
 import com.example.smartwardrobe.repository.UserRepository;
 import com.example.smartwardrobe.service.ItemService;
 import com.example.smartwardrobe.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private ItemService userService;
+    private ItemService itemService;
 
     @Override
     public User saveUser(User user) {
@@ -51,77 +52,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void writeUserToFile(User user) {
-        JSONArray jsonArray = getUsersFromFile();
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("id", user.getId().toString());
-        jsonObject.put("eyeColor", user.getEyeColor().toString());
-        jsonObject.put("weight", String.valueOf(user.getWeight()));
-        jsonObject.put("height", String.valueOf(user.getHeight()));
-        jsonObject.put("gender", user.getGender().toString());
-        jsonObject.put("age", String.valueOf(user.getAge()));
-        jsonObject.put("hairColor", user.getHairColor());
-        jsonObject.put("items", userService.createJsonArrayOfItems(user.getItems()));
-        jsonObject.put("username", user.getUsername());
-        jsonObject.put("password", user.getPassword());
-        // jsonObject.put("coat", outfit.getCoat().toString());
-        // jsonObject.put("items", itemService.createJsonArrayOfItems(outfit.getItems()));
-        jsonArray.add(jsonObject);
-        try {
-            FileWriter file = new FileWriter("src/main/java/com/example/smartwardrobe/json/users.json");
-            file.write(jsonArray.toJSONString());
-            file.close();
-            //Files.write(Paths.get("src/main/java/com/example/smartwardrobe/json/outfits.json"),jsonObject.toJSONString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public JSONArray getUsersFromFile() {
+    public JSONObject getUsersFromFile() {
         JSONParser parser = new JSONParser();
         try{
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json")); ;
-            return jsonArray;
+            return (JSONObject) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json"));
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
-        return null;
-    }
-
-    public static List<Item> convertObjectToList(Object obj) {
-        List<Item> list = new ArrayList<>();
-        if (obj.getClass().isArray()) {
-            list = Arrays.asList((Item[])obj);
-        } else if (obj instanceof Collection) {
-            list = new ArrayList<Item>((Collection<Item>)obj);
-        }
-        return list;
-    }
-
-    @Override
-    public User saveUserFromFile(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        JSONParser parser = new JSONParser();
-        try{
-            JSONArray jsonArray = (JSONArray) parser.parse(new FileReader("src/main/java/com/example/smartwardrobe/json/users.json")); ;
-            user.setId(Long.parseLong(jsonArray.get(0).toString()));
-            user.setEyeColor(EyeColor.valueOf((jsonArray.get(1).toString())));
-            user.setWeight(Double.parseDouble(jsonArray.get(2).toString()));
-            user.setHeight(Double.parseDouble(jsonArray.get(3).toString()));
-            user.setGender(Gender.valueOf((jsonArray.get(4).toString())));
-            user.setAge(Integer.parseInt(jsonArray.get(5).toString()));
-            user.setHairColor(HairColor.valueOf((jsonArray.get(6).toString())));
-            List<Item> listOfItems = convertObjectToList(jsonArray.get(7));
-            user.setItems(listOfItems);
-            user.setUsername(jsonArray.get(8).toString());
-        } catch (ParseException | IOException e) {
-            e.printStackTrace();
-        }
-        return user;
+        return new JSONObject();
     }
 
     @Override
@@ -135,66 +73,91 @@ public class UserServiceImpl implements UserService {
             jsonObject.put("code", item.getCode());
             jsonObject.put("color", item.getItemColor().toString());
             jsonObject.put("style", item.getStyle().toString());
-            jsonObject.put("category", item.getItemCategory().toString());
+            jsonObject.put("itemCategory", item.getItemCategory().toString());
+            jsonObject.put("itemColor", item.getItemColor().toString());
+            if(item.getLastWearing() == null){
+                jsonObject.put("lastWearing", null);
+            }else{
+                jsonObject.put("lastWearing", item.getLastWearing().toString());
+            }
+            if(item.getLastWashingDay() == null){
+                jsonObject.put("lastWashingDay", null);
+            }else{
+                jsonObject.put("lastWashingDay", item.getLastWearing().toString());
+            }
+            jsonObject.put("nrOfWearsSinceLastWash", item.getNrOfWearsSinceLastWash());
+            jsonObject.put("washingZoneColor", item.getWashingZoneColor().toString());
             jsonArray.add(jsonObject);
         }
         return jsonArray;
     }
 
     @Override
-    public String calculateUserSize(User user){
+    public User saveUserFromFile() {
+        JSONObject fromFile = getUsersFromFile();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            User user = objectMapper.readValue(fromFile.toJSONString(), User.class);
+            saveUser(user);
+            return user;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new User();
+    }
+
+    @Override
+    public User convertDtoToEntity(UserDto userDto) {
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        if(userDto.getId() != 0){
+            user.setId(userDto.getId());
+        }
+        user.setEyeColor(EyeColor.valueOf(userDto.getEyeColor()));
+        user.setAge(userDto.getAge());
+        user.setGender(Gender.valueOf(userDto.getGender()));
+        user.setWeight(userDto.getWeight());
+        user.setHeight(user.getHeight());
+        user.setHairColor(HairColor.valueOf(userDto.getHairColor()));
+        user.setPassword(userDto.getPassword());
+        return user;
+    }
+
+    @Override
+    public Size calculateUserSize(User user){
         double weight = user.getWeight();
         double height = user.getHeight();
-        if(weight <= 50){
-            return "XS";
-        }
-        if(weight > 50 && weight <= 55 && height >= 155){
-            return "XS";
-        }
-        if(weight > 50 && weight <= 55 && height < 155){
-            return "S";
-        }
-        if(weight > 55 && weight <= 60 && height > 170){
-            return "XS";
+        if(weight <= 55){
+            return Size.XS;
         }
         if(weight > 55 && weight <= 60 && height >= 155 && height < 170){
-            return "S";
+            return Size.S;
         }
         if(weight > 60 && weight <= 65 && height > 160){
-            return "S";
+            return Size.S;
         }
         if(weight > 60 && weight <= 65 && height < 160){
-            return "M";
-        }
-        if(weight > 65 && weight <= 70 && height < 165){
-            return "L";
+            return Size.M;
         }
         if(weight > 65 && weight <= 70 && height >= 165){
-            return "M";
-        }
-        if(weight > 70 && weight <= 75 && height < 155){
-            return "XL";
-        }
-        if(weight > 70 && weight <= 75 && height >= 155 && height < 170){
-            return "L";
+            return Size.M;
         }
         if(weight > 70 && weight <= 75 && height > 170){
-            return "M";
+            return Size.M;
+        }
+        if(weight > 70 && weight <= 75 && height >= 155 && height < 170){
+            return Size.L;
         }
         if(weight > 75 && weight <= 80 && height < 160){
-            return "XL";
-        }
-        if(weight > 75 && weight <= 80 && height >= 160 ){
-            return "L";
+            return Size.XL;
         }
         if(weight > 80 && weight <= 90){
-            return "XL";
+            return Size.XL;
         }
         if(weight > 90){
-            return "XXL";
+            return Size.XXL;
         }
 
         return null;
     }
-
 }

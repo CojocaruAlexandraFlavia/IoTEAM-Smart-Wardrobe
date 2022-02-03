@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ItemServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.service.impl</a> &gt; <span class="el_source">ItemServiceImpl.java</span></div><h1>ItemServiceImpl.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.service.impl;
+
+import com.example.smartwardrobe.enums.*;
+import com.example.smartwardrobe.model.Coat;
+import com.example.smartwardrobe.model.Item;
+import com.example.smartwardrobe.model.User;
+import com.example.smartwardrobe.model.dto.ItemDto;
+import com.example.smartwardrobe.repository.ItemRepository;
+import com.example.smartwardrobe.service.ItemService;
+import com.example.smartwardrobe.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.EnumUtils;
+import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
+import org.springframework.stereotype.Service;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Service
+<span class="fc" id="L33">public class ItemServiceImpl implements ItemService {</span>
+
+    @Autowired
+    ItemRepository itemRepository;
+
+    @Autowired
+    UserService userService;
+
+    @Override
+    public Item saveItem(Item item) {
+<span class="fc" id="L43">        return itemRepository.save(item);</span>
+    }
+
+    @Override
+    public Item findItemById(Long id) {
+<span class="fc" id="L48">        return itemRepository.findById(id).orElseThrow();</span>
+    }
+
+    @Override
+    public List&lt;Item&gt; findItemsByCategory(ItemCategory itemCategory) {
+<span class="fc" id="L53">        return itemRepository.findByItemCategory(itemCategory);</span>
+    }
+    @Override
+    public List&lt;Item&gt; findItemIfDirty()
+    {
+<span class="fc" id="L58">        return itemRepository.findItemIfDirty();</span>
+    }
+
+    @Override
+    public void deleteItemById(Long id) {
+<span class="fc" id="L63">        itemRepository.deleteById(id);</span>
+<span class="fc" id="L64">    }</span>
+
+    @Override
+    public List&lt;Item&gt; findAllItems() {
+<span class="fc" id="L68">        return itemRepository.findAll();</span>
+    }
+
+    @Override
+    public List&lt;Item&gt; getItemsByStyleName(@NotNull String styleName) {
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (!EnumUtils.isValidEnum(Style.class, styleName.toUpperCase()) ){</span>
+<span class="fc" id="L74">            return new ArrayList&lt;&gt;();</span>
+        }
+<span class="nc" id="L76">        return itemRepository.findByStyle(Style.valueOf(styleName.toUpperCase()));</span>
+    }
+
+    @Override
+    public Item washItem(String itemId) {
+<span class="fc" id="L81">        Item item = findItemById(Long.valueOf(itemId));</span>
+<span class="fc" id="L82">        item.setLastWashingDay(LocalDate.now());</span>
+<span class="fc" id="L83">        item.setNrOfWearsSinceLastWash(0);</span>
+<span class="fc" id="L84">        return saveItem(item);</span>
+    }
+
+    @Override
+    public Item updateItemAfterAddingOutfit(Long itemId) {
+<span class="fc" id="L89">        Item item = findItemById(itemId);</span>
+<span class="fc" id="L90">        item.setNrOfWearsSinceLastWash(item.getNrOfWearsSinceLastWash() + 1);</span>
+<span class="fc" id="L91">        item.setLastWearing(LocalDate.now());</span>
+<span class="fc" id="L92">        return saveItem(item);</span>
+    }
+
+    @Override
+    public Pair&lt;List&lt;Item&gt;, Set&lt;JSONObject&gt;&gt; getDirtyItemsByColor(String color) {
+<span class="fc" id="L97">        List&lt;Item&gt; specificDirtyItems = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L98">        List&lt;Item&gt; allDirtyItems = findItemIfDirty();</span>
+<span class="fc" id="L99">        Set&lt;JSONObject&gt; instructions  = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L100">        JSONParser jsonParser = new JSONParser();</span>
+<span class="fc" id="L101">        JSONObject da = null;</span>
+<span class="fc" id="L102">        try(FileReader reader = new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/wash_instructions.json&quot;))</span>
+        {
+<span class="fc" id="L104">            Object obj = jsonParser.parse(reader);</span>
+<span class="fc" id="L105">            JSONObject d = (JSONObject) obj;</span>
+
+<span class="fc bfc" id="L107" title="All 2 branches covered.">            for (Item i: allDirtyItems) {</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">                if(i.getWashingZoneColor().name().equalsIgnoreCase(color))</span>
+                {
+<span class="fc" id="L110">                    specificDirtyItems.add(i);</span>
+<span class="fc" id="L111">                    String specificInstr = i.getMaterial().name();</span>
+<span class="fc" id="L112">                    da = (JSONObject) d.get(specificInstr);</span>
+<span class="fc" id="L113">                    instructions.add(da);</span>
+                }
+<span class="fc" id="L115">            }</span>
+<span class="nc" id="L116">        } catch (IOException | ParseException e) {</span>
+<span class="nc" id="L117">            e.printStackTrace();</span>
+<span class="fc" id="L118">        }</span>
+<span class="fc" id="L119">        return Pair.of(specificDirtyItems, instructions);</span>
+
+    }
+
+    @Override
+    public JSONArray createJsonArrayOfItems(@NotNull List&lt;Item&gt; items) {
+<span class="fc" id="L125">        JSONArray jsonArray = new JSONArray();</span>
+<span class="fc bfc" id="L126" title="All 2 branches covered.">        for(Item item: items){</span>
+<span class="fc" id="L127">            JSONObject object = createJsonObjectFromItem(item);</span>
+<span class="fc" id="L128">            jsonArray.add(object);</span>
+<span class="fc" id="L129">        }</span>
+<span class="fc" id="L130">        return jsonArray;</span>
+    }
+
+    @Override
+    public JSONObject createJsonObjectFromItem(Item item) {
+<span class="fc" id="L135">        JSONParser jsonParser = new JSONParser();</span>
+<span class="fc" id="L136">        ObjectMapper objectMapper = new ObjectMapper();</span>
+        try {
+<span class="fc" id="L138">            return (JSONObject) jsonParser.parse(objectMapper.writeValueAsString(item));</span>
+<span class="nc" id="L139">        } catch (ParseException | JsonProcessingException e) {</span>
+<span class="nc" id="L140">            e.printStackTrace();</span>
+        }
+<span class="nc" id="L142">        return new JSONObject();</span>
+    }
+
+    @Override
+    public List&lt;Item&gt; findAll() {
+<span class="fc" id="L147">        return itemRepository.findAll();</span>
+    }
+
+    @Override
+    public Item convertDtoToEntity(@NotNull ItemDto itemDto) {
+<span class="fc" id="L152">        Item item = new Item();</span>
+<span class="fc bfc" id="L153" title="All 2 branches covered.">        if(itemDto.getId() != 0){</span>
+<span class="fc" id="L154">            item.setId(itemDto.getId());</span>
+        }
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if(!EnumUtils.isValidEnumIgnoreCase(Size.class, itemDto.getSize())){</span>
+<span class="fc" id="L157">            item.setSize(null);</span>
+        }else{
+<span class="nc" id="L159">            item.setSize(Size.valueOf(itemDto.getSize().toUpperCase()));</span>
+        }
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if(!EnumUtils.isValidEnumIgnoreCase(ItemColor.class, itemDto.getItemColor())){</span>
+<span class="fc" id="L162">            item.setItemColor(null);</span>
+        }else{
+<span class="nc" id="L164">            item.setItemColor(ItemColor.valueOf(itemDto.getItemColor().toUpperCase()));</span>
+        }
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if(!EnumUtils.isValidEnumIgnoreCase(ItemCategory.class, itemDto.getItemCategory())){</span>
+<span class="fc" id="L167">            item.setItemCategory(null);</span>
+        }else{
+<span class="nc" id="L169">            item.setItemCategory(ItemCategory.valueOf(itemDto.getItemCategory().toUpperCase()));</span>
+        }
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">        if(!EnumUtils.isValidEnumIgnoreCase(Material.class, itemDto.getMaterial())){</span>
+<span class="fc" id="L172">            item.setMaterial(null);</span>
+        }else{
+<span class="nc" id="L174">            item.setMaterial(Material.valueOf(itemDto.getMaterial().toUpperCase()));</span>
+        }
+<span class="fc" id="L176">        item.setCode(itemDto.getCode());</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">        if(!EnumUtils.isValidEnumIgnoreCase(Style.class, itemDto.getStyle())){</span>
+<span class="fc" id="L178">            item.setStyle(null);</span>
+        }else{
+<span class="nc" id="L180">            item.setStyle(Style.valueOf(itemDto.getStyle().toUpperCase()));</span>
+        }
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">        if(!EnumUtils.isValidEnumIgnoreCase(WashingZoneColor.class, itemDto.getWashingZoneColor())){</span>
+<span class="fc" id="L183">            item.setWashingZoneColor(null);</span>
+        }else{
+<span class="nc" id="L185">            item.setWashingZoneColor(WashingZoneColor.valueOf(itemDto.getWashingZoneColor().toUpperCase()));</span>
+        }
+<span class="fc" id="L187">        item.setNrOfWearsSinceLastWash(itemDto.getNrOfWearsSinceLastWash());</span>
+        try{
+<span class="nc" id="L189">            item.setLastWearing(LocalDate.parse(itemDto.getLastWearing()));</span>
+<span class="fc" id="L190">        }catch (DateTimeParseException e){</span>
+<span class="fc" id="L191">            throw new IllegalArgumentException();</span>
+<span class="nc" id="L192">        }</span>
+        try{
+<span class="nc" id="L194">            item.setLastWashingDay(LocalDate.parse(itemDto.getLastWashingDay()));</span>
+<span class="nc" id="L195">        }catch (DateTimeParseException e){</span>
+<span class="nc" id="L196">            throw new IllegalArgumentException();</span>
+<span class="nc" id="L197">        }</span>
+
+<span class="nc" id="L199">        return item;</span>
+    }
+
+    @Override
+    public void readAllItemsFromStore(){
+<span class="fc" id="L204">        JSONParser jsonParser = new JSONParser();</span>
+<span class="fc" id="L205">        try (FileReader reader = new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/store.json&quot;))</span>
+        {
+<span class="fc" id="L207">            JSONObject obj = (JSONObject) jsonParser.parse(reader);</span>
+
+<span class="fc" id="L209">            JSONArray itemList = (JSONArray) obj.get(&quot;items&quot;);</span>
+<span class="fc bfc" id="L210" title="All 2 branches covered.">            for(int i = 0;i&lt;itemList.toArray().length;i++)</span>
+            {
+<span class="fc" id="L212">                JSONObject jsonItem = (JSONObject) itemList.get(i);</span>
+<span class="fc" id="L213">                Item item = (Item)convertJsonObjectToItemOrCoat(jsonItem, 1);</span>
+<span class="fc" id="L214">                saveItem(item);</span>
+            }
+<span class="nc" id="L216">        } catch (IOException | ParseException e) {</span>
+<span class="nc" id="L217">            e.printStackTrace();</span>
+<span class="fc" id="L218">        }</span>
+<span class="fc" id="L219">    }</span>
+
+    @Override
+    public List&lt;Item&gt; readAllItemsByCategoryFromStore(ItemCategory itemCategory){
+<span class="fc" id="L223">        List&lt;Item&gt; items = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L224">        JSONParser jsonParser = new JSONParser();</span>
+<span class="fc" id="L225">        try (FileReader reader = new FileReader(&quot;src/main/java/com/example/smartwardrobe/json/store.json&quot;))</span>
+        {
+            //Read JSON file
+<span class="fc" id="L228">            JSONObject obj = (JSONObject) jsonParser.parse(reader);</span>
+<span class="fc" id="L229">            JSONArray itemList = (JSONArray) obj.get(&quot;items&quot;);</span>
+<span class="fc bfc" id="L230" title="All 2 branches covered.">            for(int i = 0;i&lt;itemList.toArray().length;i++)</span>
+            {
+<span class="fc" id="L232">                JSONObject jsonItem = (JSONObject) itemList.get(i);</span>
+<span class="fc" id="L233">                Item item = (Item)convertJsonObjectToItemOrCoat(jsonItem, 1);</span>
+<span class="fc bfc" id="L234" title="All 2 branches covered.">                if(item.getItemCategory() == itemCategory){</span>
+<span class="fc" id="L235">                    items.add(item);</span>
+                }
+            }
+<span class="nc" id="L238">        } catch (IOException | ParseException e) {</span>
+<span class="nc" id="L239">            e.printStackTrace();</span>
+<span class="fc" id="L240">        }</span>
+
+<span class="fc" id="L242">        return items;</span>
+    }
+
+    @Override
+    public List&lt;Item&gt; sortItemsByLastWearingDate(){
+<span class="fc" id="L247">        List&lt;Item&gt; items = findAllItems();</span>
+<span class="fc" id="L248">        items.sort(new Item.SortByDate());</span>
+<span class="fc" id="L249">        return items;</span>
+    }
+
+    public List&lt;Item&gt; updateWardrobe(String userId){
+<span class="fc" id="L253">        User user = userService.findUserById(Long.valueOf(userId));</span>
+<span class="fc" id="L254">        List&lt;Item&gt; itemsToReturn = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L255">        List&lt;Item&gt; allItems = findAllItems();</span>
+<span class="fc bfc" id="L256" title="All 2 branches covered.">        for (Item item : allItems) {</span>
+<span class="fc bfc" id="L257" title="All 2 branches covered.">            if (!item.getSize().toString().equals(userService.calculateUserSize(user).name())) {</span>
+<span class="fc" id="L258">                itemsToReturn.add(item);</span>
+            }
+<span class="fc" id="L260">        }</span>
+<span class="fc" id="L261">        return itemsToReturn;</span>
+    }
+
+    @Override
+    public Object convertJsonObjectToItemOrCoat(JSONObject jsonItem, int option){
+<span class="fc bfc" id="L266" title="All 2 branches covered.">        if(option == 1){</span>
+<span class="fc" id="L267">            Item item = new Item();</span>
+<span class="fc" id="L268">            item.setMaterial(Material.valueOf((String) jsonItem.get(&quot;material&quot;)));</span>
+<span class="fc" id="L269">            item.setSize(Size.valueOf((String) jsonItem.get(&quot;size&quot;)));</span>
+<span class="fc" id="L270">            item.setCode((String) jsonItem.get(&quot;code&quot;));</span>
+<span class="fc" id="L271">            item.setItemColor(ItemColor.valueOf((String) jsonItem.get(&quot;itemColor&quot;)));</span>
+<span class="fc" id="L272">            item.setStyle(Style.valueOf((String)  jsonItem.get(&quot;style&quot;)));</span>
+<span class="fc" id="L273">            item.setItemCategory(ItemCategory.valueOf((String)  jsonItem.get(&quot;itemCategory&quot;)));</span>
+<span class="fc" id="L274">            item.setWashingZoneColor(WashingZoneColor.valueOf((String) jsonItem.get(&quot;washingZoneColor&quot;)));</span>
+<span class="fc" id="L275">            return item;</span>
+        }
+<span class="fc" id="L277">        Coat coat = new Coat();</span>
+<span class="fc" id="L278">        coat.setMaterial(Material.valueOf((String) jsonItem.get(&quot;material&quot;)));</span>
+<span class="fc" id="L279">        coat.setSize(Size.valueOf((String) jsonItem.get(&quot;size&quot;)));</span>
+<span class="fc" id="L280">        coat.setCode((String) jsonItem.get(&quot;code&quot;));</span>
+<span class="fc" id="L281">        coat.setItemColor(ItemColor.valueOf((String) jsonItem.get(&quot;itemColor&quot;)));</span>
+<span class="fc" id="L282">        coat.setStyle(Style.valueOf((String)  jsonItem.get(&quot;style&quot;)));</span>
+<span class="fc" id="L283">        coat.setCoatCategory(CoatCategory.valueOf((String)  jsonItem.get(&quot;coatCategory&quot;)));</span>
+<span class="fc" id="L284">        coat.setWashingZoneColor(WashingZoneColor.valueOf((String) jsonItem.get(&quot;washingZoneColor&quot;)));</span>
+<span class="fc" id="L285">        return coat;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

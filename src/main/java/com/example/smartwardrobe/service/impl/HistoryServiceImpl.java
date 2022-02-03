@@ -1,28 +1,24 @@
 package com.example.smartwardrobe.service.impl;
 
 import com.example.smartwardrobe.model.History;
+import com.example.smartwardrobe.model.dto.HistoryDto;
 import com.example.smartwardrobe.repository.HistoryRepository;
 import com.example.smartwardrobe.service.HistoryService;
+import com.example.smartwardrobe.service.OutfitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class HistoryServiceImpl implements HistoryService {
 
     @Autowired
-    private final HistoryRepository historyRepository;
+    HistoryRepository historyRepository;
 
-    public HistoryServiceImpl(HistoryRepository historyRepository) {
-        this.historyRepository = historyRepository;
-    }
-
-    @Override
-    public History findHistoryById(Long id) {
-        return historyRepository.findById(id).orElseThrow();
-    }
+    @Autowired
+    OutfitService outfitService;
 
     @Override
     public History saveHistory(History history) {
@@ -30,17 +26,10 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public History findHistoryByDateTime(LocalDateTime localDateTime) {
-        return historyRepository.findByDateTime(localDateTime).orElseThrow();
-    }
-
-    @Override
-    public void deleteHistoryById(Long id) {
-        historyRepository.deleteById(id);
-    }
-
-    @Override
-    public List<History> findAllHistories() {
-        return historyRepository.findAll();
+    public History convertDtoToEntity(HistoryDto historyDto) {
+        History history = new History();
+        history.setDateTime(LocalDate.parse(historyDto.getDatetime()));
+        history.setOutfit(outfitService.findOutfitById(historyDto.getOutfitId()));
+        return history;
     }
 }

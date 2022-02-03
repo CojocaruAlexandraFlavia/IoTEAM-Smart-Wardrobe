@@ -6,13 +6,17 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
-//@JsonIgnoreProperties(value= {"outfits"})
+@AllArgsConstructor
+@NoArgsConstructor
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,27 +56,6 @@ public class Item {
     @ManyToMany(mappedBy = "items")
     @JsonIgnore
     private List<Outfit> outfits;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIgnore
-    private User user;
-
-    public Item(Long id, Material material, Size size, String code, ItemColor itemColor, Style style, ItemCategory itemCategory, LocalDate lastWearing, WashingZoneColor washingZoneColor, List<Outfit> outfits, User user) {
-        this.id = id;
-        this.material = material;
-        this.size = size;
-        this.code = code;
-        this.itemColor = itemColor;
-        this.style = style;
-        this.itemCategory = itemCategory;
-        this.lastWearing = lastWearing;
-        this.washingZoneColor = washingZoneColor;
-        this.outfits = outfits;
-        this.user = user;
-    }
-
-    public Item() { }
 
     public Long getId() {
         return id;
@@ -138,6 +121,15 @@ public class Item {
         this.lastWearing = lastWearing;
     }
 
+    public static class SortByDate implements Comparator<Item> {
+        @Override
+        public int compare(Item a, Item b) {
+            if (a.lastWearing == null || b.lastWearing == null)
+                return 0;
+            return a.lastWearing.compareTo(b.lastWearing);
+        }
+    }
+
     public WashingZoneColor getWashingZoneColor() {
         return washingZoneColor;
     }
@@ -152,14 +144,6 @@ public class Item {
 
     public void setOutfits(List<Outfit> outfits) {
         this.outfits = outfits;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public LocalDate getLastWashingDay() {
@@ -181,17 +165,17 @@ public class Item {
     @Override
     public String toString() {
         return "{" +
-                " \"id\":" + id +
-                ", \"material\":\"" + material.toString() +"\""+
-                ", \"size\":\"" + size + "\""+
-                ", \"code\":\"" + code + "\"" +
-                ", \"itemColor\":\"" + itemColor.toString() +"\""+
-                ", \"style\":\"" + style.toString() +"\""+
-                ", \"itemCategory\":\"" + itemCategory.toString()+"\""+
+                "\"id\":" + id +
+                ",\"material\":\"" + material.toString() +"\""+
+                ",\"size\":\"" + size + "\""+
+                ",\"code\":\"" + code + "\"" +
+                ",\"itemColor\":\"" + itemColor.toString() +"\""+
+                ",\"style\":\"" + style.toString() +"\""+
+                ",\"itemCategory\":\"" + itemCategory.toString()+"\""+
 //                ", \"lastWearing\":" + lastWearing +
 //                ", \"lastWashingDay\":" + lastWashingDay +
 //                ", \"nrOfWearsSinceLastWash\":" + nrOfWearsSinceLastWash +
-                ", \"washingZoneColor\":\"" + washingZoneColor.toString() +"\""+
+                ",\"washingZoneColor\":\"" + washingZoneColor.toString() +"\""+
                 '}';
     }
 }

@@ -2,11 +2,15 @@ package com.example.smartwardrobe.model;
 
 import com.example.smartwardrobe.enums.CoatCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Outfit {
 
     @Id
@@ -16,8 +20,11 @@ public class Outfit {
 
     private String description;
 
-//    @Enumerated(EnumType.STRING)
-//    private Coat coat;
+    private int nrOfStars;
+
+    private int nrOfReviews;
+
+    private double rating;
 
     @ManyToOne
     @JoinColumn(name = "coat_id")
@@ -36,16 +43,11 @@ public class Outfit {
     private List<Item> items;
 
 
-
-
-
     public Outfit(Long id, String description, Coat coat) {
         this.id = id;
         this.description = description;
         this.coat = coat;
     }
-
-    public Outfit() { }
 
     public String getDescription() {
         return description;
@@ -95,5 +97,29 @@ public class Outfit {
                 ", \"coat\":" + coat +
                 ", \"items\":" + items +
                 '}';
+    }
+
+    public int getNrOfStars() {
+        return nrOfStars;
+    }
+
+    public void setNrOfStars(int nrOfStars) {
+        this.nrOfStars = nrOfStars;
+    }
+
+    public int getNrOfReviews() {
+        return nrOfReviews;
+    }
+
+    public void setNrOfReviews(int nrOfReviews) {
+        this.nrOfReviews = nrOfReviews;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

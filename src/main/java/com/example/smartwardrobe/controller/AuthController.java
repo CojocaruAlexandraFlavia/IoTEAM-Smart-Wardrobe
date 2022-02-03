@@ -1,6 +1,6 @@
 package com.example.smartwardrobe.controller;
 
-import com.example.smartwardrobe.model.LoginRequest;
+import com.example.smartwardrobe.authentication.UsernameAndPasswordAuthenticationRequest;
 import com.example.smartwardrobe.model.User;
 import com.example.smartwardrobe.service.UserService;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -23,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
@@ -36,6 +34,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
+
     @Autowired
     MqttController mqttController;
 
@@ -47,7 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<?> authenticateUser(@NotNull @RequestBody LoginRequest loginRequest) throws Exception {
+    public ResponseEntity<String> authenticateUser(@NotNull @RequestBody UsernameAndPasswordAuthenticationRequest loginRequest) throws Exception {
 
         Object existingAuthenticated = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -56,12 +55,9 @@ public class AuthController {
         }
 
         Optional<User> user = userService.findUserByUsername(loginRequest.getUsername());
-        if(user.isEmpty()){
-            return ResponseEntity.badRequest().body(" This username DOESN'T EXIST! ");
-        }
-        User foundUser = user.get();
-        if(!passwordEncoder.matches(loginRequest.getPassword(), foundUser.getPassword())){
-            return ResponseEntity.badRequest().body(" The password is incorrect! ");
+
+        if(user.isEmpty() || !passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword())){
+            return ResponseEntity.badRequest().body("Username or password incorrect!");
         }
 
         Authentication authentication = authenticationManager.authenticate(
@@ -74,29 +70,5 @@ public class AuthController {
         return ResponseEntity.ok().body("Login successful for: \n " + loginRequest.getUsername());
 
     }
-
-    @GetMapping("/signOut")
-    public ResponseEntity<?> signOut(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = getContext().getAuthentication();
-
-        if (!auth.getPrincipal().equals("anonymousUser")) {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.invalidate();
-            }
-
-            Cookie[] cookies = request.getCookies();
-            Optional<Cookie> sessionId = Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("JSESSIONID")).findFirst();
-            sessionId.ifPresent(cookie -> cookie.setMaxAge(0));
-            sessionId.ifPresent(response::addCookie);
-
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-            getContext().setAuthentication(null);
-
-            return ResponseEntity.ok("Logout ok");
-        }
-        return ResponseEntity.badRequest().body("Unauthenticated");
-    }
-
 
 }

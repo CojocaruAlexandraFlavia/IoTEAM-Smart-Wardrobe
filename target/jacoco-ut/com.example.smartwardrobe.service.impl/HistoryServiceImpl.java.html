@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HistoryServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.service.impl</a> &gt; <span class="el_source">HistoryServiceImpl.java</span></div><h1>HistoryServiceImpl.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.service.impl;
+
+import com.example.smartwardrobe.model.History;
+import com.example.smartwardrobe.model.dto.HistoryDto;
+import com.example.smartwardrobe.repository.HistoryRepository;
+import com.example.smartwardrobe.service.HistoryService;
+import com.example.smartwardrobe.service.OutfitService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Service
+<span class="fc" id="L15">public class HistoryServiceImpl implements HistoryService {</span>
+
+    @Autowired
+    HistoryRepository historyRepository;
+
+    @Autowired
+    OutfitService outfitService;
+
+    @Override
+    public History saveHistory(History history) {
+<span class="fc" id="L25">        return historyRepository.save(history);</span>
+    }
+
+    @Override
+    public History convertDtoToEntity(HistoryDto historyDto) {
+<span class="fc" id="L30">        History history = new History();</span>
+<span class="fc" id="L31">        history.setDateTime(LocalDate.parse(historyDto.getDatetime()));</span>
+<span class="fc" id="L32">        history.setOutfit(outfitService.findOutfitById(historyDto.getOutfitId()));</span>
+<span class="fc" id="L33">        return history;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

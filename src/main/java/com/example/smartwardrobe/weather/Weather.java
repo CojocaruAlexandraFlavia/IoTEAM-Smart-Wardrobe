@@ -1,20 +1,23 @@
 package com.example.smartwardrobe.weather;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Wrapper for the weather
  */
 
 public class Weather implements Serializable {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private int humidity;
-    private int is_day;
-    private float temp_c;
-    private Date last_updated;
+    private int isDay;
+    private float tempC;
+    private LocalDateTime lastUpdated;
 
     /**
      * Default constructor
@@ -26,15 +29,15 @@ public class Weather implements Serializable {
      * Initializes a new Weather
      *
      * @param humidity humidity
-     * @param is_day is_day
-     * @param temp_c temp_c
-     * @param last_updated last_updated
+     * @param isDay is_day
+     * @param tempC temp_c
+     * @param lastUpdated last_updated
      */
-    public Weather(int humidity, int is_day, float temp_c, String last_updated) throws Exception {
+    public Weather(int humidity, int isDay, float tempC, String lastUpdated) {
         this.humidity = humidity;
-        this.is_day = is_day;
-        this.temp_c = temp_c;
-        this.last_updated = DATE_FORMAT.parse(last_updated);
+        this.isDay = isDay;
+        this.tempC = tempC;
+        this.lastUpdated = LocalDateTime.parse(lastUpdated, DATE_FORMAT);
     }
 
     /**
@@ -52,7 +55,7 @@ public class Weather implements Serializable {
      * @return text
      */
     public int getDay() {
-        return this.is_day;
+        return this.isDay;
     }
 
     /**
@@ -61,7 +64,7 @@ public class Weather implements Serializable {
      * @return temp
      */
     public float getTemp() {
-        return this.temp_c;
+        return this.tempC;
     }
 
     /**
@@ -69,8 +72,8 @@ public class Weather implements Serializable {
      *
      * @return date
      */
-    public Date getDate() {
-        return this.last_updated;
+    public LocalDateTime getDate() {
+        return this.lastUpdated;
     }
 
     /**
@@ -81,7 +84,7 @@ public class Weather implements Serializable {
     @Override
     public String toString() {
         String timeOfDay;
-        if(this.is_day == 0){
+        if(this.isDay == 0){
             timeOfDay = "night";
         }else{
             timeOfDay = "day";
@@ -89,8 +92,8 @@ public class Weather implements Serializable {
         return "Weather{" +
                 "humidity=" + this.humidity +
                 ", timeOfDay='" + timeOfDay + '\'' +
-                ", temp=" + this.temp_c +
-                ", date='" + DATE_FORMAT.format(this.last_updated) + '\'' +
+                ", temp=" + this.tempC +
+                ", date='" + DATE_FORMAT.format(this.lastUpdated) + '\'' +
                 '}';
     }
 }

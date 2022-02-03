@@ -43,6 +43,14 @@
   { "material":"POLYESTER", "size":"M", "code":"2142/239", "itemColor":"BRIGHT_PINK", "style":"OFFICE", "itemCategory":"CARDIGAN", "washingZoneColor":"COLOR" },
   { "material":"POLYESTER", "size":"L", "code":"9598/013", "itemColor":"PEAR", "style":"OFFICE", "itemCategory":"CARDIGAN", "washingZoneColor":"COLOR" },
   { "material":"POLYESTER", "size":"XL", "code":"1165/276", "itemColor":"ELECTRIC_PURPLE", "style":"OFFICE", "itemCategory":"CARDIGAN", "washingZoneColor":"COLOR" },
-  { "material":"POLYESTER", "size":"XXL", "code":"3666/255", "itemColor":"HONEY", "style":"OFFICE", "itemCategory":"CARDIGAN", "washingZoneColor":"COLOR" }
+  { "material":"POLYESTER", "size":"XXL", "code":"3666/255", "itemColor":"HONEY", "style":"OFFICE", "itemCategory":"CARDIGAN", "washingZoneColor":"COLOR" },
+
+  { "material":"POLYESTER", "size":"XS", "code":"2022/335", "itemColor":"BLACK", "style":"OFFICE", "itemCategory":"JACKET", "washingZoneColor":"BLACK" },
+  { "material":"POLYESTER", "size":"S", "code":"0222/267", "itemColor":"BLACK", "style":"OFFICE", "itemCategory":"JACKET", "washingZoneColor":"BLACK" },
+  { "material":"POLYESTER", "size":"M", "code":"2530/099", "itemColor":"BLACK", "style":"OFFICE", "itemCategory":"JACKET", "washingZoneColor":"BLACK" },
+  { "material":"POLYESTER", "size":"L", "code":"2546/036", "itemColor":"BLACK", "style":"OFFICE", "itemCategory":"JACKET", "washingZoneColor":"BLACK" },
+  { "material":"POLYESTER", "size":"XL", "code":"2303/274", "itemColor":"BLACK", "style":"OFFICE", "itemCategory":"JACKET", "washingZoneColor":"BLACK" },
+  { "material":"POLYESTER", "size":"XXL", "code":"3306/032", "itemColor":"BLACK", "style":"OFFICE", "itemCategory":"JACKET", "washingZoneColor":"WHITE" }
+
 
 ]}
