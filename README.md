@@ -135,7 +135,7 @@ Configure MQTT-mosquitto
 
 1. install mosquitto - https://mosquitto.org/download/
 2. open run as administrator command prompt
-3. navigate to Mosquitto root file -- somthing like C:\Program Files (x86)\mosquitto.
+3. navigate to Mosquitto root file -- something like C:\Program Files (x86)\mosquitto.
 4. Start the Mosquitto service by running the command: "net start mosquitto". 
 
 ### Installation
