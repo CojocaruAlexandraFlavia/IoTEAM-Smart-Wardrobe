@@ -121,7 +121,6 @@ class IntegrationTest {
         mockMvc.perform(get("/item/findDirty"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(json));
-
     }
 
     @ParameterizedTest
