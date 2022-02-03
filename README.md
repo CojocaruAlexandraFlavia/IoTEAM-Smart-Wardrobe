@@ -79,7 +79,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+
 
 Our project is an IoT Solution for a Smart Wardrobe, that has different functionalities in order to replace an ordinary object in the house, making an easier life for the user. 
 
