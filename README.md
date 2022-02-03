@@ -39,7 +39,7 @@
   <p align="center">
     Smart, fast and appropriate solution in your own wardrobe
     <br />
-    <a href="https://github.com/CojocaruAlexandraFlavia/IoTEAM-Smart-Wardrobe"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/CojocaruAlexandraFlavia/IoTEAM-Smart-Wardrobe/blob/main/documentation.md"><strong>Explore the docs »</strong></a>
     <br />
   </p>
 </div>
