@@ -67,7 +67,7 @@ The IP information is determined by getting our device IP from [AmazonAWS](http:
 
 From this, we extract the city or region name (e.g. ip-api returns that Bucharest is the region name, Sector 6 is the city) and we use them to get the weather conditions.
 
-The weather is determined by connecting to the [WeatherAPI](http://api.weatherapi.com). From the city name (or region name) this API returns a JSON with so many weather related data, from which we select the felt temperature in Celsius, the humidity, the last update of the recorded data and whether it is day or night. 
+The weather is determined by connecting to the [WeatherAPI](https://www.weatherapi.com/). From the city name (or region name) this API returns a JSON with so many weather related data, from which we select the felt temperature in Celsius, the humidity, the last update of the recorded data and whether it is day or night. 
 
 Our main focus from the weather is the temperature, from which we determine the following rules:
 
