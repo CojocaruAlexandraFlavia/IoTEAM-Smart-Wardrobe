@@ -241,12 +241,16 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- TEAM -->
 ## Team
 
-Project Link: [https://github.com/CojocaruAlexandraFlavia/IoTEAM-Smart-Wardrobe](IoTeam Smart Wardrobe)
+Project Link: [IoTeam Smart Wardrobe](https://github.com/CojocaruAlexandraFlavia/IoTEAM-Smart-Wardrobe)
 
 [@AlexandraFlaviaCojocaru](https://github.com/CojocaruAlexandraFlavia)
+
 [@AlexandraBuruiana](https://github.com/alexandraburu23)
+
 [@MariaFlorea](https://github.com/FloreaMaria)
+
 [@AndreeaGavrila](https://github.com/AndreeaGavrila)
+
 [@MariaTudor](https://github.com/maria-tudor)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
