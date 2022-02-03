@@ -124,5 +124,4 @@ The findAllItems() functionality "scans" the wardrobe and returns every item of 
 
 The updateWardrobe functionality scans the wardrobe for items that don't fit the user anymore. For that, it compares the size of the user, calculated with their weight and height, and compares it to the sizes of all the items in the wardrobe.
 
-The webcam functionality lets the user take pictures of themselves and saves it to memory as a picture. This feature is also a part of mimicking the mirror, but is also an beneficial addition to the wardrobe, because it lets you take selfies and test out the outfits.
 
