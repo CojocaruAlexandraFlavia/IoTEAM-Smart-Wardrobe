@@ -87,9 +87,15 @@ The user size is calculated depending on the weight and height.
 
 # Outfit History, Rating and Favourites
 
+## History
+
 Once an outfit is worn once, it is saved in history. We decided to save the history of the last seven days of outfits in a JSON file.
 
+## Rating
+
 Every generated outfit that is chosen will be added to the database, after which we can add a rating, that is calculated basod on the number of stars and ratings given.
+
+## Favourites
 
 Our favourites option displays the outfits with a rating over a chosen value, basically a list of the best rated outfits.
 
