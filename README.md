@@ -159,7 +159,7 @@ Configure MQTT-mosquitto
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-For a more detailed description, please refer to the [Documentation](https://example.com)_
+For a more detailed description, please refer to the [Documentation](https://github.com/CojocaruAlexandraFlavia/IoTEAM-Smart-Wardrobe/blob/main/documentation.md).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
