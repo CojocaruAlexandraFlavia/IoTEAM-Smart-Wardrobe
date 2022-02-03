@@ -198,7 +198,15 @@ See the [open issues](https://github.com/CojocaruAlexandraFlavia/IoTEAM-Smart-Wa
 <!-- MQTT -->
 ## MQTT
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+It is created with a mosquitto broker that implements MQTT using a Publisher and a Subscriber.
+
+In our case, the Publisher posts information about the weather condition (humidity, temperature, time_of_day) every minute on the "weather" topic once the app starts.
+
+Once the user is logged in, the publisher posts all available items from the wardrobe every minute on the "items" topic.
+
+Also, a new publish can be made, e.g. from Postman, using a post request with a JSON (that contains id, qos, topic, message) in the body.
+
+The Async Documentation is made by hand in mqtt.yml.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
