@@ -1,4 +1,3 @@
-# IoTEAM-Smart-Wardrobe
 
 <div id="top"></div>
 <!--
