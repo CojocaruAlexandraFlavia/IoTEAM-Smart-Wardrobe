@@ -1,8 +1,8 @@
 package com.example.smartwardrobe.service;
 
 import com.example.smartwardrobe.enums.ItemCategory;
-import com.example.smartwardrobe.enums.Style;
 import com.example.smartwardrobe.model.Item;
+import com.example.smartwardrobe.model.dto.ItemDto;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.data.util.Pair;
@@ -21,11 +21,15 @@ public interface ItemService {
     void deleteItemById(Long id);
     List<Item> findAllItems();
     List<Item> getItemsByStyleName(String styleName);
-    String washItem(String itemId);
-//    List<Item> getDirtyItems(String color);
-    void updateItemAfterAddingOutfit(Long itemId);
+    Item washItem(String itemId);
+    Item updateItemAfterAddingOutfit(Long itemId);
     JSONArray createJsonArrayOfItems(List<Item> items);
+    JSONObject createJsonObjectFromItem(Item item);
+    List<Item> findAll();
+    Item convertDtoToEntity(ItemDto itemDto);
     void readAllItemsFromStore();
     List<Item> readAllItemsByCategoryFromStore(ItemCategory itemCategory);
     List<Item> sortItemsByLastWearingDate();
+    List<Item> updateWardrobe(String userId);
+    Object convertJsonObjectToItemOrCoat(JSONObject object, int option);
 }

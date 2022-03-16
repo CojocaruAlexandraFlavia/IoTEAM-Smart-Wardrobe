@@ -8,5 +8,6 @@ public enum ItemColor {
     DENIM, NAVY, ADMIRAL, BLUE, CERULEAN, TEAL, SKY, ARCTIC, // blue shades
     INDIGO, GRAPE, VIOLET, MARDIGRAS, MAGENTA, ELECTRIC_PURPLE, ORCHID, LAVANDER, //purple shades
     DARK_PINK, BRIGHT_PINK, FUCSIA, WATERMELON, TAFFY, PINK, SALMON, CREPE, //pink shades
-    BLACK, GREY, WHITE //non-colors
+    BLACK, GREY, WHITE, //non-colors
+    SOMETHING
 }

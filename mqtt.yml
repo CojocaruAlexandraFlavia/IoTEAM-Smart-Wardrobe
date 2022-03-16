@@ -1,0 +1,63 @@
+asyncapi: 2.0.0
+info:
+  title: Mqtt Controler
+  version: '1.0.0'
+  description: |
+    Manages user accounts in the system.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+servers:
+  production:
+    url: mqtt://test.mosquitto.org
+    protocol: mqtt
+    description: Test MQTT broker
+channels:
+  api/mqtt/publish/AllDirtyClothes:
+    publish:
+      operationId: publishAllDirtyClothes
+      message:
+        $ref : '#/components/messages/DirtyClothes'
+  api/mqtt/publish/WeatherConditions:
+    publish:
+      operationId: publishWeatherConditions
+      message:
+        $ref: '#/components/messages/WeatherConditions'
+  api/mqtt/publish/Items:
+    publish:
+      operationId: publishItems
+        message:
+          $ref: '#/components/messages/AllItems'
+
+components:
+  messages:
+    DirtyClothes:
+      name: clothes
+      title: Dirty clothes to wash
+      summary: Inform about clothes that need to be washed
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/dirtyClothesPayload'
+    WeatherConditions:
+      name: weather
+      title: Weather condition outside
+      summary: Inform about weather outside
+      contentType: application/json
+      payload:
+          $ref: '#/components/schemas/weatherPayload'
+    AllItems:
+      name: items
+      title: All items
+      summary: Inform about items in garderobe
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/itemsPayload'
+
+
+  schemas:
+    dirtyClothesPayload:
+      type: string
+    weatherPayload:
+      type: string
+    itemsPayload:
+      type: string

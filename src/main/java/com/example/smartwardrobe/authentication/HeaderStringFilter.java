@@ -1,6 +1,7 @@
 package com.example.smartwardrobe.authentication;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,7 @@ import java.util.List;
 public class HeaderStringFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if(!authorizationHeader.startsWith("Basic ")){

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Weather.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.weather</a> &gt; <span class="el_source">Weather.java</span></div><h1>Weather.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.weather;
+
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
+/**
+ * Wrapper for the weather
+ */
+
+public class Weather implements Serializable {
+<span class="fc" id="L16">    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm&quot;);</span>
+    private int humidity;
+    private int isDay;
+    private float tempC;
+    private LocalDateTime lastUpdated;
+
+    /**
+     * Default constructor
+     */
+<span class="fc" id="L25">    public Weather() {</span>
+<span class="fc" id="L26">    }</span>
+
+    /**
+     * Initializes a new Weather
+     *
+     * @param humidity humidity
+     * @param isDay is_day
+     * @param tempC temp_c
+     * @param lastUpdated last_updated
+     */
+<span class="fc" id="L36">    public Weather(int humidity, int isDay, float tempC, String lastUpdated) {</span>
+<span class="fc" id="L37">        this.humidity = humidity;</span>
+<span class="fc" id="L38">        this.isDay = isDay;</span>
+<span class="fc" id="L39">        this.tempC = tempC;</span>
+<span class="fc" id="L40">        this.lastUpdated = LocalDateTime.parse(lastUpdated, DATE_FORMAT);</span>
+<span class="fc" id="L41">    }</span>
+
+    /**
+     * Returns the code of the weather
+     *
+     * @return
+     */
+    public int getHumidity() {
+<span class="fc" id="L49">        return this.humidity;</span>
+    }
+
+    /**
+     * Returns the text
+     *
+     * @return text
+     */
+    public int getDay() {
+<span class="fc" id="L58">        return this.isDay;</span>
+    }
+
+    /**
+     * Returns the temp
+     *
+     * @return temp
+     */
+    public float getTemp() {
+<span class="fc" id="L67">        return this.tempC;</span>
+    }
+
+    /**
+     * Returns the date
+     *
+     * @return date
+     */
+    public LocalDateTime getDate() {
+<span class="fc" id="L76">        return this.lastUpdated;</span>
+    }
+
+    /**
+     * Displays the weather
+     *
+     * @return string
+     */
+    @Override
+    public String toString() {
+        String timeOfDay;
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        if(this.isDay == 0){</span>
+<span class="fc" id="L88">            timeOfDay = &quot;night&quot;;</span>
+        }else{
+<span class="fc" id="L90">            timeOfDay = &quot;day&quot;;</span>
+        }
+<span class="fc" id="L92">        return &quot;Weather{&quot; +</span>
+                &quot;humidity=&quot; + this.humidity +
+                &quot;, timeOfDay='&quot; + timeOfDay + '\'' +
+                &quot;, temp=&quot; + this.tempC +
+<span class="fc" id="L96">                &quot;, date='&quot; + DATE_FORMAT.format(this.lastUpdated) + '\'' +</span>
+                '}';
+    }
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

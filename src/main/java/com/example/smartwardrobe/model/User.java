@@ -3,7 +3,7 @@ package com.example.smartwardrobe.model;
 import com.example.smartwardrobe.enums.EyeColor;
 import com.example.smartwardrobe.enums.Gender;
 import com.example.smartwardrobe.enums.HairColor;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
+@AllArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -36,10 +37,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private HairColor hairColor;
 
-    @OneToMany(targetEntity = Item.class, mappedBy = "user", cascade= CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Item> items;
-
     @Column(unique = true)
     private String username;
 
@@ -52,20 +49,6 @@ public class User implements UserDetails {
     private boolean isCredentialsNonExpired;
 
     private boolean isEnabled;
-
-    public User(Long id, EyeColor eyeColor, double weight, double height, Gender gender, int age,
-                HairColor hairColor, List<Item> items, String username, String password) {
-        this.id = id;
-        this.eyeColor = eyeColor;
-        this.weight = weight;
-        this.height = height;
-        this.gender = gender;
-        this.age = age;
-        this.hairColor = hairColor;
-        this.items = items;
-        this.username = username;
-        this.password = password;
-    }
 
     public User() {
         super();
@@ -131,14 +114,6 @@ public class User implements UserDetails {
         this.hairColor = hairColor;
     }
 
-    public List<Item> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -179,5 +154,25 @@ public class User implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", eyeColor=" + eyeColor +
+                ", weight=" + weight +
+                ", height=" + height +
+                ", gender=" + gender +
+                ", age=" + age +
+                ", hairColor=" + hairColor +
+                //", items=" + items +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", isAccountNonExpired=" + isAccountNonExpired +
+                ", isAccountNonLocked=" + isAccountNonLocked +
+                ", isCredentialsNonExpired=" + isCredentialsNonExpired +
+                ", isEnabled=" + isEnabled +
+                '}';
     }
 }

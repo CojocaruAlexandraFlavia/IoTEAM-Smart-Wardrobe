@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.model</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.model;
+
+import com.example.smartwardrobe.enums.EyeColor;
+import com.example.smartwardrobe.enums.Gender;
+import com.example.smartwardrobe.enums.HairColor;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+@Entity
+<span class="fc" id="L17">@AllArgsConstructor</span>
+public class User implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;id&quot;, nullable = false)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private EyeColor eyeColor;
+
+    private double weight;
+
+    private double height;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private int age;
+
+    @Enumerated(EnumType.STRING)
+    private HairColor hairColor;
+
+    @Column(unique = true)
+    private String username;
+
+    private String password;
+
+    private boolean isAccountNonExpired;
+
+    private boolean isAccountNonLocked;
+
+    private boolean isCredentialsNonExpired;
+
+    private boolean isEnabled;
+
+    public User() {
+<span class="fc" id="L54">        super();</span>
+<span class="fc" id="L55">        isAccountNonExpired = true;</span>
+<span class="fc" id="L56">        isAccountNonLocked = true;</span>
+<span class="fc" id="L57">        isEnabled = true;</span>
+<span class="fc" id="L58">        isCredentialsNonExpired = true;</span>
+<span class="fc" id="L59">    }</span>
+
+    public Long getId() {
+<span class="fc" id="L62">        return id;</span>
+    }
+
+    public void setId(Long id) {
+<span class="fc" id="L66">        this.id = id;</span>
+<span class="fc" id="L67">    }</span>
+
+    public EyeColor getEyeColor() {
+<span class="fc" id="L70">        return eyeColor;</span>
+    }
+
+    public void setEyeColor(EyeColor eyeColor) {
+<span class="fc" id="L74">        this.eyeColor = eyeColor;</span>
+<span class="fc" id="L75">    }</span>
+
+    public double getWeight() {
+<span class="fc" id="L78">        return weight;</span>
+    }
+
+    public void setWeight(double weight) {
+<span class="fc" id="L82">        this.weight = weight;</span>
+<span class="fc" id="L83">    }</span>
+
+    public double getHeight() {
+<span class="fc" id="L86">        return height;</span>
+    }
+
+    public void setHeight(double height) {
+<span class="fc" id="L90">        this.height = height;</span>
+<span class="fc" id="L91">    }</span>
+
+    public Gender getGender() {
+<span class="fc" id="L94">        return gender;</span>
+    }
+
+    public void setGender(Gender gender) {
+<span class="fc" id="L98">        this.gender = gender;</span>
+<span class="fc" id="L99">    }</span>
+
+    public int getAge() {
+<span class="fc" id="L102">        return age;</span>
+    }
+
+    public void setAge(int age) {
+<span class="fc" id="L106">        this.age = age;</span>
+<span class="fc" id="L107">    }</span>
+
+    public HairColor getHairColor() {
+<span class="fc" id="L110">        return hairColor;</span>
+    }
+
+    public void setHairColor(HairColor hairColor) {
+<span class="fc" id="L114">        this.hairColor = hairColor;</span>
+<span class="fc" id="L115">    }</span>
+
+    public String getUsername() {
+<span class="fc" id="L118">        return username;</span>
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+<span class="fc" id="L123">        return isAccountNonExpired;</span>
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+<span class="fc" id="L128">        return isAccountNonLocked;</span>
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+<span class="fc" id="L133">        return isCredentialsNonExpired;</span>
+    }
+
+    @Override
+    public boolean isEnabled() {
+<span class="fc" id="L138">        return isEnabled;</span>
+    }
+
+    public void setUsername(String username) {
+<span class="fc" id="L142">        this.username = username;</span>
+<span class="fc" id="L143">    }</span>
+
+
+    @Override
+    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+<span class="fc" id="L148">        return new ArrayList&lt;&gt;(List.of(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;)));</span>
+    }
+
+    public String getPassword() {
+<span class="fc" id="L152">        return password;</span>
+    }
+
+    public void setPassword(String password) {
+<span class="fc" id="L156">        this.password = password;</span>
+<span class="fc" id="L157">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L161">        return &quot;User{&quot; +</span>
+                &quot;id=&quot; + id +
+                &quot;, eyeColor=&quot; + eyeColor +
+                &quot;, weight=&quot; + weight +
+                &quot;, height=&quot; + height +
+                &quot;, gender=&quot; + gender +
+                &quot;, age=&quot; + age +
+                &quot;, hairColor=&quot; + hairColor +
+                //&quot;, items=&quot; + items +
+                &quot;, username='&quot; + username + '\'' +
+                &quot;, password='&quot; + password + '\'' +
+                &quot;, isAccountNonExpired=&quot; + isAccountNonExpired +
+                &quot;, isAccountNonLocked=&quot; + isAccountNonLocked +
+                &quot;, isCredentialsNonExpired=&quot; + isCredentialsNonExpired +
+                &quot;, isEnabled=&quot; + isEnabled +
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

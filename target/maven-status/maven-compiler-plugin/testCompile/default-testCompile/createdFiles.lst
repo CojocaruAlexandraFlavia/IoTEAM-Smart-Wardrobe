@@ -1,1 +1,9 @@
+com\example\smartwardrobe\service\impl\ItemServiceImplTest.class
 com\example\smartwardrobe\SmartWardrobeApplicationTests.class
+com\example\smartwardrobe\controller\UserControllerTest.class
+com\example\smartwardrobe\service\impl\UserDetailsServiceImplTest.class
+com\example\smartwardrobe\controller\HistoryControllerTest.class
+com\example\smartwardrobe\controller\OutfitControllerTest.class
+com\example\smartwardrobe\service\impl\UserServiceImplTest.class
+com\example\smartwardrobe\controller\ItemControllerTest.class
+com\example\smartwardrobe\service\impl\OutfitServiceImplTest.class

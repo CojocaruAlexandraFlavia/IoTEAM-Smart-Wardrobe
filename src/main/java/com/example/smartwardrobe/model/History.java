@@ -3,13 +3,17 @@ package com.example.smartwardrobe.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class History {
 
     @Id
@@ -17,21 +21,14 @@ public class History {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dateTime;
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate dateTime;
 
     @ManyToOne
     @JoinColumn(name = "outfit_id")
     private Outfit outfit;
-
-    public History(Long id, LocalDateTime dateTime) {
-        this.id = id;
-        this.dateTime = dateTime;
-    }
-
-    public History() { }
 
     public Long getId() {
         return id;
@@ -41,11 +38,11 @@ public class History {
         this.id = id;
     }
 
-    public LocalDateTime getDateTime() {
+    public LocalDate getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(LocalDate dateTime) {
         this.dateTime = dateTime;
     }
 

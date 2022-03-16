@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Coat.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smart-wardrobe</a> &gt; <a href="index.source.html" class="el_package">com.example.smartwardrobe.model</a> &gt; <span class="el_source">Coat.java</span></div><h1>Coat.java</h1><pre class="source lang-java linenums">package com.example.smartwardrobe.model;
+
+import com.example.smartwardrobe.enums.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
+
+<span class="fc" id="L16">@NoArgsConstructor</span>
+<span class="fc" id="L17">@AllArgsConstructor</span>
+@Entity
+public class Coat {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;id&quot;, nullable = false)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private Material material;
+
+    @Enumerated(EnumType.STRING)
+    private Size size;
+
+    private String code;
+
+    @Enumerated(EnumType.STRING)
+    private ItemColor itemColor;
+
+    @Enumerated(EnumType.STRING)
+    private Style style;
+
+    @Enumerated(EnumType.STRING)
+    private CoatCategory coatCategory;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate lastWearing;
+
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate lastWashingDay;
+
+    private int nrOfWearsSinceLastWash;
+
+    @Enumerated(EnumType.STRING)
+    private WashingZoneColor washingZoneColor;
+
+    @OneToMany(mappedBy = &quot;coat&quot;, cascade= CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List&lt;Outfit&gt; outfits;
+
+    public Material getMaterial() {
+<span class="fc" id="L60">        return material;</span>
+    }
+
+    public void setMaterial(Material material) {
+<span class="fc" id="L64">        this.material = material;</span>
+<span class="fc" id="L65">    }</span>
+
+    public Size getSize() {
+<span class="fc" id="L68">        return size;</span>
+    }
+
+    public void setSize(Size size) {
+<span class="fc" id="L72">        this.size = size;</span>
+<span class="fc" id="L73">    }</span>
+
+    public String getCode() {
+<span class="fc" id="L76">        return code;</span>
+    }
+
+    public void setCode(String code) {
+<span class="fc" id="L80">        this.code = code;</span>
+<span class="fc" id="L81">    }</span>
+
+    public ItemColor getItemColor() {
+<span class="fc" id="L84">        return itemColor;</span>
+    }
+
+    public void setItemColor(ItemColor itemColor) {
+<span class="fc" id="L88">        this.itemColor = itemColor;</span>
+<span class="fc" id="L89">    }</span>
+
+    public Style getStyle() {
+<span class="fc" id="L92">        return style;</span>
+    }
+
+    public void setStyle(Style style) {
+<span class="fc" id="L96">        this.style = style;</span>
+<span class="fc" id="L97">    }</span>
+
+    public CoatCategory getCoatCategory() {
+<span class="fc" id="L100">        return coatCategory;</span>
+    }
+
+    public void setCoatCategory(CoatCategory coatCategory) {
+<span class="fc" id="L104">        this.coatCategory = coatCategory;</span>
+<span class="fc" id="L105">    }</span>
+
+    public LocalDate getLastWearing() {
+<span class="fc" id="L108">        return lastWearing;</span>
+    }
+
+    public void setLastWearing(LocalDate lastWearing) {
+<span class="fc" id="L112">        this.lastWearing = lastWearing;</span>
+<span class="fc" id="L113">    }</span>
+
+    public LocalDate getLastWashingDay() {
+<span class="fc" id="L116">        return lastWashingDay;</span>
+    }
+
+    public void setLastWashingDay(LocalDate lastWashingDay) {
+<span class="fc" id="L120">        this.lastWashingDay = lastWashingDay;</span>
+<span class="fc" id="L121">    }</span>
+
+    public int getNrOfWearsSinceLastWash() {
+<span class="fc" id="L124">        return nrOfWearsSinceLastWash;</span>
+    }
+
+    public void setNrOfWearsSinceLastWash(int nrOfWearsSinceLastWash) {
+<span class="fc" id="L128">        this.nrOfWearsSinceLastWash = nrOfWearsSinceLastWash;</span>
+<span class="fc" id="L129">    }</span>
+
+    public WashingZoneColor getWashingZoneColor() {
+<span class="fc" id="L132">        return washingZoneColor;</span>
+    }
+
+    public void setWashingZoneColor(WashingZoneColor washingZoneColor) {
+<span class="fc" id="L136">        this.washingZoneColor = washingZoneColor;</span>
+<span class="fc" id="L137">    }</span>
+
+    public List&lt;Outfit&gt; getOutfits() {
+<span class="fc" id="L140">        return outfits;</span>
+    }
+
+    public void setOutfits(List&lt;Outfit&gt; outfits) {
+<span class="fc" id="L144">        this.outfits = outfits;</span>
+<span class="fc" id="L145">    }</span>
+
+    public void setId(Long id) {
+<span class="fc" id="L148">        this.id = id;</span>
+<span class="fc" id="L149">    }</span>
+
+    public Long getId() {
+<span class="fc" id="L152">        return id;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L157">        return &quot;{&quot; +</span>
+                &quot;\&quot;id\&quot;:&quot; + id +
+<span class="fc" id="L159">                &quot;,\&quot;material\&quot;:\&quot;&quot; + material.toString()+&quot;\&quot;&quot; +</span>
+                &quot;,\&quot;size\&quot;:\&quot;&quot; + size + &quot;\&quot;&quot;+
+                &quot;,\&quot;code\&quot;:\&quot;&quot; + code + &quot;\&quot;&quot; +
+<span class="fc" id="L162">                &quot;,\&quot;itemColor\&quot;:\&quot;&quot; + itemColor.toString() +&quot;\&quot;&quot;+</span>
+<span class="fc" id="L163">                &quot;,\&quot;style\&quot;:\&quot;&quot; + style.toString() +&quot;\&quot;&quot;+</span>
+<span class="fc" id="L164">                &quot;,\&quot;coatCategory\&quot;:\&quot;&quot; + coatCategory.toString() +&quot;\&quot;&quot;+</span>
+<span class="fc" id="L165">                &quot;,\&quot;washingZoneColor\&quot;:\&quot;&quot; + washingZoneColor.toString() +&quot;\&quot;&quot;+</span>
+                '}';
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

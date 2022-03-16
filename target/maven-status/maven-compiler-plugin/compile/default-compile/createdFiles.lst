@@ -12,7 +12,6 @@ com\example\smartwardrobe\service\OutfitService.class
 com\example\smartwardrobe\repository\UserRepository.class
 com\example\smartwardrobe\service\ItemService.class
 com\example\smartwardrobe\PasswordConfig.class
-com\example\smartwardrobe\exceptions\ExceptionMessages.class
 com\example\smartwardrobe\service\UserService.class
 com\example\smartwardrobe\repository\OutfitRepository.class
 com\example\smartwardrobe\service\impl\UserDetailsServiceImpl.class
@@ -27,7 +26,7 @@ com\example\smartwardrobe\enums\Gender.class
 com\example\smartwardrobe\repository\ItemRepository.class
 com\example\smartwardrobe\controller\AuthController.class
 com\example\smartwardrobe\model\Item.class
-com\example\smartwardrobe\model\LoginRequest.class
+com\example\smartwardrobe\model\dto\ItemDto.class
 com\example\smartwardrobe\repository\CoatRepository.class
 com\example\smartwardrobe\enums\CoatCategory.class
 com\example\smartwardrobe\enums\WashingZoneColor.class
@@ -41,16 +40,19 @@ com\example\smartwardrobe\enums\ItemColor.class
 com\example\smartwardrobe\model\History.class
 com\example\smartwardrobe\model\User.class
 com\example\smartwardrobe\repository\HistoryRepository.class
+com\example\smartwardrobe\authentication\AuthenticationException.class
 com\example\smartwardrobe\controller\CoatController.class
-com\example\smartwardrobe\service\MainService.class
+com\example\smartwardrobe\model\dto\CoatDto.class
 com\example\smartwardrobe\mqtt\MqttPublishModel.class
 com\example\smartwardrobe\controller\MqttController.class
 com\example\smartwardrobe\service\impl\HistoryServiceImpl.class
 com\example\smartwardrobe\service\impl\OutfitServiceImpl.class
 com\example\smartwardrobe\authentication\HeaderStringFilter.class
+com\example\smartwardrobe\model\dto\HistoryDto.class
 com\example\smartwardrobe\enums\ItemCategory.class
 com\example\smartwardrobe\enums\Material.class
 com\example\smartwardrobe\controller\OutfitController.class
+com\example\smartwardrobe\model\dto\OutfitDto.class
 com\example\smartwardrobe\controller\HistoryController.class
 com\example\smartwardrobe\service\impl\ItemServiceImpl.class
 com\example\smartwardrobe\enums\Style.class
